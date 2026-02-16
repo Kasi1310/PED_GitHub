@@ -1,0 +1,233 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin
+@model ContractStatusDetails;
+
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+}
+<input type="hidden" id="hrfContractStatus" value='@Url.Content("~/Admin/ContractStatus/")' />
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li class="active">Contract Status</li>
+    </ol>
+    <h1 class="page-header">Contract Status<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong> Details saved.
+    </div>
+    <div id="alertinfo" class="alert alert-info alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Sorry!</strong> Contract Exists.
+    </div>
+    <div id="divContractform">
+        @{ Html.RenderPartial("_ContractStatusForm", Model); }
+    </div>
+    <div id="divContractList">
+        @{ Html.RenderPartial("_ContractStatusList", Model); }
+
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/ApplicationError.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        LoadContractList();
+        $('#alertsuccess').hide();
+        $('#alertinfo').hide();
+        InitEvents();
+        CancelTeam();
+    });
+    function createContractStatus()
+    {
+        var validationresult = $('#Contractform').parsley().validate();
+        if (validationresult) {
+            var Getname = $('#@Html.IdFor(m => m.ContractStatusDet.ContractStatus)').val();
+            var GetActiveStatus = ($('.ActiveStatus:checked').val());
+            var activ;
+            if (GetActiveStatus == 1)
+                activ = 1;
+            else
+                activ = 0;
+            var GetId = $('#@Html.IdFor(m => m.ContractStatusDet.Id)').val();
+            GetId = (GetId == "" ? 0 : GetId);
+            var ContractDetails = JSON.stringify({
+                Id: GetId,
+                ContractStatus: Getname,
+                Active: activ
+                 //Status: GetActiveStatus
+            });
+           // console.log(ContractDetails);
+            var url = "@Url.Action("InsertContractType", "Admin")";
+            var jsonData = ContractDetails;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divContractList').html(resp);
+                $('.collapse').hide();
+                $('#btnSubmit').val('Submit');
+                $('#alertsuccess').show();
+                $('#@Html.IdFor(m => m.ContractStatusDet.Id)').val('');
+                setTimeout(function () {
+                    $('#alertsuccess').hide();
+                    $('#alertsuccess').removeClass('show');
+                }, 2000);
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+                $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+                $('#Contractform').parsley().destroy();
+                ClearForm();
+                LoadContractList();
+            });
+        }
+    }
+         
+
+    function ClearForm()
+    {
+        $('#Contractform').find('input:text').val('');
+        $("textarea").val("");
+        $('#Contractform').find('input:radio').removeAttr('checked');
+        $('#Contractform').find('select').val(0);
+       // $('#EmployeePositionDetails_Id').val('');
+    }
+
+    function EditContractRequest(ID)
+    {
+        var url = "@Url.Action("EditContractType", "Admin")";
+        var jsonData = ID;
+        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+            $('#divContractform').html(resp);
+            var hfdisable = $('#hfactiveDisable').val();
+            if (hfdisable == 'disabled') {
+                $('#Active').attr('disabled','disabled');
+                $('#InActive').attr('disabled', 'disabled');
+                $('#divActiveStatus').attr('title','Sorry Cannot be Edited');
+            }
+            else
+            {
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+            }
+            CancelTeam();
+            $('#btnSubmit').val('Update');
+            $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
+            $('.collapse').collapse();
+            $("#changeteam").html("Edit Contract Status");
+            ScrollToTop();
+        });
+    }
+
+        $('#btnSubmit').live('click', function () {
+            createContractStatus();
+            $("#changeteam").html("Add Contract Status");
+    });
+         $('#@Html.IdFor(m => m.ContractStatusDet.ContractStatus)').on('blur', function () {
+             var Value = $(this).val();
+             if (Value != 0) {
+                 $("#spanContractst").hide();
+                 $.ajax({
+                     url: "@Url.Action("IsContractStatusExist", "Admin")",
+                     type: "POST",
+                 data: { ContractStatus: Value },
+                 success: function (data) {
+                     SetSessionExpireTimer();
+                     if (data.message == "Failed") {
+                         $("#spanContractst").show();
+                         $('#@Html.IdFor(m => m.ContractStatusDet.ContractStatus)').focus();
+                     }
+                     else {
+                         $("#spanContractst").hide();
+                     }
+                 },
+                 error: function (result) {
+                     console.log("Filed Ajax");
+                 }
+             });
+         }
+        });
+
+
+        function LoadContractList() {
+            $('#tblContractList').DataTable({
+            searching: true,
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': [-1]
+            }]
+        });
+    }
+    function CancelTeam(){
+        $('#btnCancel').click(function (e) {
+        swal({
+            title: "Are you sure?",
+            text: "Data in the page will be lost!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-primary',
+            confirmButtonText: 'Confirm'
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    location.href = $('#hrfContractStatus').val();
+                }
+            });
+    });
+    }
+    function ConfirmDelete(RID) {
+        $("#alertsuccess").hide();
+        $('#alertinfo').hide();
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this detail!",
+            type: "error",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-danger',
+            confirmButtonText: 'Yes, delete it!'
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+                var url = "@Url.Action("DeleteContractStatus", "Admin")";
+            var jsonData = { ID: RID };
+                AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                    if (resp.message == "Failed") {
+                        $('#alertinfo').show();
+                        setTimeout(function () {
+                            $('#alertinfo').hide();
+                            $('#alertinfo').removeClass('show');
+                        }, 2000);
+                        LoadContractList();
+                    }
+                    else
+                    {
+                        $('#alertinfo').hide();
+                        $('#divContractList').html(resp);
+                        ClearForm();
+                        LoadContractList();
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+    });
+};
+    </script>
+}
+
+

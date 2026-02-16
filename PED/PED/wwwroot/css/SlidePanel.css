@@ -1,0 +1,78 @@
+﻿.cac-panel [class*="col-"].ui-sortable {
+    min-height: 0px;
+}
+
+.cac-panel {
+    position: fixed;
+    right: -150px;
+    top: 400px;
+    z-index: 1020;
+    background: #fff;
+    padding: 15px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.4);
+    -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 0 2px rgba(0,0,0,0.4);
+    width: 150px;
+    -webkit-transition: right .2s linear;
+    -moz-transition: right .2s linear;
+    transition: right .2s linear;
+}
+
+.cac-panel.active {
+    right: 0;
+}
+
+.cac-panel .cac-collapse-btn {
+    position: absolute;
+    left: -30px;
+    /*top: 10%;*/
+    margin-top: -15px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    /*color: #333;*/
+    color: #fff;
+    /*background: #fff;*/
+    background: #348fe2;
+    border-radius: 4px 0 0 4px;
+    text-align: center;
+    box-shadow: -1px 0px 3px -1px rgba(0,0,0,0.4);
+    -webkit-box-shadow: -1px 0px 3px -1px rgba(0,0,0,0.4);
+    -moz-box-shadow: -1px 0px 3px -1px rgba(0,0,0,0.4);
+}
+
+.cac-panel .cac-panel-content {
+    margin: -15px;
+    padding: 15px;
+    /*background: #fff;*/
+    background: #e2e7eb;
+    position: relative;
+    z-index: 1020;
+}
+
+.cac-panel.active .cac-collapse-btn .fa:before {
+    content: '\f00d';
+}
+
+.cac-panel .cac-list a.bg-white {
+    border: 1px solid #e2e7eb;
+}
+
+.cac-panel .control-label {
+    line-height: 30px;
+}
+
+.cac-panel .control-label.double-line {
+    line-height: 15px;
+}
+
+.cac-panel .cac-divider {
+    height: 1px;
+    margin: 15px 0;
+    background: #f2f2f2;
+}
+
+.cac-panel-content h5 {
+    cursor:move;
+}

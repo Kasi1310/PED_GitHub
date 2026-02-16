@@ -1,0 +1,493 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var isEnabled = "";
+
+
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isEnabled = "disabled";
+    }
+}
+<form id="PECheckList" class="form-horizontal">
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Name of Checklist Status</label>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Allocated To">Allocated To</label>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Client added to ESO Company</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldClientAddedToESOCompanyStatus" class="form-control clsClientAddedToESOCompanyStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.ClientAddedToESOCompanyStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldClientAddedToESOCompanyStatusAllocatedTo" class="form-control clsClientAddedToESOCompanyStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.ClientAddedToESOCompanyStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Medicare - submit application thru Pecos</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicareSubmitApplicationThruPecosStatus" class="form-control clsMedicareSubmitApplicationThruPecosStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request From Client">Request From Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicareSubmitApplicationThruPecosStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicareSubmitApplicationThruPecosStatusAllocatedTo" class="form-control clsMedicareSubmitApplicationThruPecosStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicareSubmitApplicationThruPecosStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Waystar - submit ticket to create child account</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarSubmitTicketToCreateChildAccountStatus" class="form-control clsWaystarSubmitTicketToCreateChildAccountStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Generate and Submit">Generate and Submit</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarSubmitTicketToCreateChildAccountStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarSubmitTicketToCreateChildAccountStatusAllocatedTo" class="form-control clsWaystarSubmitTicketToCreateChildAccountStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarSubmitTicketToCreateChildAccountStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Waystar Provider Set up</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarProviderSetupStatus" class="form-control clsWaystarProviderSetupStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarProviderSetupStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarProviderSetupStatusAllocatedTo" class="form-control clsWaystarProviderSetupStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarProviderSetupStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Waystar Enrollments</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarEnrollmentsStatus" class="form-control clsWaystarEnrollmentsStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Generated">Generated</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarEnrollmentsStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldWaystarEnrollmentsStatusAllocatedTo" class="form-control clsWaystarEnrollmentsStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.WaystarEnrollmentsStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Medicare EDI - Submit Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicareEDISubmitApplicationStatus" class="form-control clsMedicareEDISubmitApplicationStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Approved">Approved</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicareEDISubmitApplicationStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicareEDISubmitApplicationStatusAllocatedTo" class="form-control clsMedicareEDISubmitApplicationStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicareEDISubmitApplicationStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">BCBS - Par status and request confidentiality agreement</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldBCBSParStatusAndRequestConfidentialityAgreementStatus" class="form-control clsBCBSParStatusAndRequestConfidentialityAgreementStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Applicable">Not Applicable</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.BCBSParstatusAndRequestConfidentialityAgreementStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldBCBSParStatusAndRequestConfidentialityAgreementStatusAllocatedTo" class="form-control clsBCBSParStatusAndRequestConfidentialityAgreementStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.BCBSParstatusAndRequestConfidentialityAgreementStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">MMO -send PIF to MM</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMMOSendPIFToMMStatus" class="form-control clsMMOSendPIFToMMStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Applicable">Not Applicable</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MMOsendPIFtoMMStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMMOSendPIFToMMStatusAllocatedTo" class="form-control clsMMOSendPIFToMMStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MMOsendPIFtoMMStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Medicaid - submit ERA and/or EDI</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicaidSubmitERAAndOrEDIStatus" class="form-control clsMedicaidSubmitERAAndOrEDIStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitERAAndOrEDIStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicaidSubmitERAAndOrEDIStatusAllocatedTo" class="form-control clsMedicaidSubmitERAAndOrEDIStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitERAAndOrEDIStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Tricare East -submit application if not enrolled</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldTricareEastSubmitApplicationIfNotEnrolledStatus" class="form-control clsTricareEastSubmitApplicationIfNotEnrolledStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Applicable">Not Applicable</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.TricareEastSubmitApplicationIfNotEnrolledStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldTricareEastSubmitApplicationIfNotEnrolledStatusAllocatedTo" class="form-control clsTricareEastSubmitApplicationIfNotEnrolledStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.TricareEastSubmitApplicationIfNotEnrolledStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Railroad Medicare - apply (if not enrolled) or update pay to address</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldRailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatus" class="form-control clsRailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Applicable">Not Applicable</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.RailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldRailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatusAllocatedTo" class="form-control clsRailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.RailroadMedicareApplyIfNotEnrolledOrUpdatePayToAddressStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Railroad Medicare - submit ERA and/or EDI</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldRailroadMedicareSubmitERAAndOrEDIStatus" class="form-control clsRailroadMedicareSubmitERAAndOrEDIStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.RailroadMedicareSubmitERAAndOrEDIStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldRailroadMedicareSubmitERAAndOrEDIStatusAllocatedTo" class="form-control clsRailroadMedicareSubmitERAAndOrEDIStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.RailroadMedicareSubmitERAAndOrEDIStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+          
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">OH BWC (OH clients only) - if not enrolled submit Medco 13 application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldOHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatus" class="form-control clsOHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Applicable">Not Applicable</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.OHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldOHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatusAllocatedTo" class="form-control clsOHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.OHBWCOHClientsOnlyIfNotEnrolledSubmitMedco13ApplicationStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status"> VA Vendor Form</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldVAVendorFormStatus" class="form-control clsVAVendorFormStatus" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.VAVendorFormStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldVAVendorFormStatusAllocatedTo" class="form-control clsVAVendorFormStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.VAVendorFormStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status"> NPPES</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldNPPESStatus" class="form-control clsNPPESStatus" @isEnabled>
+                    <option value="Not Started">Not Started</option>
+                        <option value="Generated">Generated</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Required">Not Required</option> 
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.NPPESStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldNPPESStatusAllocatedTo" class="form-control clsNPPESStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.NPPESStatusAllocatedTo)
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Medicaid - submit application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicaidSubmitApplicationStatus" class="form-control clsMedicaidSubmitApplicationStatus">
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request From Client">Request From Client</option>
+                        <option value="Waiting on Client">Completed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitApplicationStatus)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOldMedicaidSubmitApplicationStatusAllocatedTo" class="form-control clsMedicaidSubmitApplicationStatusAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitApplicationStatusAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

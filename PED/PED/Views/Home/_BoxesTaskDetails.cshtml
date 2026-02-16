@@ -1,0 +1,63 @@
+﻿@using WiseX.ViewModels.Home
+@model HomeViewModel
+
+
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+        </div>
+        <h4 class="panel-title">Allocated User Task Info</h4>
+    </div>
+    <div class="panel-body">
+        <!-- begin row -->
+        @*  <div class="row m-l-5"> *@
+
+        <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+            <div class="widget widget-stats Agreements" style="background-color:#adb574;" id="BillyWhiteOpenedTask">
+                <div><a id="btnDashboardExport17" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                <a href="javascript:;">
+                    <div class="stats-icon"><i class="fa fa-files-o"></i></div>
+                    <div class="stats-info">
+                        <p>@Model.ChartBoxes.BillyWhiteTask</p>
+                    </div>
+                </a>
+                <div class="stats-link">
+                    <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Billy White</h4></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+            <div class="widget widget-stats" style="background-color:#494949;" Agreements" id="AmyKingOpenedTask">
+                <div><a id="btnDashboardExport18" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                <a href="javascript:;">
+                    <div class="stats-icon"><i class="fa fa-money"></i></div>
+                    <div class="stats-info">
+                        <p>@Model.ChartBoxes.AmyKingTask</p>
+                    </div>
+                </a>
+                <div class="stats-link">
+                    <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Amy King</h4></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+            <div class="widget widget-stats" style="background-color:#494949;" Agreements" id="PamelaRoysdonOpenedTask">
+                <div><a id="btnDashboardExport19" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                <a href="javascript:;">
+                    <div class="stats-icon"><i class="fa fa-money"></i></div>
+                    <div class="stats-info">
+                        <p>@Model.ChartBoxes.PamelaRoysdonTask</p>
+                    </div>
+                </a>
+                <div class="stats-link">
+                    <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Pamela Roysdon</h4></a>
+                </div>
+            </div>
+        </div>
+
+        @*  </div> *@
+    </div>
+</div>
+

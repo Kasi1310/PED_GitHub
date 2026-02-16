@@ -1,0 +1,147 @@
+﻿@using PED.ViewModels.Contract;
+@model Contracts
+<div class="modal fade" id="CEditForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <button class="btn btn-xs btn-icon btn-circle btn-default" id="Contractclose"><i class="fa fa-close"></i></button>
+                    </div>
+                    <h4 class="panel-title" id="changeteam">Edit Contract</h4>
+                </div>
+
+                <form id="contractdetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+                    <div class="panel-body panel-form p-t-15 m-t-10">
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            <label class="control-label col-md-4 col-sm-4" for="AggrementType">Agreement Type<span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls input-daterange datepicker-current input-group">
+                                @Html.HiddenFor(m => m.ClientContractDetails.ID)
+                                @Html.HiddenFor(m => m.ClientContractDetails.ClientId)
+                                @Html.DropDownListFor(m => m.ClientContractDetails.AgreementType, new SelectList(Model.ContractAgreementTypeList, "Id", "Value"), "Select Agreement Type", new { @class = "form-control AgreementTypeList", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            <label class="control-label col-md-4 col-sm-4" for="Agreement">Agreement<span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls input-group" data-parsley-validate="false">
+                                <input type="file" id="Agreementfile" class="form-control" name="file" accept=".pdf" data_parsley_required="true" />
+                                <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                                <small class="text-primary">(Allowed Document Format : pdf)</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            <label class="control-label col-md-4 col-sm-4" for="ContractSignedDate">Contract Effective Date<span style="color:red">*</span></label>
+                            @*<div class="col-md-6 col-sm-6 col-lg-6 controls input-daterange datepicker-current input-group" data-parsley-validate="true">
+            @Html.TextBoxFor(m => m.ClientContractDetails.ContractSignedDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Contract Signed Date", data_parsley_required = "true" })*@
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls input-daterange datepicker-current input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.ContractSignedDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Contract Signed Date" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            <label class="control-label col-md-4 col-sm-4" for="ContractExpiryDate">Contract Expiry Date<span style="color:red">*</span></label>
+                            @*<div class="col-md-6 col-sm-6 col-lg-6 controls input-daterange datepicker-current input-group" data-parsley-validate="true">
+            @Html.TextBoxFor(m => m.ClientContractDetails.ContractExpiryDate, new { @class = "form-control DateMask datepicker-current", @placeholder = "Contract Expiry Date", data_parsley_required = "true" })*@
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls input-daterange datepicker-current input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.ContractExpiryDate, new { @class = "form-control DateMask datepicker-current", @placeholder = "Contract Expiry Date", data_parsley_required = "false" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6" data-parsley-validate="true">
+                            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0" for="Year1">Year 1 Fee <span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 p-l-0 controls input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.Year1Fee, new { @class = "form-control", @placeholder = "Enter Year 1 Fee", data_parsley_required = "true", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                                <span class="input-group-addon p-l-1 p-r-2">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6" data-parsley-validate="true">
+                            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0" for="Year2">Year 2 Fee <span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 p-l-0 controls input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.Year2Fee, new { @class = "form-control", @placeholder = "Enter Year 2 Fee", data_parsley_required = "true", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                                <span class="input-group-addon p-l-1 p-r-2">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6" data-parsley-validate="true">
+                            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0" for="Year3">Year 3 Fee </label>@*<span style="color:red">*</span>*@
+                            <div class="col-md-6 col-sm-6 col-lg-6 p-l-0 controls input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.Year3Fee, new { @class = "form-control", @placeholder = "Enter Year 3 Fee", data_parsley_required = "false", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                                <span class="input-group-addon p-l-1 p-r-2">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6" data-parsley-validate="true">
+                            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0" for="Year4">Year 4 Fee </label>@*<span style="color:red">*</span>*@
+                            <div class="col-md-6 col-sm-6 col-lg-6 p-l-0 controls input-group">
+                                @Html.TextBoxFor(m => m.ClientContractDetails.Year4Fee, new { @class = "form-control", @placeholder = "Enter Year 4 Fee", data_parsley_required = "false", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                                <span class="input-group-addon p-l-1 p-r-2">%</span>
+                            </div>
+                        </div>
+
+
+                        @*<div class="form-group col-sm-6 col-md-6 col-lg-6"></div>
+        <div class="form-group col-sm-6 col-md-6 col-lg-6" id="divdoc">
+            <label class="control-label col-md-4 col-sm-4" for="otherdocuments">Other Documents</label>
+            <div class="col-md-8 col-sm-8 col-lg-8 controls" controls">
+                <input type="file" id="OtherDocumentfile" class="form-control" name="file" accept=".pdf,.xlsx,.xls,.doc" />
+                <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                <span style="color:red;font:bolder;font-size:10px;">(Allowed Document Format : pdf,doc,xlsx,xls)</span>
+            </div>
+        </div>*@
+                        <div class="form-group col-sm-12 text-center">
+                            <input type="button" id="btnContractDetailsSubmit" class="btn btn-sm btn-primary m-r-5" value="Submit" />
+                            <input type="button" id="btnAddCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="CNotesForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <button class="btn btn-xs btn-icon btn-circle btn-default" id="commentsclose"><i class="fa fa-close"></i></button>
+                    </div>
+                    <h4 class="panel-title" id="changeNotesteam">Add Comments</h4>
+                </div>
+
+                <form id="notesdetailsfrm" method="post" class="form-horizontal" pars>
+                    <div class="panel-body panel-form p-t-15 m-t-10">
+                        <div class="form-group col-sm-10 col-md-10 col-lg-10" id="divuser">
+                            <label class="control-label col-md-4 col-sm-4" for="Users">Users<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 controls" data-parsley-validate="true">
+                                @Html.DropDownListFor(m => m.ClientContractDetails.Users, new SelectList(Model.ContractUSersList, "Id", "UserName"), "Select User", new { @class = "form-control ContractUSersList", data_parsley_required = "true", onchange = "Usersubmit(this.value);" })
+                            </div>
+                        </div>
+                        @*<div class="form-group col-sm-10 col-md-10 col-lg-10" id="divdoc">
+                                <label class="control-label col-md-4 col-sm-4" for="otherdocuments">Other Documents</label>
+                                <div class="col-md-8 col-sm-8 col-lg-8 controls" controls">
+                                    <input type="file" id="OtherDocumentfile" class="form-control" name="file" accept=".pdf,.xlsx,.xls,.doc"/>
+                                    <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                                    <span style="color:red;font:bolder;font-size:10px;">(Allowed Document Format : pdf,doc,xlsx,xls)</span>
+                                </div>
+                            </div>*@
+                        <div class="form-group col-sm-10 col-md-10 col-lg-10">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">Comments<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 controls" data-parsley-validate="true">
+                                @Html.TextAreaFor(m => m.ClientContractDetails.Comments, new { @class = "form-control", @maxlength = "500", @placeholder = "Comments", data_parsley_required = "true" })
+                                <small id="CommonNoteChar" class="text-primary pull-right">Maximum allowed characters: 500</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 text-center">
+                            <input type="button" id="btnNotesSubmit" class="btn btn-sm btn-primary m-r-5" value="Submit" />
+                            <input type="button" id="btnNotesCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+ 
+}
+
+<form id="ContractFeesDetails" class="form-horizontal">
+    <h4>Fee Details</h4>
+    <hr />
+    <div id="FeesDetails">
+        <div class="form-group col-sm-3 col-md-3 col-lg-3 p-l-0" data-parsley-validate="true">
+            <label class="control-label col-md-5 col-sm-5 col-lg-5 p-l-0" for="Year1">Year 1 Fee <span style="color:red">*</span></label>
+            <div class="col-md-7 col-sm-7 col-lg-7 p-l-0 controls input-group">
+                @Html.TextBoxFor(m => m.ClientsDetails.Year1, new { @class = "form-control", @placeholder = "Enter Year 1 Fee", data_parsley_required = "true", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                <span class="input-group-addon p-l-1 p-r-2">%</span>
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3 p-l-0" data-parsley-validate="true">
+            <label class="control-label col-md-5 col-sm-5 col-lg-5 p-l-0" for="Year2">Year 2 Fee <span style="color:red">*</span></label>
+            <div class="col-md-7 col-sm-7 col-lg-7 p-l-0 controls input-group">
+                @Html.TextBoxFor(m => m.ClientsDetails.Year2, new { @class = "form-control", @placeholder = "Enter Year 2 Fee", data_parsley_required = "true", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                <span class="input-group-addon p-l-1 p-r-2">%</span>
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3 p-l-0" data-parsley-validate="true">
+            <label class="control-label col-md-5 col-sm-5 col-lg-5 p-l-0" for="Year3">Year 3 Fee </label>@*<span style="color:red">*</span>*@
+            <div class="col-md-7 col-sm-7 col-lg-7 p-l-0 controls input-group">
+                @Html.TextBoxFor(m => m.ClientsDetails.Year3, new { @class = "form-control", @placeholder = "Enter Year 3 Fee", data_parsley_required = "false", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                <span class="input-group-addon p-l-1 p-r-2">%</span>
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3 p-l-0" data-parsley-validate="true">
+            <label class="control-label col-md-5 col-sm-5 col-lg-5 p-l-0" for="Year4">Year 4 Fee </label>@*<span style="color:red">*</span>*@
+            <div class="col-md-7 col-sm-7 col-lg-7 p-l-0 controls input-group">
+                @Html.TextBoxFor(m => m.ClientsDetails.Year4, new { @class = "form-control", @placeholder = "Enter Year 4 Fee", data_parsley_required = "false", data_parsley_trigger = "keyup", min = "0", max = "100", data_parsley_pattern = "[0-9]\\d*(\\.\\d+)?$" })
+                <span class="input-group-addon p-l-1 p-r-2">%</span>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,62 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    string isPermission = "";
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isPermission = "hide";
+        isAdmin = "hide";
+    }
+}
+
+<div class="row m-10">
+
+    <table id="tblInsuranceContractList" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Insurance Name</th>
+                <th>Info</th>
+                <th>Effective Date</th>
+                <th>Last Revalidation Date</th>
+                <th>Next Revalidation Date</th>
+                <th>Termed Date</th>
+                <th>Provider #</th>
+                @*<th>Group #</th>*@
+                <th>Active</th>
+                <th class="@isAdmin">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{int i = 0;
+                foreach (var item in Model.PEInsuranceContractFileDetailsList)
+                {
+                    i++;
+                    <tr id="@item.Id">
+                        @*<td id="tdSno" class="tr1">@i</td>*@
+                        <td id="tdInsuranceContractName" class="tr1">@item.InsuranceContractName</td>
+                        <td id="tdInfo" class="tr1">@item.Info</td>
+                        <td id="tdEffectiveDate" class="tr1">@item.EffectiveDate</td>
+                        <td id="tdLastRevalidateDate" class="tr1">@item.LastRevalidateDate</td>
+                        <td id="tdNextUpdateDue" class="tr1">@item.NextUpdateDue</td>
+                        <td id="tdTermedDate" class="tr1">@item.TermedDate</td>
+                        <td id="tdProviderNo" class="tr1">@item.ProviderNo</td>
+                        <td id="tdActive" class="tr1">@item.Active</td>
+                        <td class="tr1">
+                            <button id="btnContractEdit" type="button" Onclick="EditPEContract('@item.InsuranceContractId')" title="Edit" class="fa fa-lg fa-edit  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                            <button id="btnContractDelete" type="button" Onclick="ConfirmPEContractDelete('@item.InsuranceContractId')" title="Delete" class="fa fa-lg fa-trash-o  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+</div>

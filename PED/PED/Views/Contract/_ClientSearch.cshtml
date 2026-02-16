@@ -1,0 +1,98 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Contract
+@model Contracts
+@{
+    string isPermission = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isPermission = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isPermission = "hide";
+    }
+}
+<form id="userForm" method="post" class="form-horizontal">
+    <div class="panel-body panel-form p-t-15  m-t-10">
+        <div class="form-group col-sm-12 col-md-12 col-lg-12" id="Companyfilter">
+            <label class="control-label col-md-4 col-sm-4">Company</label>
+            <div class="col-md-3 col-sm-3 col-lg-3 controls" onkeypress="return runScript(event)">
+                @Html.TextBox("ClientSearch", null, new { @class = "form-control", @placeholder = "Enter Client ID / Name ", data_parsley_required = "true" })
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                <input id="btnSearch" type="button" class="btn btn-sm btn-primary m-r-5 hide" value="Search" />
+            </div>
+        </div>
+        <div class="hide m-10" id="divClientDetails">
+            <h4>Client Details</h4>
+            <hr />
+            <div class="table-responsive" data-scrollbar="true" data-init="true">
+                <table class="table table-profile width-full">
+                    <tbody>
+                        <tr>
+                            <td style="width: 14%!important" class="field p-l-2 p-r-0 text-success text-left">Company ID</td>
+                            <td style="width: 1%!important" class="field text-success">:</td> @Html.HiddenFor(m => m.ClientsDetails.CompanyId) @Html.HiddenFor(m => m.ClientsDetails.ID)
+                            <td style="width: 10%!important" class="p-l-5 p-r-0"> @Html.DisplayFor(m => m.ClientsDetails.CompanyId)</td>
+                            <td style="width: 14%!important" class="field p-l-5 p-r-0 text-success text-left">Company Name</td>
+                            <td style="width: 1%!important" class="field text-success">:</td>
+                            <td style="width: 15%!important" class="p-l-5 p-r-0">@Html.DisplayFor(m => m.ClientsDetails.CompanyName)</td>
+                            <td style="width: 9%!important" class="field p-l-5 p-r-0 text-success text-left">Residency Code</td>
+                            <td style="width: 1%!important" class="field text-success">:</td>
+                            <td style="width: 5%!important" class="p-l-5 p-r-2">@Html.DisplayFor(m => m.ClientsDetails.ResidencyCode) </td>
+                            <td style="width: 14%!important" class="field p-l-5 p-r-0 text-success text-left">Account Executive Name</td>
+                            <td style="width: 1%!important" class="field text-success">:</td>
+                            <td style="width: 15%!important" class="p-l-5 p-r-2">@Html.DisplayFor(m => m.ClientsDetails.AccountExecutiveName) </td>
+                        </tr>
+                        <tr>
+                            <td class="field p-l-2 p-r-0 text-success text-left">Contract Effective Date</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-0">
+                                @Html.HiddenFor(m => m.ClientsDetails.CompanyName)
+                                @Html.HiddenFor(m => m.ClientsDetails.ContractSignedDate)
+                                @Html.HiddenFor(m => m.ClientsDetails.ContractExpiryDate)
+                                @Html.HiddenFor(m => m.ClientsDetails.Transport)
+                                @Html.DisplayFor(m => m.ClientsDetails.ContractEffDate)
+                            </td>
+                            <td class="field p-l-5 p-r-0 text-success text-left">Contract Expiry Date</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-0">@Html.DisplayFor(m => m.ClientsDetails.ContractExpiryDate)</td>
+                            <td class="field p-l-5 p-r-0 text-success text-left">Fee (%)</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-2">@Html.DisplayFor(m => m.ClientsDetails.Amount) </td>
+                            <td class="field p-l-5 p-r-0 text-success text-left">Fee Changed Date</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-2" id="FeesChangedDate">@Html.DisplayFor(m => m.ClientsDetails.FeesChangedDate) </td>
+                        </tr>
+                        <tr>
+                            <td class="field p-l-5 p-r-0 text-success text-left">Length (Years)</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-2">@Html.DisplayFor(m => m.ClientsDetails.ContractLength) </td>
+                            <td class="field p-l-2 p-r-0 text-success text-left">Non-Transport Billed</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-0 Transport"> @Html.DisplayFor(m => m.ClientsDetails.Transport)</td>
+                            <td class="field p-l-5 p-r-0 text-success text-left">Non-Transport Charges ($)</td>
+                            <td class="field text-success">:</td>
+                            <td class="p-l-5 p-r-0 TransportCharges">@Html.DisplayFor(m => m.ClientsDetails.TransportCharges)</td>
+                            @*<td class="field p-l-5 p-r-0 text-success"></td>*@
+                            @*<td class="p-l-5 p-r-2"></td>*@
+                            @*<td class="field p-l-5 p-r-0 text-success text-left" for="Contract">Contract Status</td>*@
+                            <td class="field p-l-5 p-r-0 text-success text-left" for="Contract">Contract Status</td>
+                            <td class="field text-success">:</td>
+                            @*<div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">*@
+                            @*<td class="p-l-5 p-r-2">@Html.DisplayFor(m => m.ClientsDetails.Notes)</td>*@
+                            <td class="p-l-5 p-r-2"> @Html.DropDownListFor(m => m.ClientsDetails.ContractStatusID, new SelectList(Model.ContractStatus, "Id", "Value"), "---SELECT---", new { @class = "form-control ContractStatus", data_parsley_required = "true" })</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-group col-sm-12 text-right">
+                    <input type="button" id="btnClientsUpdate" class="btn btn-sm btn-primary m-r-5 @isPermission" value="Update" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

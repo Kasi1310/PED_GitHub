@@ -1,0 +1,41 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+@if (RolePermission == "F")
+{
+    <form id="AnnualChargeRateDetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+
+        <h4>Annual Charge Rate</h4>
+        <hr />
+        
+        <div class="form-group col-sm-3 col-md-3 col-lg-3">
+            <div class="col-md-12 col-sm-12 col-lg-12" data-parsley-validate="true">
+                <label class="control-label" for="AnnualChargeRateSheet">Annual Charge Rate Sheet<span style="color:red">*</span></label>
+                <input type="file" id="fuAnnualChargeRateSheet" class="form-control" name="file" accept=".pdf,.xlsx,.xls,.docx,.doc" />
+                <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                <small class="text-primary">(Allowed Document Format : pdf,docx,doc,xlsx,xls)</small>
+            </div>
+        </div>
+        <div class="form-group col-sm-1 col-md-1 col-lg-1">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <input type="button" id="btnAnnualChargeRateAdd" class="btn btn-sm btn-info m-t-25 @isAdmin" value="Add" />
+            </div>
+        </div>
+
+
+    </form>
+}

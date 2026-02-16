@@ -1,0 +1,196 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var isEnabled = "";
+
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isEnabled = "disabled";
+    }
+}
+<form id="PEPracticeLocationChangeCheckList" class="form-horizontal">
+    @* <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Inquire With Client About OOS Enrollment</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Obtain Necessary Documents to Start Enrollment</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Submit Application</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Submit ERA and/or EDI</label>
+            </div>
+        </div>
+    </div> *@
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Name of Checklist Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Allocated To">Allocated To</label>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Inquire With Client About OOS Enrollment</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDInquireWithClientAboutOOSEnrollment" class="form-control clsOSMCDInquireWithClientAboutOOSEnrollment" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="AE Notified">AE Notified</option>
+                        <option value="Client Declined">Client Declined</option>
+                        <option value="Enrollment Started">Enrollment Started</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.InquireWithClientAboutOOSEnrollment)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDInquireWithClientAboutOOSEnrollmentAllocatedTo" class="form-control clsOSMCDInquireWithClientAboutOOSEnrollmentAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.InquireWithClientAboutOOSEnrollmentAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Obtain Necessary Documents to Start Enrollment</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDObtainNecessaryDocumentsToStartEnrollment" class="form-control clsOSMCDObtainNecessaryDocumentsToStartEnrollment" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request from Client">Requested from Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.ObtainNecessaryDocumentsToStartEnrollment)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDObtainNecessaryDocumentsToStartEnrollmentAllocatedTo" class="form-control clsOSMCDObtainNecessaryDocumentsToStartEnrollmentAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.ObtainNecessaryDocumentsToStartEnrollmentAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Submit Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDMedicaidSubmitApplication" class="form-control clsOSMCDMedicaidSubmitApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request from Client">Request from Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.MedicaidSubmitApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDMedicaidSubmitApplicationAllocatedTo" class="form-control clsOSMCDMedicaidSubmitApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.MedicaidSubmitApplicationAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Submit ERA and/or EDI</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDMedicaidSubmitERAAndOrEDI" class="form-control clsOSMCDMedicaidSubmitERAAndOrEDI" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.MedicaidSubmitERAAndOrEDI)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDMedicaidSubmitERAAndOrEDIAllocatedTo" class="form-control clsOSMCDMedicaidSubmitERAAndOrEDIAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.MedicaidSubmitERAAndOrEDIAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Notify AR</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDNotifyAR" class="form-control clsOSMCDNotifyAR" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.NotifyAR)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlOSMCDNotifyARAllocatedTo" class="form-control clsOSMCDNotifyARAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEOutOfStateMCDCheckList.NotifyARAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

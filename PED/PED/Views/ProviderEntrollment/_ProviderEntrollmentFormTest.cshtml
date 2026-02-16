@@ -1,0 +1,110 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<input type="hidden" id="hfPayToStateId" value="@Model.ProviderEntrollmentDetails.PayToStateId" />
+<input type="hidden" id="hfPayToCityId" value="@Model.ProviderEntrollmentDetails.PayToCityId" />
+<input type="hidden" id="hfBillingProviderStateId" value="@Model.ProviderEntrollmentDetails.BillingProviderStateId" />
+<input type="hidden" id="hfBillingProviderCityId" value="@Model.ProviderEntrollmentDetails.BillingProviderCityId" />
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        @*@if (RolePermission == "F")
+            {
+                <h4 class="panel-title" id="changeteam">Add Billing Provider</h4>
+            }
+            @if (RolePermission == "R")
+            {
+                <h4 class="panel-title" id="changeteam">View Billing Provider</h4>
+            }*@
+        <h3 class="panel-title" id="changeteam">Organization Demographics</h3>
+    </div>
+
+    <form id="ProviderEntrollmentfrm" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <ul class="nav nav-tabs customtab" role="tablist">
+                <li class="nav-item active"> <a class="nav-link" data-toggle="tab" id="tDetails" href="#divPEDetails" role="tab"><span class="hidden-sm-up"></span> <span class="hiddpen-xs-down">Details</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tSpecialities" href="#divPESpecialities" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Specialties</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherAddresses" href="#divOtherAddresses" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Other Addresses</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tIDs" href="#divIDs" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">IDs</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tContacts" href="#divContacts" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Contacts</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tHours" href="#divHours" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Hours</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tLanguages" href="#divLanguages" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Languages</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tDocuments" href="#divDocuments" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Documents</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tServices" href="#divServices" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Services</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tTexonomy" href="#divTexonomy" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Texonomy</span></a> </li>
+            </ul>
+
+            <div class="tab-pane active" id="divPEDetails" role="tabpanel" style="padding-top:10px;">
+                <div id="PEDetails">
+                    @{ await Html.RenderPartialAsync("_PEDetails", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divPESpecialities" role="tabpanel">
+                <div id="PESpecialities">
+                    @{ await Html.RenderPartialAsync("_PESpecialities", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divOtherAddresses" role="tabpanel">
+                <div id="PEOtherAddresses">
+                    @{ await Html.RenderPartialAsync("_PEOtherAddresses", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divIDs" role="tabpanel">
+                <div id="PEIDs">
+                    @{ await Html.RenderPartialAsync("_PEIDs", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divContacts" role="tabpanel">
+                <div id="PEContacts">
+                    @{ await Html.RenderPartialAsync("_PEContacts", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divHours" role="tabpanel">
+                <div id="PEHours">
+                    @{ await Html.RenderPartialAsync("_PEHours", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divLanguages" role="tabpanel">
+                <div id="PELanguages">
+                    @{ await Html.RenderPartialAsync("_PELanguages", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divDocuments" role="tabpanel">
+                <div id="PEDocuments">
+                    @{ await Html.RenderPartialAsync("_PEDocuments", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divServices" role="tabpanel">
+                <div id="PEServices">
+                    @{ await Html.RenderPartialAsync("_PEServices", Model); }
+                </div>
+            </div>
+            <div class="tab-pane" id="divTexonomy" role="tabpanel">
+                <div id="PETexonomy">
+                    @{ await Html.RenderPartialAsync("_PETexonomy", Model); }
+                </div>
+            </div>
+
+
+
+            @if (RolePermission == "F")
+            {
+                <div class="form-group col-sm-12 text-center">
+                    <input type="button" id="btnBillingProviderSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                    <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                </div>
+            }
+        </div>
+
+    </form>
+</div>

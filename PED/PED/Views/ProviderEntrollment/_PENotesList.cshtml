@@ -1,0 +1,48 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<div class="row m-10">
+
+    <table id="tblNotes" class="table table-striped table-bordered table-hover" style="width:100%">
+        <thead>
+            <tr>
+                <th>Notes</th>
+                <th>UpdatedBy</th>
+                <th>UpdatedOn</th>
+                <th class="@isAdmin">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{int i = 0;
+                foreach (var item in Model.PENotesList)
+                {
+                    i++;
+                    <tr id="@item.Id">
+                        @*<td id="tdSno" class="tr1">@i</td>*@
+                        <td class="tr1">@item.Notes</td>
+                        <td class="tr1">@item.AddedBy</td>
+                        <td class="tr1">@item.AddedDate</td>
+                        <td class="tr1">
+                            <button id="btnNotesEdit" type="button" Onclick="EditPENotes('@item.Id','@item.Notes')" title="Edit" class="fa fa-lg fa-edit  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                            <button id="btnNotesDelete" type="button" Onclick="ConfirmPENotesDelete('@item.Id')" title="Delete" class="fa fa-lg fa-trash-o  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+</div>

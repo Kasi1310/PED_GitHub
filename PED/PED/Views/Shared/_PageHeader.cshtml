@@ -1,0 +1,99 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using WiseX.Helpers;
+@{
+    var numCount = "";
+    var message = HttpContextAccessor.HttpContext.Session.Get<List<BroadcastMessageDetails>>("my-message");
+    if (message != null)
+    {
+        numCount = message.Where(m => m.IsRead == 0).Count().ToString();
+    }
+
+}
+
+<div id="header" class="header navbar navbar-default navbar-fixed-top">
+
+    <!-- begin container-fluid -->
+    <div class="container-fluid">
+        <!-- begin mobile sidebar expand / collapse button -->
+        <a href="~/Home" class="navbar-brand p-t-5 p-b-5 width-100"><img src="~/img/logo 03_06.png" height="40" /></a>
+
+        <div class="navbar-header">
+            <h4 style="color: #348fe2; text-align:left;"> <span style="font-size:x-large">W</span>ise&nbsp;-&nbsp;<span style="font-size:x-large">X</span></h4>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!-- end mobile sidebar expand / collapse button -->
+        <!-- begin header navigation right -->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form class="navbar-form full-width">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter keyword" />
+                        <button type="submit" class="btn btn-search"><i style="color: #348fe2" class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+                    <i class="fa fa-bell-o" style="color: #348fe2"></i>
+                    <span class="label" id="spanm">@numCount</span>
+                    <input type="hidden" id="inputMessage" value="@numCount"/>
+                </a>
+                <ul class="dropdown-menu media-list pull-right animated fadeInDown">
+                    <li class="dropdown-header" id="liNotifications">Notifications</li>
+                    @if (message != null)
+                    {
+                        foreach (var item in message)
+                        {
+                            <li class="media">
+                                <a href='@Url.Content("~/Broadcast/BroadcastReceived")'>
+
+                                    <div class="media-left"><img src='@Url.Content("~/img/user-1.jpg")' class="media-object" alt="my Image" /></div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">@item.SentBy</h6>
+                                        <p>@item.Message</p>
+                                        <div class="text-muted f-s-11">@item.EffectiveDate</div>
+                                    </div>
+
+                                </a>
+                            </li>
+                        }
+                    }
+                    </ul>
+                </li>
+                <li class="dropdown navbar-user">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="~//img/user-13.jpg" alt="" /> 
+                        <span class="hidden-xs" style="color: #348fe2">@User.Identity.Name</span><b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu animated fadeInLeft">
+                        <li class="arrow"></li>
+                        <li><a href="@Url.Action("ChangePassword", "account")">Change Password</a></li>
+                        <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
+                        <li><a href="javascript:;">My Calendar</a></li>
+                        <li><a href="javascript:;">Setting</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("login", "account")" data-action="userLogout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        <!-- end container-fluid -->
+        <!-- begin breadcrumb -->
+        <!-- end header navigation right -->
+                    </div>
+                </div>
+                @section Sctipts
+                    {
+                    <script type="text/javascript">
+                        // Retrieve
+                        $(document).ready(function () {
+
+                        });
+
+
+                    </script>
+                }

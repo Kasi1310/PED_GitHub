@@ -1,0 +1,55 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model AgreementType
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeteam">Add Agreement Type</h4>
+    </div>
+
+    <form id="AgreementTypefrm" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Name">Name<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls" data-parsley-validate="true">
+                    @Html.HiddenFor(m => m.AgreementTypeDetails.Id)
+                    @Html.TextBoxFor(m => m.AgreementTypeDetails.Name, new { @class = "form-control", @placeholder = "Enter Name", data_parsley_required = "true" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="description">Description<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                    @Html.TextAreaFor(m => m.AgreementTypeDetails.Description, new { @class = "form-control", @placeholder = "Enter Description", data_parsley_required = "true" })
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Active">Active<span style="color:red">*</span></label>
+                <div class="form-group" id="divActiveStatus">
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.AgreementTypeDetails.Status, 1, new { @class = "ActiveStatus", @required = "required", @id = "Active" })
+                        <label for="Active">Yes</label>
+                    </div>
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.AgreementTypeDetails.Status, 2, new { @class = "ActiveStatus", @required = "required", @id = "InActive" })
+                        <label for="InActive">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12 text-center">
+                <input type="button" id="btnAgreementTypeSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,40 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="panel panel-inverse  @isAdmin" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandBulkcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeteam">Bulk Clients Upload</h4>
+    </div>
+
+    <form id="BulkClientsfrm" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="row col-12 p-10">
+                    <div class="form-group col-sm-6 col-md-6 col-lg-6 p-0">
+                        <label class="control-label col-md-4 col-sm-4" for="Client">Clients<span style="color:red">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-lg-8 p-0" controls" data-parsley-validate="true">
+                            <input type="file" id="UploadClientsfile" class="form-control" name="file" accept=".xlsx,.xls" data_parsley_required = "true"/>
+                            <span style="color:red;font:bolder;" id="bulkErrorErrorMessage"></span>
+                            @*<span style="color:red;font:bolder;font-size:10px; white-space:nowrap;">(Allowed Document Format : xlsx)</span>*@
+                            <small class="text-primary">(Allowed Document Format : xlsx,xls)</small>
+                            <span><a target="_blank" href="@Url.Content("~/Contracts/Sample Clients Master.xlsx")" title="Download Sample File">Click here to download sample file</a></span>
+                        </div>
+                    </div>
+            </div>
+            <div class="form-group col-sm-12 text-center">
+                <input type="button" id="btnBulkClientsUpload" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                <input type="button" id="btnBulkCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>

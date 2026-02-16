@@ -1,0 +1,207 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var isEnabled = "";
+
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isEnabled = "disabled";
+    }
+}
+<form id="PEClientBankChangeCheckList" class="form-horizontal">
+    
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Name of Checklist Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Allocated To">Allocated To</label>
+            </div>
+           
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Review/Obtain Bank Letter</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCReviewObtainBankLetter" class="form-control clsCBCReviewObtainBankLetter" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Requested from Client">Requested from Client</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.ReviewObtainBankLetter)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCReviewObtainBankLetterAllocatedTo" class="form-control clsCBCReviewObtainBankLetterAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.ReviewObtainBankLetterAllocatedTo)
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">PED - Update Bank Info</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCPEDUpdateBankInfo" class="form-control clsCBCPEDUpdateBankInfo" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.PEDUpdateBankInfo)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCPEDUpdateBankInfoAllocatedTo" class="form-control clsCBCPEDUpdateBankInfoAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.PEDUpdateBankInfoAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Medicare - EFT Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCMedicareEFTApplication" class="form-control clsCBCMedicareEFTApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request from Client">Request from Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.MedicareEFTApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCMedicareEFTApplicationAllocatedTo" class="form-control clsCBCMedicareEFTApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.MedicareEFTApplicationAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Maintenance Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCMedicaidMaintenanceApplication" class="form-control clsCBCMedicaidMaintenanceApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.MedicaidMaintenanceApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCMedicaidMaintenanceApplicationAllocatedTo" class="form-control clsCBCMedicaidMaintenanceApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.MedicaidMaintenanceApplicationAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Railroad Medicare - EFT Notification Email</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCRailroadMedicareEFTNotificationEmail" class="form-control clsCBCRailroadMedicareEFTNotificationEmail" @isEnabled>
+                        <option value="Waiting for Medicare Approval">Waiting for Medicare Approval</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.RailroadMedicareEFTNotificationEmail)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCRailroadMedicareEFTNotificationEmailAllocatedTo" class="form-control clsCBCRailroadMedicareEFTNotificationEmailAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.RailroadMedicareEFTNotificationEmailAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Update Commercial EFTs</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCUpdateCommercialEFTs" class="form-control clsCBCUpdateCommercialEFTs" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.UpdateCommercialEFTs)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlCBCUpdateCommercialEFTsAllocatedTo" class="form-control clsCBCUpdateCommercialEFTsAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEClientBankChangeCheckList.UpdateCommercialEFTsAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

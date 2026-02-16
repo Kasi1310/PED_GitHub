@@ -1,0 +1,26 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<div class="row m-10">
+    <table id="tblPEAuditLogList" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Changes</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+            </tr>
+        </thead>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>

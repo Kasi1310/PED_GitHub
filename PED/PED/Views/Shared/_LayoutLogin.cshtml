@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Medicount's Provider Enrollment Database
+    </title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="icon" href='@Url.Content("~/img/favicon.ico")' type="image/gif" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- ================== CSS ================== -->
+    <link href='@Url.Content("~/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap/css/bootstrap.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/BaseStyles.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/style-responsive.min.css")' rel="stylesheet" />
+    @RenderSection("Styles", false)
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src='@Url.Content("~/plugins/pace/pace.min.js")'></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top">
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    <!-- begin #page-container -->
+    <div class="login-cover" style="background-color:white">
+        @*<div class="login-cover-image"><img src="~/img/login-bg/bg-6.jpg" data-id="login-cover-image" alt="" /></div>*@
+        <div class="login-cover-bg"></div>
+    </div>
+    <div id="page-container" class="fade page-sidebar-toggled page-sidebar-minified page-header-fixed">
+        <!-- begin #header -->
+        @RenderBody()
+    </div>
+    <!-- end page container -->
+    <!-- ================== JS ================== -->
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/BaseScripts.js")'></script>
+    <script src='@Url.Content("~/js/apps.min.js")'></script>
+    <script>
+        $(document).ready(function () {
+            App.init();
+        });
+    </script>
+    @RenderSection("Scripts", false)
+</body>
+</html>

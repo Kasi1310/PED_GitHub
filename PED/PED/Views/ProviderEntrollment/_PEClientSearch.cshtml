@@ -1,0 +1,73 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+
+    //if (RoleId == "bc0adea4-0a8b-49f6-9702-8376d9cd2ad4")//Provider Enrollment Limited Access
+    //{
+    //    isAdmin = "SU";
+    //}
+    if(RolePermission=="R")
+    {
+        isAdmin = "SU";
+    }
+}
+<form id="userForm" method="post" class="form-horizontal">
+    <div class="panel-body panel-form p-t-15  m-t-10">
+        <div class="form-group col-sm-12 col-md-12 col-lg-12" id="Companyfilter">
+            <label class="control-label col-md-3 col-sm-3">Client ID / Name</label>
+            <div class="col-md-3 col-sm-3 col-lg-3 controls" onkeypress="return runScript(event);">
+                @Html.TextBox("ClientSearch", null, new { @class = "form-control", @placeholder = "Enter Client ID / Name ", data_parsley_required = "true" })
+
+                <input id="btnSearch" type="button" class="btn btn-sm btn-primary m-r-5 hide" value="Search" />
+
+
+            </div>
+
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                @*<button id="btnPEW9All" class="btn btn-success"><i class="fa fa-download"></i> W-9(All Client)</button>*@
+                @*<input id="btnPEW9All" type="button" class="btn btn-success" value=" W-9(All Client)" />
+                    <input id="btnPETricareAll" type="button" class="btn btn-success" value=" Tricare(All Client)" />
+                    <input id="btnPEMMPIAll" type="button" class="btn btn-success" value=" MMPI(All Client)" />
+                    <input id="btnPEMedcoAll" type="button" class="btn btn-success" value=" Medco(All Client)" />*@
+                <select id="ddlDownloadType" class="form-control" onchange="EnableDocumentDDL()">
+                    <option value="">Select Download Type</option>
+                    <option value="All Client">All Client</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlDocumentType" class="form-control" style="display:none;" onchange="EnablePEDocDownload()">
+                    <option value="">Select Document Type</option>
+                    <option value="W-9">W-9</option>
+                    <option value="W-9(1099)">W-9(1099)</option>
+                    @if (isAdmin != "SU")
+                    {
+                        <option value="Tricare">Tricare</option>
+                        <option value="Medical Mutual">Medical Mutual</option>
+                        <option value="Medco">Medco</option>
+                        <option value="Medical Mutual with W-9">Medical Mutual with W-9</option>
+                        <option value="Medco with W-9">Medco with W-9</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-1 col-sm-1 col-lg-1 controls">
+                <input id="btnPEDocDownload" type="button" class="btn btn-success" value="Download" style="display:none;" />
+            </div>
+            <div class="col-md-1 col-sm-1 col-lg-1 controls">
+                @if (isAdmin != "SU")
+                {
+                    <a id="btnPEExport" href="javascript:;" style="float:right !important;" title="Download"><i class="fa fa-lg fa-file-excel-o text-success"></i> </a>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+

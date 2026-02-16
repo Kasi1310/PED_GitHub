@@ -1,0 +1,50 @@
+﻿@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+<div class="modal fade" id="PESearchForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <button class="btn btn-xs btn-icon btn-circle btn-default" id="btnPESearchclose"><i class="fa fa-close"></i></button>
+                    </div>
+                    <h4 class="panel-title" id="changeteam">Search</h4>
+                </div>
+
+                <form id="contractdetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+                    <div class="panel-body panel-form p-t-15 m-t-10">
+                        <div class="col-lg-12">
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AggrementType">Search options</label>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.CompanyId, new { @class = "form-control", @placeholder = "Search by code", data_parsley_required = "true", })
+                            </div>
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                                <input type="button" id="btnPESearch" class="btn btn-sm btn-primary m-r-5" value="Search" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:center !important;" for="AggrementType">OR</label>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.CompanyId, new { @class = "form-control", @placeholder = "Search by text", data_parsley_required = "true", })
+                            </div>
+                            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

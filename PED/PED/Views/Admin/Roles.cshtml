@@ -1,0 +1,263 @@
+﻿@model  List<WiseX.ViewModels.Admin.Roles>
+@{
+    ViewData["Title"] = "Roles";
+
+}
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+
+}
+<input type="hidden" id="hrfRleList" value='@Url.Content("~/Admin/Roles/")' />
+
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li class="active">Roles</li>
+    </ol>
+    <h1 class="page-header">Roles<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong> Details saved.
+    </div>
+    <div id="alertinfo" class="alert alert-info fade in m-b-15">
+        <strong>Sorry!</strong>User or Menu are mapped....
+        <span class="close" data-dismiss="alert">&times;</span>
+    </div>
+    <div id="divAddRoles">
+        @{ Html.RenderPartial("_RoleForm"); }
+    </div>
+
+    <div id="divRoleList">
+        @{ Html.RenderPartial("_RoleList", Model); }
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            createRoles();
+            InitEvents();
+            $('#alertsuccess').hide();
+            $('#alertinfo').hide();
+            //App.init();
+            LoadRoleList();
+            Cancelrole();
+            $("input:checkbox").on('click', function () {
+                var $box = $(this);
+                if ($box.is(":checked")) {
+                    var group = "input:checkbox[name='" + $box.attr("name") + "']";
+                    $(group).prop("checked", false);
+                    $box.prop("checked", true);
+                } else {
+                    $box.prop("checked", false);
+                }
+            });
+        });
+         //To Check if the Role already exist or Not.
+        $('#txtroleName').on('blur', function () {
+            var Value = $(this).val();
+            if (Value != 0) {
+                $("#spanRoleName").hide();
+                $.ajax({
+                    url: "@Url.Action("IsRoleNameExsit", "Admin")",
+                    type: "POST",
+                    data: { RoleName: Value },
+                    success: function (data) {
+                        SetSessionExpireTimer();
+                        if (data.message == "Failed") {
+                            $("#spanRoleName").show();
+                            $('#txtroleName').focus();
+                        }
+                        else {
+                            $("#spanRoleName").hide();
+                        }
+                    },
+                    error: function (result) {
+                        console.log("Filed Ajax");
+                    }
+                });
+
+            }
+            else
+            {
+                $("#spanProjName").show();
+                $('#txtroleName').focus();
+            }
+
+        });
+        function createRoles()
+        {
+            $('#addRoles').click(function (e) {
+
+                var validationresult = $('#userForm').parsley().validate();
+                if (validationresult) {
+                    var value = $('#Id').val();
+                    var GetId = value == '' ? 0 : value;
+                    var GetRole = $('#txtroleName').val();
+                    var GetActive = $('[name = optionRadios]:checked').val();
+                    var GetPermission = $('[name = Permissions]:checked').val();
+                    var Roles = JSON.stringify({
+                        Id: GetId,
+                        Name: GetRole,
+                        Permissions:GetPermission,
+                        Status : GetActive
+                    });
+                    var url = "@Url.Action("CreateRoles", "Admin")";
+                    var jsonData = Roles;
+                    AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                        if (resp.message == "Failed") {
+                            $('#alertinfo').show();
+                            return false;
+                        }
+                        else
+                        {
+                            $('#divRoleList').html(resp);
+                            $('#divRoleForm').css("display", "none");
+                            $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+                            $('#divAddRoles').find('input:text').val('');
+                            $('[name = optionRadios]:checked').prop('checked', false);
+                            $('[name = Permissions]:checked').prop('checked', false);
+                            $('#alertsuccess').show();
+                            $('#addRoles').val('Add Roles');
+                            setTimeout(function () {
+                                $('#alertsuccess').hide();
+                                $('#alertsuccess').removeClass('show');
+                            }, 2000);
+                            $('#alertinfo').hide();
+                            $('#txtroleName').removeAttr('disabled', 'disabled');
+                            LoadRoleList();
+                            $('#userForm').parsley().destroy();
+                            $('#Id').val('');
+                        }
+                         $("#changeroles").html("Add Roles");
+
+                    });
+
+                }
+            });
+
+
+        };
+        function ConfirmDelete(Id) {
+            $('#alertinfo').hide();
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var url = "@Url.Action("DeleteRoles", "Admin")";
+                        var RoleID = Id;
+                        var jsonData = { RoleId : RoleID};
+                        AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                            if (resp.message == "Exist") {
+                                $('#alertinfo').show();
+                                return false;                                
+                            }
+                            $('#divRoleList').html(resp);
+                            $('#divAddRoles').find('input:text').val('');
+                            $("textarea").val("");
+                           $('#divAddRoles').find('select').val(0);
+                           LoadRoleList();
+
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                });
+        };
+        function LoadRoleList() {
+            $('#rolesTable').DataTable({
+                searching: true,
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': [-1]
+                }]
+            });
+        }
+
+        function Cancelrole() {
+            $('#btnCancel').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Data in the page will be lost!",
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonClass: 'btn-primary',
+                    confirmButtonText: 'Confirm'
+
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            location.href = $('#hrfRleList').val();
+                        }
+                        else {
+
+                        }
+                    });
+            });
+        }
+        function EditRole(RID)
+        {
+
+            $('#alertsuccess').hide();
+            $('#alertinfo').hide();
+            $('#addRoles').val('Update');
+            var url = "@Url.Action("EditRole", "Admin")";
+            var RoleId = RID;
+            var jsonData = { RoleId : RoleId };
+            AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                $('#userForm').parsley().destroy();
+                $("#spanRoleName").hide();
+                if (resp.name != null)
+                { 
+                    $('#txtroleName').parsley.validationresult = true;
+                }
+                $('#Id').val(resp.id);
+                $('#txtroleName').val(resp.name);
+                $('#txtroleName').attr('disabled', 'disabled');
+                if (resp.active == 1) {
+                    $('#editRole').find(':radio[name=optionRadios][value="1"]').prop('checked', true);
+                }
+                else {
+                    $('#editRole').find(':radio[name=optionRadios][value="2"]').prop('checked', true);
+                }
+
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="1"]').prop('checked', false);
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="2"]').prop('checked', false);
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="3"]').prop('checked', false);
+                if (resp.permissions == 1) {
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="1"]').prop('checked', true);
+                }
+                else if (resp.permissions == 2) {
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="2"]').prop('checked', true);
+                }
+                else
+                {
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="3"]').prop('checked', true);
+                }
+                $('#divRoleForm').css("display", "block");
+                $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
+                $("#changeroles").html("Edit Roles");
+                ScrollToTop();
+            });
+        }
+
+
+    </script>
+}

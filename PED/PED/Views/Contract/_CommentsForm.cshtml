@@ -1,0 +1,31 @@
+﻿@using PED.ViewModels.Contract;
+@model Contracts
+<div class="modal fade" id="CNotesForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <button class="btn btn-xs btn-icon btn-circle btn-default" id="commentsclose"><i class="fa fa-close"></i></button>
+                    </div>
+                    <h4 class="panel-title" id="changeNotesteam">Add Comments</h4>
+                </div>
+
+                <form id="notesdetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+                    <div class="panel-body panel-form p-t-15 m-t-10">
+                        <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">Comments<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 controls" data-parsley-validate="true">
+                                @Html.TextAreaFor(m => m.ClientContractDetails.Comments, new { @class = "form-control", @placeholder = "Comments" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 text-center">
+                            <input type="button" id="btnNotesSubmit" class="btn btn-sm btn-primary m-r-5" value="Submit" />
+                            <input type="button" id="btnNotesCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

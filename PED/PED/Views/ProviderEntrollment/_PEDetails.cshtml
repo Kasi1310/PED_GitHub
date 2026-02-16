@@ -1,0 +1,752 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var IsDeleted = HttpContextAccessor.HttpContext.Session.Get<string>("SessionPEDetailsDeleted");
+    
+    string IsSuperAdmin = "fasle";
+    if (RoleId == "2c0cdf89-9984-4f82-bcf3-f3382e5a843c")
+    {
+        IsSuperAdmin = "true";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<input type="hidden" id="hfStateId" value="@Model.PEDetails.StateId" />
+<input type="hidden" id="hfCityId" value="@Model.PEDetails.CityId" />
+<input type="hidden" id="hfId" value="@Model.PEDetails.ID" />
+<input type="hidden" id="hfIsNonTransports" value="@Model.PEDetails.IsNonTransports" />
+<input type="hidden" id="hfIsNonEmergencies" value="@Model.PEDetails.IsNonEmergencies" />
+<input type="hidden" id="hfIsCheckList" value="@Model.PEDetails.IsCheckList" />
+
+<input type="hidden" id="hdnAccountExecutiveMailID" value="@Model.PEDetails.AccountExecutiveMailID" />
+<input type="hidden" id="hdnSupervisorMailID" value="@Model.PEDetails.SupervisorMailID" />
+<input type="hidden" id="hdnWaystarAdminMailID" value="@Model.PEDetails.WaystarAdminMailID" />
+<input type="hidden" id="hdnClientMailID" value="@Model.PEDetails.ClientMailID" />
+
+<form id="PEDetailsfrm" method="post" class="form-horizontal">
+    <div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="changeteam">General Information</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                @if (IsDeleted == "true")
+                {
+                    <div class="col-lg-12">
+                        <label class="text-danger">This client status is in-active</label>
+                    </div>
+                }
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ClientID">Client ID<span style="color:red">*</span></label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Legal Name<span style="color:red">*</span></label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ResidencyIndicator">Residency Indicator</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.HiddenFor(m => m.PEDetails.ID)
+                                @Html.HiddenFor(m => m.PEDetails.ClientDetailsID)
+                                @Html.TextBoxFor(m => m.PEDetails.CompanyId, new { @class = "form-control", @placeholder = "Enter Client ID", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.ClientName, new { @class = "form-control", @placeholder = "Enter Legal Name", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.StatusID, new SelectList(Model.PEStatusList, "Id", "Value"), "Select Status", new { @class = "form-control AccountRepresentativeList", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.ResidencyIndicatorID, new SelectList(Model.ResidencyCodeList, "Id", "Value"), "Select Residency Indicator", new { @class = "form-control ResidencyCodeList", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="PaymentIndicator">Payment Indicator</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="DoingBusinessAs">Doing Business As</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="OtherName">Other Name</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="DisplayOtherName">Hours of Operation</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.PaymentIndicatorID, new SelectList(Model.PEPaymentIndicatorList, "Id", "Value"), "Select Payment Indicator", new { @class = "form-control AccountRepresentativeList", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.DoingBusinessAs, new { @class = "form-control", @placeholder = "Enter Doing Business As", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.OtherName, new { @class = "form-control", @placeholder = "Enter Other Name", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.HoursofOperationID, new SelectList(Model.PEHoursofOperationList, "Id", "Value"), "Select Hours of Operation", new { @class = "form-control AccountRepresentativeList", })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AccountRepresentative">Account Representative</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="EPCR">EPCR</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="EnrollmentRepresentative ">Enrollment Representative </label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.AccountRepresentativeID, new SelectList(Model.AccountExecutiveList, "Id", "Value"), "Select Account Representative", new { @class = "form-control AccountRepresentativeList", })
+                            </div>
+                        </div>
+                         <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.EPCRStatus, new SelectList(Model.PEEPCRList, "Id", "Value"), "Select EPCR Status", new { @class = "form-control", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.EnrollmentRepresentativeStatus, new SelectList(Model.PEEnrollmentRepresentativeStatusList, "Id", "Value"), "Select Enrollment Representative", new { @class = "form-control", })
+                            </div>
+                        </div> 
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="changeteam">Practice Location</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="PracticeLocation">Practice Location</label>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="SiteType">Address Line 2</label>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">County</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.PracticeLocation, new { @class = "form-control", @placeholder = "Enter Practice Location", })
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.AddressLine2, new { @class = "form-control", @placeholder = "Enter Address Line 2", })
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.County, new { @class = "form-control", @placeholder = "Enter County", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="State">State</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="City">City</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Zip">Zip</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.StateId, new SelectList(Model.StatesList, "Id", "Value"), "Select State", new { @class = "form-control StatesList", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.CityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select City", new { @class = "form-control CitiesList", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Zip, new { @class = "form-control", @placeholder = "Enter Zip", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HandicapAccess">Phone 1</label>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HidefromHub">Ext 1</label>
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HandicapAccess">Phone 2</label>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HidefromHub">Ext 2</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HandicapAccess">Fax</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HidefromHub">Email</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Phone1, new { @class = "form-control", @placeholder = "Enter Phone 1", })
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Ext1, new { @class = "form-control", @placeholder = "Enter Ext 1", })
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Phone2, new { @class = "form-control", @placeholder = "Enter Phone 2", })
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Ext2, new { @class = "form-control", @placeholder = "Enter Ext 2", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Fax, new { @class = "form-control", @placeholder = "Enter Fax", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.Email, new { @class = "form-control", @placeholder = "Enter Email", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="col-lg-12">
+                        <div class="form-group" style="margin-bottom: 5px !important;">
+                            <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                                <input type="button" id="btnMapIt" class="btn btn-sm btn-default m-r-5" value="Map It" />
+                            </div>
+                            <div class="col-sm-11 col-md-11 col-lg-11 p-0">
+                            </div>
+                        </div>
+                    </div>*@
+
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="HandicapAccess">URL</label>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.URL, new { @class = "form-control", @placeholder = "Enter URL", })
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="changeteam">Identification Numbers</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="TaxID">Tax ID</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="TaxIDIssued">Tax ID Issued</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="TaxIDClassification">Tax ID Classification</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Taxonomy">Taxonomy</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.TaxID, new { @class = "form-control", @placeholder = "Enter Tax ID", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                @Html.TextBoxFor(m => m.PEDetails.TaxIDIssued, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Tax ID Issued", data_parsley_required = "false" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.TaxIDClassificationID, new SelectList(Model.PETaxClassificationList, "Id", "Value"), "Select Tax ID Classification", new { @class = "form-control", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.DropDownListFor(m => m.PEDetails.TaxonomyID, new SelectList(Model.PETaxonomyList, "Id", "Value"), "Select Taxonomy", new { @class = "form-control", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Group NPI</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Group NPI Issued</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Medicaid Number</label>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            @*<label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="SiteType">Medicaid Number Issued</label>*@
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicare Number</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.GroupNPI, new { @class = "form-control", @placeholder = "Enter Group NPI", })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                @Html.TextBoxFor(m => m.PEDetails.GroupNPIIssued, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Group NPI Issued", data_parsley_required = "false" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.MedicaidNumber, new { @class = "form-control", @placeholder = "Enter Medicaid Number", })
+                            </div>
+                        </div>
+                        @*<div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                    @Html.TextBoxFor(m => m.PEDetails.MedicareNumberIssued, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Medicaid Number Issued", data_parsley_required = "false" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+
+
+                                    </div>*@
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.MedicareNumber, new { @class = "form-control", @placeholder = "Enter Madicare Number", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="col-lg-12">
+                        <div class="form-group" style="margin-bottom: 5px !important;">
+
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicare Number</label>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Medicare Number Issued</label>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Group PTAN</label>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="SiteType">Group PTAN Issued</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group" style="margin-bottom: 5px !important;">
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                    @Html.TextBoxFor(m => m.PEDetails.MedicareNumber, new { @class = "form-control", @placeholder = "Enter Madicare Number", })
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                    @Html.TextBoxFor(m => m.PEDetails.MedicareNumberIssued, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Madicare Number Issued", data_parsley_required = "false" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                    @Html.TextBoxFor(m => m.PEDetails.GroupPTAN, new { @class = "form-control", @placeholder = "Enter Group PTAN", })
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                    @Html.TextBoxFor(m => m.PEDetails.GroupPTANIssued, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Group PTAN Issued", data_parsley_required = "false" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+
+
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">WC Policy Number</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.WPPolicyNumber, new { @class = "form-control", @placeholder = "Enter WC Policy Number", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    @*<div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+            <div class="panel-heading">
+                <h6 class="panel-title" id="changeteam">Notes</h6>
+            </div>
+            <div class="panel-body panel-form p-t-15 m-t-10">
+                <div class="row col-12 p-10" id="CompanyDetails">
+                    <div class="col-lg-12">
+                        <div class="form-group" style="margin-bottom: 5px !important;">
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">Notes</label>
+                            </div>
+                            <div class="col-sm-9 col-md-9 col-lg-9 p-0"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group" style="margin-bottom: 5px !important;">
+                            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                    //@Html.TextBoxFor(m => m.PEDetails.ClientName, new { @class = "form-control", @placeholder = "Enter Notes",  })
+                                    <input type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-9 col-md-9 col-lg-9 p-0">
+                                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                    <input type="button" id="btnAdd" class="btn btn-sm btn-success m-r-5" value="Add" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+
+    <div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="changeteam">
+                Billing Information
+            </h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">Initial Billing Setup</label>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">Previous Biller</label>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">Previous Biller Contact</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-group">
+                                @*@Html.TextBoxFor(m => m.PEDetails.InitialBillingSetup, new { @class = "form-control", @placeholder = "Enter Initial Billing Setup", })*@
+                                <select id="ddlBilling" class="form-control clsBilling" onchange="BillingDLLOnChange()">
+                                    <option value="" selected="selected">Select Billing</option>
+                                    <option value="New to Billing">New to Billing</option>
+                                    <option value="Existing Biller">Existing Biller</option>
+                                </select>
+
+                                @Html.HiddenFor(m => m.PEDetails.InitialBillingSetup)
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.PreviousBiller, new { @class = "form-control", @placeholder = "Enter Previous Biller", })
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                @Html.TextBoxFor(m => m.PEDetails.PreviousBillerContact, new { @class = "form-control", @placeholder = "Enter Previous Biller Contact", @style = "resize:none;", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">
+                                First Run Date
+                            </label>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0" style="width:150px !important;">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">
+                                Non-Emergencies
+                            </label>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">
+                                CheckList
+                            </label>
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Notes">
+                                CheckList For
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+
+                        <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                                @Html.TextBoxFor(m => m.PEDetails.FirstRunDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter First Run Date ", data_parsley_required = "false" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0" style="width:150px !important;">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                <input id="chkNonEmergencies" type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="default">
+                                @Html.HiddenFor(m => m.PEDetails.IsNonEmergencies)
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                                <input id="chkIsCheckList" type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No"
+                                       data-onstyle="success" data-offstyle="default" onchange="BillingDLLOnChange()">
+                                @Html.HiddenFor(m => m.PEDetails.IsCheckList)
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                            <div class="col-md-11 col-sm-11 col-lg-11 controls input-group">
+                                <select id="ddlCheckListFor" class="form-control clsCheckListFor" onchange="CheckListForDLLOnChange()">
+                                    <option value="" selected="selected">Select CheckList</option>
+                                    <option value="Payment Category Change"> Payment Category Change</option>
+                                    <option value="Single Payer Update">Single Payer Update</option>
+                                    <option value="Practice Location Change">Practice Location Change</option>
+                                    <option value="Closed Client">Closed Client</option>
+                                    <option value="Client Bank Change">Client Bank Change</option>
+                                   @*  <option value="Commerical EFTs">Commerical EFTs</option> *@
+                                    <option value="Medicare Change of Info">Medicare Change of Info</option>
+                                    <option value="Out of State MCD">Out of State MCD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divPECheckListHeading" class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="chkHeading">CheckList</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10">
+                <div id="divPENewBillingCheckList">
+                    @{ Html.RenderPartial("_PENewCheckList", Model); }
+                </div>
+                <div id="divPEExistingBillingCheckList">
+                    @{ Html.RenderPartial("_PEExistingCheckList", Model); }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divPEOtherCheckListHeading" class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="chkOtherHeading">CheckList</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10">
+                <div id="divPEPaymentCategoryChangeCheckList">
+                    @{ Html.RenderPartial("_PEPaymentCategoryChangeCheckList", Model); }
+                </div>
+                <div id="divPESinglePayerUpdateCheckList">
+                    @{ Html.RenderPartial("_PESinglePayerUpdateCheckList", Model); }
+                </div>
+                <div id="divPEPracticeLocationChangeCheckList">
+                    @{ Html.RenderPartial("_PEPracticeLocationChangeCheckList", Model); }
+                </div>
+                <div id="divPEClosedClientCheckList">
+                    @{ Html.RenderPartial("_PEClosedClientCheckList", Model); }
+                </div>
+                <div id="divPEClientBankChangeCheckList">
+                    @{ Html.RenderPartial("_PEClientBankChangeCheckList", Model); }
+                </div>
+                <div id="divPECommericalEFTsCheckList">
+                    @{ Html.RenderPartial("_PECommericalEFTsCheckList", Model); }
+                </div>
+                <div id="divPEMedicareChangeOfInfoCheckList">
+                    @{ Html.RenderPartial("_PEMedicareChangeOfInfoCheckList", Model); }
+                </div>
+                <div id="divPEOutOfStateMCDCheckList">
+                    @{ Html.RenderPartial("_PEOutOfStateMCDCheckList", Model); }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (RolePermission == "F")
+    {
+        <div class="form-group col-sm-12">
+            <div class="col-sm-7">
+                @if (IsSuperAdmin == "true")
+                {
+                    <button id="btnPEDelete" class="btn btn-danger" style="float:left"><i class="fa fa-close"></i> Delete</button>
+                }
+            </div>
+            @*<div class="col-sm-1">
+                    <button id="btnPEW9" class="btn btn-success" style="float:right"><i class="fa fa-download"></i> W-9</button>
+                </div>
+                <div class="col-sm-1">
+                    <button id="btnPETricare" class="btn btn-success" style="float:right"><i class="fa fa-download"></i> Tricare</button>
+                </div>
+                <div class="col-sm-1">
+                    <button id="btnPEMMPI" class="btn btn-success" style="float:right"><i class="fa fa-download"></i> MMPI</button>
+                </div>
+                <div class="col-sm-1">
+                    <button id="btnPEMedco" class="btn btn-success" style="float:right"><i class="fa fa-download"></i> Medco</button>
+                </div>*@
+            <div class="col-sm-5">
+                <button id="btnPESave" class="btn btn-success" style="float:right"><i class="fa fa-save"></i> Save</button>
+            </div>
+            @*<input type="button" id="btnBillingProviderSubmit" class="btn btn-sm btn-success m-r-5 @isAdmin" value="Save" style="float:right" />
+                <input type="button" id="btnCancel" class="btn btn-sm btn-danger m-r-5" value="Delete" style="float:left;" />*@
+        </div>
+    }
+
+</form>

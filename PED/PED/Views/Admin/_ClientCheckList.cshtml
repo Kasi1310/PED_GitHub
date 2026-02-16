@@ -1,0 +1,252 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<form id="PECheckList" class="form-horizontal">
+
+    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0" id="divExistingBilling" style="margin-bottom:0px !important;">
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="col-md-3 col-sm-3" for="Task">Task</label>
+            <label class="col-md-2 col-sm-2" for="Status">Status</label>
+            @*<label class="col-md-3 col-sm-3" for="Automation">Automation</label>
+                <label class="col-md-2 col-sm-2" for="ActionFormat">Action Format</label>
+                <label class="col-md-2 col-sm-2" for="DocumentName">Document Name</label>*@
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Client added to ESO Company
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlClientAddedToESOCompanyStatus" class="form-control clsClientAddedToESOCompanyStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.ClientAddedToESOCompanyStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Medicare - submit application thru Pecos
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlMedicareSubmitApplicationThruPecosStatus" class="form-control clsMedicareSubmitApplicationThruPecosStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Request From Client">Request From Client</option>
+                    <option value="Waiting on Client">Waiting on Client</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.MedicareSubmitApplicationThruPecosStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Waystar - submit ticket to create child account
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlWaystarSubmitTicketToCreateChildAccountStatus" class="form-control clsWaystarSubmitTicketToCreateChildAccountStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.WaystarSubmitTicketToCreateChildAccountStatus)
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0" id="divNewBilling">
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Waystar Provider Set up
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlWaystarProviderSetupStatus" class="form-control clsWaystarProviderSetupStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.WaystarProviderSetupStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Waystar Enrollments
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlWaystarEnrollmentsStatus" class="form-control clsWaystarEnrollmentsStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Generated">Generated</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.WaystarEnrollmentsStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Medicare EDI - Submit Application
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlMedicareEDISubmitApplicationStatus" class="form-control clsMedicareEDISubmitApplicationStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Approved</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.MedicareEDISubmitApplicationStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                BCBS - Request to join network
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlBCBSRequestToJoinNetworkStatus" class="form-control clsBCBSRequestToJoinNetworkStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.BCBSRequestToJoinNetworkStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                MMO - Request to join network
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlMMORequestToJoinNetworkStatus" class="form-control clsMMORequestToJoinNetworkStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.MMORequestToJoinNetworkStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Aetna - NPI Submission
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlAetnaNPISubmissionStatus" class="form-control clsAetnaNPISubmissionStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.AetnaNPISubmissionStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Medicaid - submit application
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlMedicaidSubmitApplicationStatus" class="form-control clsMedicaidSubmitApplicationStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitApplicationStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Medicaid - submit ERA and/or EDI
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlMedicaidSubmitERAAndOrEDIStatus" class="form-control clsMedicaidSubmitERAAndOrEDIStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.MedicaidSubmitERAAndOrEDIStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Tricare East -submit application
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlTricareEastSubmitEFTApplicationStatus" class="form-control clsTricareEastSubmitEFTApplicationStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.TricareEastSubmitApplicationStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Railroad Medicare - apply for PTAN
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlRailroadMedicareApplyForPTANStatus" class="form-control clsRailroadMedicareApplyForPTANStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.RailroadMedicareApplyForPTANStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                Railroad Medicare - submit ERA and/or EDI
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlRailroadMedicareSubmitERAAndOrEDIStatus" class="form-control clsRailroadMedicareSubmitERAAndOrEDIStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.RailroadMedicareSubmitERAAndOrEDIStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                OH BWC - submit Medco 13 application
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlOHBWCSubmitMedco13ApplicationStatus" class="form-control clsOHBWCSubmitMedco13ApplicationStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.OHBWCSubmitMedco13ApplicationStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                VA Vendor Form
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlVAVendorFormSubmitFormW9AndAuthLetterStatus" class="form-control clsVAVendorFormSubmitFormW9AndAuthLetterStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.VAVendorFormStatus)
+            </div>
+        </div>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+            <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                NPPES
+            </div>
+            <div class="col-md-2 col-sm-2 col-lg-2 controls">
+                <select id="ddlNPPESStatus" class="form-control clsNPPESStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Completed</option>                    
+                    <option value="Not Required">Not Required</option> 
+                </select>
+                @Html.HiddenFor(m => m.PECheckList.NPPESStatus)
+            </div>
+        </div>
+    </div>
+</form>

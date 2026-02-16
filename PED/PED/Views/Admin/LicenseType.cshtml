@@ -1,0 +1,233 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin
+@model LicenseType;
+
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+}
+<input type="hidden" id="hrfLicenseType" value='@Url.Content("~/Admin/LicenseType/")' />
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li class="active">License Type</li>
+    </ol>
+    <h1 class="page-header">License Type<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong> Details saved.
+    </div>
+    <div id="alertinfo" class="alert alert-info alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Sorry!</strong> License Type Exists.
+    </div>
+    <div id="divLicenseTypeform">
+        @{ Html.RenderPartial("_LicenseTypeForm", Model); }
+    </div>
+    <div id="divLicenseTypeList">
+        @{ Html.RenderPartial("_LicenseTypeList", Model); }
+
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/ApplicationError.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        LoadLicenseTypeList();
+        $('#alertsuccess').hide();
+        $('#alertinfo').hide();
+        InitEvents();
+        CancelTeam();
+    });
+    function createLicenseType()
+    {
+        var validationresult = $('#LicenseTypeform').parsley().validate();
+        if (validationresult) {
+            var Getname = $('#@Html.IdFor(m => m.LicenseTypeDet.Name)').val();
+            var GetActiveStatus = ($('.ActiveStatus:checked').val());
+            var activ;
+            if (GetActiveStatus == 1)
+                activ = 1;
+            else
+                activ = 0;
+            var GetId = $('#@Html.IdFor(m => m.LicenseTypeDet.Id)').val();
+            GetId = (GetId == "" ? 0 : GetId);
+            var LicenseTypeDetails = JSON.stringify({
+                Id: GetId,
+                Name: Getname,
+                Active: activ
+                 //Status: GetActiveStatus
+            });
+           // console.log(LicenseTypeDetails);
+            var url = "@Url.Action("InsertLicenseType", "Admin")";
+            var jsonData = LicenseTypeDetails;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divLicenseTypeList').html(resp);
+                $('.collapse').hide();
+                $('#btnSubmit').val('Submit');
+                $('#alertsuccess').show();
+                $('#@Html.IdFor(m => m.LicenseTypeDet.Id)').val('');
+                setTimeout(function () {
+                    $('#alertsuccess').hide();
+                    $('#alertsuccess').removeClass('show');
+                }, 2000);
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+                $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+                $('#LicenseTypeform').parsley().destroy();
+                ClearForm();
+                LoadLicenseTypeList();
+            });
+        }
+    }
+
+    function ClearForm()
+    {
+        $('#LicenseTypeform').find('input:text').val('');
+        $("textarea").val("");
+        $('#LicenseTypeform').find('input:radio').removeAttr('checked');
+        $('#LicenseTypeform').find('select').val(0);
+       // $('#EmployeePositionDetails_Id').val('');
+    }
+
+    function EditLicenseType(ID)
+    {
+        var url = "@Url.Action("EditLicenseType", "Admin")";
+        var jsonData = ID;
+        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+            $('#divLicenseTypeform').html(resp);
+            var hfdisable = $('#hfactiveDisable').val();
+            if (hfdisable == 'disabled') {
+                $('#Active').attr('disabled','disabled');
+                $('#InActive').attr('disabled', 'disabled');
+                $('#divActiveStatus').attr('title','Sorry Cannot be Edited');
+            }
+            else
+            {
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+            }
+            CancelTeam();
+            $('#btnSubmit').val('Update');
+            $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
+            $('.collapse').collapse();
+            $("#changeteam").html("Edit License Type");
+            ScrollToTop();
+        });
+    }
+
+    $('#btnSubmit').live('click', function () {
+        createLicenseType();
+        $("#changeteam").html("Add License Type");
+    });
+
+    $('#@Html.IdFor(m => m.LicenseTypeDet.Name)').on('blur', function () {
+        var Value = $(this).val();
+        if (Value != "") {
+            $("#spanLicenseTypest").hide();
+            $.ajax({
+                url: "@Url.Action("IsLicenseTypeExist", "Admin")",
+                type: "POST",
+                data: { Name: Value },
+                success: function (data) {
+                SetSessionExpireTimer();
+                if (data.message == "Failed") {
+                    $("#spanLicenseTypest").show();
+                    $('#@Html.IdFor(m => m.LicenseTypeDet.Name)').focus();
+                }
+                else {
+                    $("#spanLicenseTypest").hide();
+                }
+            },
+            error: function (result) {
+                console.log("Filed Ajax");
+            }
+        });
+    }
+});
+
+
+        function LoadLicenseTypeList() {
+            $('#tblLicenseTypeList').DataTable({
+            searching: true,
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': [-1]
+            }]
+        });
+    }
+    function CancelTeam(){
+        $('#btnCancel').click(function (e) {
+        swal({
+            title: "Are you sure?",
+            text: "Data in the page will be lost!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-primary',
+            confirmButtonText: 'Confirm'
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                location.href = $('#hrfLicenseType').val();
+            }
+        });
+    });
+    }
+    function ConfirmDelete(RID) {
+        $("#alertsuccess").hide();
+        $('#alertinfo').hide();
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this detail!",
+            type: "error",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-danger',
+            confirmButtonText: 'Yes, delete it!'
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+                var url = "@Url.Action("DeleteLicenseType", "Admin")";
+            var jsonData = { ID: RID };
+                AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                    if (resp.message == "Failed") {
+                        $('#alertinfo').show();
+                        setTimeout(function () {
+                            $('#alertinfo').hide();
+                            $('#alertinfo').removeClass('show');
+                        }, 2000);
+                        LoadLicenseTypeList();
+                    }
+                    else
+                    {
+                        $('#alertinfo').hide();
+                        $('#divLicenseTypeList').html(resp);
+                        ClearForm();
+                        LoadLicenseTypeList();
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+    });
+};
+    </script>
+}
+
+

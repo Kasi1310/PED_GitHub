@@ -1,0 +1,38 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var IsDeleted = HttpContextAccessor.HttpContext.Session.Get<string>("SessionPEDetailsDeleted");
+
+    if (RolePermission == "R" || IsDeleted == "true")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<form id="PEOtherAddressfrm" method="post" class="form-horizontal">
+    <div class="panel panel-inverse col-lg-12" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h6 class="panel-title" id="changeteam">Add Address</h6>
+        </div>
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                <div class="col-lg-12 @isAdmin">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                            <input type="button" id="btnOtherAddressesAdd" class="btn btn-sm btn-default m-r-5" value="Add Other Address" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 hide" id="divOtherAddressesForm">
+                    @{ Html.RenderPartial("_PEOtherAddressesForm", Model); }
+                </div>
+                <div class="col-lg-12" id="divOtherAddressesList">
+                    @{ Html.RenderPartial("_PEOtherAddressesList", Model); }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

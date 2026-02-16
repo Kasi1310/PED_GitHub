@@ -1,0 +1,243 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment
+@model ProviderEntrollment;
+
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    string isFullAccess = "true";
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isFullAccess = "false";
+    }
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @section Styles {
+        <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    }
+    <style>
+        .dropZone {
+            width: 300px;
+            height: 100px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            padding: 40px;
+            font-family: Arial;
+            cursor: pointer;
+        }
+    </style>
+    }
+</head>
+<body>
+    <input type="hidden" id="hrfAddressType" value='@Url.Content("~/Admin/AddressType/")' />
+    <div id="content" class="content">
+
+        <h1 class="page-header">Instructions Document<small></small></h1>
+        <div id="alertsuccess" class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            <strong>Success!</strong> Details saved.
+        </div>
+        <div id="alertinfo" class="alert alert-info alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            <strong>Sorry!</strong> Instructions Document Exists.
+        </div>
+        <div id="divInstructionsDocumentform">
+            @{ Html.RenderPartial("_InstructionsDocumentForm", Model); }
+        </div>
+        <div id="divInstructionsDocumentList">
+            @{ Html.RenderPartial("_InstructionsDocumentList", Model); }
+
+        </div>
+    </div>
+</body>
+</html>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/ApplicationError.js")'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            InstructionsDocumentDatatable();
+            $('#alertsuccess').hide();
+            $('#alertinfo').hide();
+        });
+
+        var selectedFile = null;
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            var file = files[0];
+
+            // Check if the dropped file is a PDF
+            if (file.type === 'application/pdf' || file.type === 'application/msword'
+                || file.type ==='application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                // Perform further processing or upload the file to the server
+                //uploadFile(file);
+                var dropZone = document.getElementById('dropZone');
+                dropZone.innerHTML = '<p>' + file.name + '</p>';
+
+                selectedFile = file;
+
+                //uploadFile(file);
+            } else {
+                document.getElementById("spanInstructionsDocumentfileErrorMessage").innerHTML = "Drop a PDF/Word file.";
+            }
+        }
+
+        $('#btnInstructionsDocumentAdd').live('click', function () {
+            var validationresult = $('#InstructionsDocumentfrm').parsley().validate();
+            if (selectedFile == null) {
+                document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "Select File";
+                validationresult = false;
+            }
+
+            if (validationresult) {
+                var GetId = $('#@Html.IdFor(m => m.InstructionsDocument.Id)').val();
+                GetId = GetId == "" ? 0 : GetId;
+
+                var GetDocumentName = $('#@Html.IdFor(m => m.InstructionsDocument.DocumentName)').val();
+
+                ShowOverlay();
+
+                var url = "@Url.Action("InsertInstructionsDocument", "ProviderEntrollment")";
+
+                var formData = new FormData();
+                formData.append('Id', GetId);
+                formData.append('DocumentName', GetDocumentName);
+                formData.append('FileAttachment', selectedFile);
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: formData,
+                    success: function (result) {
+                        InstructionsDocumentDatatable();
+
+                        document.getElementById("spanInstructionsDocumentfileErrorMessage").innerHTML = "";
+                        selectedFile = null;
+                        ClearInstructionsDocument();
+                        HideOverlay();
+                    },
+                    error: function (req, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+
+        function InstructionsDocumentDatatable()
+        {
+            var dtTblList;
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblInstructionsDocumentList')) {
+                dtTblList = $('#tblInstructionsDocumentList').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblInstructionsDocumentList').DataTable(
+                    {
+                        ajax: {
+                            url: '@Url.Content("~/ProviderEntrollment/GetInstructionsDocumentList")',
+                            type: "POST",
+                            datatype: "json",
+                            data: function (d) {
+                                d.id = 0;
+                            },
+                            error: function (result) {
+                                //console.log(result);
+                            }
+                        },
+
+                        columns: [
+                            { data: "documentName", name: "documentName" },
+                            { data: "orgFileName", name: "orgFileName" },
+                            { data: "uploadDate", name: "uploadDate" },
+                            {
+                                targets: 3,
+                                render: function (data, type, row, meta) {
+                                    var Delete = '<a href="javascript:;" id="' + row["id"] + '" class="btnDocumentdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isAdmin" style="border:none; background-color:transparent;display: initial;"></a>';
+
+                                    var view = "";
+
+                                    if (@isFullAccess) {
+
+                                        var viewFileName = row["fileName"];
+                                        view = '@Html.ActionLink("", "ViewInstructionsDocumentFile", "ProviderEntrollment", new { fileName = "FN**" }, new { @class = "btnDocview fa fa-download text-inverse form-control1 p-l-0 p-r-0 m-5  text-decoration" })';
+                                        view = view.replace('FN**', escape(viewFileName))
+                                    }
+                                    return view + Delete;
+                                }
+                            }
+                        ],
+
+                        autoWidth: false,
+                        order: [],
+                        language: {
+                            processing: "Processing...Please Wait"
+                        }
+
+                    });
+
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblInstructionsDocumentList tbody td .btnDocumentdelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var DocumentID = $(this).attr("id");
+                    ConfirmInstructionsDocumentDelete(DocumentID);
+                });
+            }
+        }
+
+        function ConfirmInstructionsDocumentDelete(DocumentID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    var url = "@Url.Action("DeleteInstructionsDocument", "ProviderEntrollment")";
+                    var jsonData = { Id: DocumentID };
+                    AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                        InstructionsDocumentDatatable();
+                        ClearInstructionsDocument();
+                    });
+                }
+                else {
+                    return false;
+                }
+            });
+        }
+
+        function ClearInstructionsDocument() {
+            $('#@Html.IdFor(m => m.InstructionsDocument.Id)').val("0");
+            $('#@Html.IdFor(m => m.InstructionsDocument.DocumentName)').val("");
+
+            selectedFile = null;
+            document.getElementById('dropZone').innerHTML = "<p>Drag and drop a PDF,DOC OR DOCX file here</p>";
+
+           // $('#divDocumentsForm').hide();
+
+        }
+    </script>
+}
+
+

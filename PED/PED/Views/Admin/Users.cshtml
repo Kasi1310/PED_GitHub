@@ -1,0 +1,491 @@
+﻿@using WiseX.ViewModels.Admin;
+@model Users
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/switchery/switchery.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/bootstrap-multiselect.css")' rel="stylesheet" />
+   
+    <style type="text/css">
+        #stuff {
+            overflow-x: auto;
+            top: 18px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+        }
+
+        .height-100 {
+            height: 140px !important;
+        }
+        .input-group label {
+            color: #67757c !important;
+            margin-bottom: 0px;
+        }
+
+        .input-group > .btn:first-child {
+            margin-left: 0;
+            background-color: white !important;
+            border: 1px solid #ced4da !important;
+            margin-top: -11px !important;
+        }
+        .multiselect-native-select .input-group {
+            margin-top: 0px !important;
+        }
+
+        #multiselect-native-select .parsley-required {
+            margin-top: 35px;
+        }
+        .input-group-addon:first-child {
+            border-right: 0;
+            padding: 0px 0px;
+        }
+        .multiselect-search {
+            height: 30px !important;
+        }
+        .multiselect-container > li > a > label.checkbox, .multiselect-container > li > a > label.radio {
+            margin-left: 20px;
+        }
+        .multiselect-container {
+            position: absolute !important;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            top: 100% !important;
+            transform: translate3d(0px, 0px, 0px) !important;
+            height: 200px !important;
+            overflow-y: scroll;
+        }
+    </style>
+}
+
+@{
+    ViewBag.Title = "Users";
+}
+<input type="hidden" id="hrfUrlList" value='@Url.Content("~/Admin/Users/")' />
+<input type="hidden" id="hrfRolesList" value="@Model.RolesList.Count" />
+<input type="hidden" id="hrfNorms" value="1" />
+<input type="hidden" id="Isadmin" value="" />
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li class="active">Users</li>
+    </ol>
+    <h1 class="page-header">Users<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong>Details saved.
+    </div>
+    <div id="alertIsValidUser" class="alert alert-info fade in m-b-15">
+        <strong>Info! </strong>Cannot Delete User! Contracts are progressed by User !
+        <span class="close" data-dismiss="alert">&times;</span>
+    </div>
+    <div id="divUserForm">
+        @{ Html.RenderPartial("_UserForm", Model); }
+    </div>
+    <div id="divUserList">
+        @{ Html.RenderPartial("_UsersList", Model); }
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-show-password/bootstrap-show-password.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/plugins/switchery/switchery.min.js")'></script>
+    <script src='@Url.Content("~/js/bootstap-multiselect.js")'></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+           createUsers();
+           LoadUserList();
+           $('#alertsuccess').hide();
+           $('#alertIsValidUser').hide();
+           CancelUsers();
+           multiples();
+           PermissionCheck();
+           $("input:checkbox").on('click', function () {
+               var $box = $(this);
+               if ($box.is(":checked")) {
+                   var group = "input:checkbox[name='" + $box.attr("name") + "']";
+                   $(group).prop("checked", false);
+                   $box.prop("checked", true);
+               } else {
+                   $box.prop("checked", false);
+               }
+           });
+        });
+        $('#@Html.IdFor(m => m.UserDetails.FirstName)').on('change', function () {
+            UsernameLoad();
+        });
+        $('#@Html.IdFor(m => m.UserDetails.LastName)').on('change', function () {
+            UsernameLoad();
+        });
+        function UsernameLoad()
+        {
+                $('#@Html.IdFor(m => m.UserName)').val($('#@Html.IdFor(m => m.UserDetails.FirstName)').val() +  $('#@Html.IdFor(m=>m.UserDetails.LastName)').val())
+        }
+
+        function multiples()
+        {
+            $('#@Html.IdFor(m => m.UserDetails.Client)').multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+            });
+        }
+
+        function PermissionCheck()
+        {
+            $('#PermissionRead').on('click', function () {
+                var ischecked = $(this).is(':checked');
+                if (!ischecked) {
+                    $('#PermissionFullControl').attr('checked', true);
+                }
+                else {
+                    $('#PermissionFullControl').attr('checked', false);
+                    $('#PermissionRead').attr('checked', true);
+                }
+            });
+            $('#PermissionFullControl').on('click', function () {
+                var ischecked = $(this).is(':checked');
+                if (!ischecked) {
+                    $('#PermissionRead').attr('checked', true);
+                }
+                else {
+                    $('#PermissionRead').attr('checked', false);
+                    $('#PermissionFullControl').attr('checked', true);
+                }
+            });
+        }
+
+        function createUsers() {
+            $('#btnSubmit').click(function (e) {
+                //To call parsley validation
+
+                $('#@Html.IdFor(m => m.UserDetails.FirstName)').attr("data-parsley-required", true);
+                $('#@Html.IdFor(m => m.UserDetails.LastName)').attr("data-parsley-required", true);
+                @*$('#@Html.IdFor(m => m.UserName)').attr("data-parsley-required", true);*@
+                $('#@Html.IdFor(m => m.Email)').attr("data-parsley-required", true);
+                $('#@Html.IdFor(m => m.UserDetails.UserRole)').attr("data-parsley-required", true);
+                $('#@Html.IdFor(m => m.UserDetails.Gender)').attr("data-parsley-required", true);
+                $('#@Html.IdFor(m => m.UserDetails.Active)').attr("data-parsley-required", true);
+                @*$('#@Html.IdFor(m => m.UserDetails.Client)').attr("data-parsley-required", true);*@
+                $('#txtPassword').attr("data-parsley-required", true);
+                $('#txtConfirmPassword').attr("data-parsley-required", true);
+                $('.permissions').attr("data-parsley-required", true);
+                var text = $('#btnSubmit').val();
+                if (text == 'Submit')
+                {
+                    $('#txtPassword').attr("data-parsley-required", true);
+                    $('#txtConfirmPassword').attr("data-parsley-required", true);
+                }
+                else if (text == 'Update') {
+                    $('#txtPassword').attr("data-parsley-required", false);
+                    $('#txtConfirmPassword').attr("data-parsley-required", false);
+                }
+                var Pass1 = $('#txtPassword').val();
+
+                if (Pass1 != '')
+                {
+                    $('#txtConfirmPassword').attr("data-parsley-required", true);
+                }
+
+                if ($('#divClient').hasClass('show'))
+                {
+                    $('#@Html.IdFor(m => m.UserDetails.Client)').attr("data-parsley-required", true);
+                }
+                var validationresult = $('#frmUser').parsley().validate();
+
+                if (validationresult) {
+                    var GetRoleId = $('#@Html.IdFor(m=>m.UserDetails.UserRole) option:selected').val();
+                    var GetRoleName = $('#@Html.IdFor(m=>m.UserDetails.UserRole) option:selected').text();
+                    var GetNames = $('#@Html.IdFor(m => m.UserName)').val();
+                    var GetEmail = $('#@Html.IdFor(m=>m.Email)').val();
+                    var GetPassword = ($('#txtPassword').val() != '' ? $('#txtPassword').val() : $('#@Html.IdFor(m=>m.PasswordHash)').val());
+                    var GetPhone = $('#@Html.IdFor(m=>m.PhoneNumber)').val() == '' ? 0 : $('#@Html.IdFor(m=>m.PhoneNumber)').val();
+                    var GetFirstName = $('#@Html.IdFor(m=>m.UserDetails.FirstName)').val();
+                    var GetLastName = $('#@Html.IdFor(m=>m.UserDetails.LastName)').val();
+                    var GetGender = $('.Gender:checked').val();
+                    var GetActive = $('.Active:checked').val();
+                    var GetId = $('#Id').val();
+                    var GetClient = [];
+                    var GetPermission = $('[name = Permissions]:checked').val();
+                    $.each($(".AccountUsers option:selected"), function () {
+                        var ClientRoleList = {
+                            ClientId: $(this).val(),
+                            RoleId: GetRoleId,
+                            RoleName: GetRoleName
+                        }
+                        GetClient.push(ClientRoleList);
+                    });
+                    
+                    if (GetClient.length == 0)
+                    {
+                        var ClientRoleList = {
+                            ClientId: 0,
+                            RoleId: GetRoleId,
+                            RoleName: GetRoleName
+                        }
+                        GetClient.push(ClientRoleList);
+                    }
+                    var GetUserDetailsId = $('#@Html.IdFor(m=>m.UserDetails.UserDetailId)').val();
+                        var UserDetails = {
+                            Id: GetId,
+                            UserDetailId: GetUserDetailsId,
+                            ClientRoles: GetClient,
+                            RoleId: GetRoleId,
+                            FirstName: GetFirstName,
+                            LastName: GetLastName,
+                            Gender: GetGender,
+                            Permissions:GetPermission,
+                            Active: GetActive,
+                        };
+
+                    var Users = JSON.stringify({
+                        Id: GetId,
+                        UserName: GetNames,
+                        Email: GetEmail,
+                        PasswordHash: GetPassword,
+                        PhoneNumber: GetPhone,
+                        userDetails: UserDetails
+                    });
+                    var url = "@Url.Action("Users", "Admin")";
+                    var jsonData = Users;
+                    AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                        $('#divUserList').html(resp);
+                        console.log(resp);
+                        if (resp.message == "UserExistsError")
+                        {
+                            swal("User Name already exists");
+                        }
+                        else
+                        {
+                            $('#alertsuccess').show();
+                            setTimeout(function () {
+                                $('#alertsuccess').hide();
+                                $('#alertsuccess').removeClass('show');
+                            }, 2000);
+                            LoadUserList();
+                            $('#frmUser').find('input:text').val('');
+                            $('#frmUser').find('input:radio').removeAttr('checked');
+                            $('#frmUser').find('select').val(0);
+                            $('#@Html.IdFor(m => m.UserName)').attr("readonly", false);
+                            $('#frmUser').find('input:checkbox').removeAttr('checked');
+                            $('#txtPassword').attr("data-parsley-required", true);
+                            $('#txtConfirmPassword').attr("data-parsley-required", true);
+                            $('[name = Permissions]:checked').prop('checked', false);
+                            $('#txtPassword').val('');
+                            $('#txtConfirmPassword').val('');
+                            $('#Id').val('');
+                            $('#UserDetails_UserDetailId').val(0);
+                            $('#UserName').val('');
+                            $('#PasswordHash').val('');
+                            $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+                            $("#changeuser").html("Add User");
+                            $('#btnSubmit').val('Submit');
+                            $('.collapse').hide();
+                            $('#frmUser').parsley().destroy();
+                        }
+                    });
+                }
+            });
+        }
+
+
+        //To Check if the UserName already exist or Not.
+        $('#@Html.IdFor(m => m.UserName)').on('blur', function () {
+            var Value = $(this).val();
+            if (Value != 0) {
+                $("#spanUserName").hide();
+                $.ajax({
+                    url: "@Url.Action("IsUserNameExsit", "Admin")",
+                    type: "POST",
+                    data: { UserName: Value },
+                    success: function (data) {
+                        SetSessionExpireTimer();
+                        if (data.message == "Failed") {
+                            $("#spanUserName").show();
+                            $('#@Html.IdFor(m => m.UserName)').focus();
+                        }
+                        else {
+                            $("#spanUserName").hide();
+                        }
+                    },
+                    error: function (result) {
+                        console.log("Filed Ajax");
+                    }
+                });
+            }
+        });
+
+         //To Compare Password and ConfirmPassword
+        $('#txtConfirmPassword').on('blur', function () {
+            var Pass1 = $('#txtPassword').val();
+            var Pass2 = $('#txtConfirmPassword').val();
+            if (Pass1 != Pass2) {
+                $('#spanPassword').show();
+                $('#txtPassword').focus();
+            }
+            else
+            {
+                $('#spanPassword').hide();
+            }
+
+        });
+        function LoadUserList()
+        {
+            $('#tblUserList').DataTable({
+                searching: true,
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets':[-1]
+                }]
+            });
+        }
+
+        //function GetPermission()
+        //{
+        //    var permissions = ;
+        //}
+
+        function EditUser(userid)
+        {
+            var Users = JSON.stringify({
+                Id: userid
+            });
+            var url = "@Url.Action("UserEdit", "Admin")";
+            var jsonData = Users;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divUserForm').html(resp);
+                $('#btnSubmit').val('Update');
+                $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
+                $('#@Html.IdFor(m => m.UserName)').attr("readonly", true);
+                $('#txtPassword').attr("data-parsley-required", false);
+                $('#txtConfirmPassword').attr("data-parsley-required", false);
+                $('#PhoneNumber').attr("data-parsley-required", false);
+                $('#PhoneNumber').val('');
+                CancelUsers();
+                createUsers();
+                $('.collapse').collapse();
+                $('#chkActive').attr('disabled', 'disabled');
+                $("#changeuser").html("Edit User");
+                multiples();
+                if ($('#@Html.IdFor(m=>m.UserDetails.UserRole)').val() == "194c4cc1-4a1e-4861-abbb-302d02f7d825")
+                {
+                    $('#divClient').removeClass('hide');
+                    $('#UserDetails_Client').attr('data-parsley-required', 'true');
+                    var url = "@Url.Action("GetClient", "Admin")";
+                    var jsonData = {  UserId: userid };
+                    AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                        if (resp.length != 0) {
+                            $.map(resp, function (item) {
+                                $("#UserDetails_Client option[value='" + item.id + "']").attr("selected", 1);
+                                $('#@Html.IdFor(m => m.UserDetails.Client)').multiselect('rebuild');
+                            });
+
+                        }
+                    });
+                }
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="1"]').prop('checked', false);
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="2"]').prop('checked', false);
+                $('#chkRolePermissions').find(':checkbox[name=Permissions][value="3"]').prop('checked', false);
+                if ($('#@Html.IdFor(m => m.UserDetails.Permissions)').val() == 1)
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="1"]').prop('checked', true);
+                if ($('#@Html.IdFor(m => m.UserDetails.Permissions)').val() == 2)
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="2"]').prop('checked', true);
+                if ($('#@Html.IdFor(m => m.UserDetails.Permissions)').val() == 3)
+                    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="3"]').prop('checked', true);
+
+                PermissionCheck();
+
+                //alert($(".permissions").val())
+                //if ($(".permissions").val() == 1) {
+                //    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="1"]').prop('checked', true);
+                //}
+                //else if ($(".permissions").val() == 2) {
+                //    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="2"]').prop('checked', true);
+                //}
+                //else {
+                //    $('#chkRolePermissions').find(':checkbox[name=Permissions][value="3"]').prop('checked', true);
+                //}
+                ScrollToTop();
+            });
+
+        }
+
+        function ConfirmDelete(userid) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var Users = JSON.stringify({ Id: userid });
+                        var url = "@Url.Action("DeleteUsers", "Admin")";
+                        var jsonData = Users;
+                        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                            $('#divUserList').html(resp);
+                            //if ($('#hfIsValidUser').val() == "False")
+                            //{
+                            //    $('#alertIsValidUser').show();
+                            //    setTimeout(function () {
+                            //        $('#alertIsValidUser').hide();
+                            //        $('#alertIsValidUser').removeClass('show');
+                            //    }, 3000);
+                            //}
+                            LoadUserList()
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                });
+        };
+
+        function CancelUsers() {
+            $('#btnCancel').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Data in the page will be lost!",
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonClass: 'btn-primary',
+                    confirmButtonText: 'Confirm'
+
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.href = $('#hrfUrlList').val();
+                    }
+                    else {
+
+                    }
+                });
+            });
+        }
+
+
+        $('#@Html.IdFor(m => m.UserDetails.UserRole)').live('change', function () {
+            if ($(this).val() == "194c4cc1-4a1e-4861-abbb-302d02f7d825")
+            {
+                $('#divClient').removeClass('hide');
+                $('#UserDetails_Client').attr('data-parsley-required', 'true');
+            }
+            else {
+                $('#divClient').addClass('hide');
+                $('#UserDetails_Client').attr('data-parsley-required', 'false');
+            }
+        });
+
+
+    </script>
+}}

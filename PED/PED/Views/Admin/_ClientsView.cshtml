@@ -1,0 +1,123 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model ClientsViewDetails
+
+    @*<form id="ClientsView" method="post" class="form-horizontal"></form>*@
+<div>
+    <div class="col-lg-4 Clientdetails">
+        <h4>Company Details</h4>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 text-success" for="CompanyID">Company ID :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.CompanyId, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0 text-success" for="CompanyName">Company Name :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.CompanyName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 p-l-0 text-success" for="Residency Code">Residency Code :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.ResidencyCode, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 text-success" for="LocationStreetAddress">Address :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.LocationStreetAddress, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 text-success" for="City">State :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.State, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 text-success" for="City">City :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.City, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class=" col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 col-lg-4 text-success" for="ZipCode">Zip Code :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8">
+                @Html.DisplayFor(m => m.ZipCode, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+            <label class="control-label col-md-4 col-sm-4 text-success" for="Active">Active :</label>
+            <div class="col-md-8 col-sm-8 col-lg-8 controls" id="divActiveStatus">
+                @Html.DisplayFor(m => m.Active, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <h4>Contract Details</h4>
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="ContractSignedDate">Contract Start Date :</label>
+            <div class="col-md-2 col-sm-2 col-lg-2 p-0">
+                @Html.DisplayFor(m => m.ContractStartDate, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="ContractEffDate">Contract Renewed Date :</label>
+            <div class="col-md-2 col-sm-2 col-lg-2 p-0">
+                @Html.DisplayFor(m => m.ContractRenewedDate, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="ContractExpiryDate">Contract Expiry Date :</label>
+            <div class="col-md-2 col-sm-2 col-lg-2 p-0">
+                @Html.DisplayFor(m => m.ContractExpiryDate, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="ContractLength"> Length (Years) : </label>
+            <div class="col-md-2 col-sm-2 col-lg-2 p-0 controls">
+                @Html.DisplayFor(m => m.ContractLength, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="Fee">Fees :</label>
+            <div class="col-md-1 col-sm-1 col-lg-1 p-0 controls input-group">
+                @Html.DisplayFor(m => m.Amount, new { @class = "form-control" })
+            </div>
+            <span>%</span>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="AE">Account Executive :</label>
+            <div class="col-md-6 col-sm-6 col-lg-6 p-0 controls">
+                @Html.DisplayFor(m => m.AccountExecutiveName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="AgreementType">Agreement Type :</label>
+            <div class="col-md-6 col-sm-6 col-lg-6 p-0 controls">
+                @Html.DisplayFor(m => m.AgreementType, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 p-0" id="TransportBilled">
+            <label class="control-label col-md-6 col-sm-6 text-success" for="Transport">Non-Transport Billed :</label>
+            <div class="col-md-2 col-sm-2 col-lg-2 p-0 controls">
+                @Html.DisplayFor(m => m.Transport, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" id="NonTransportCharges">
+            <label class="control-label col-md-6 col-sm-6 p-l-0 text-success" for="TransportCharges">Non-Transport Charges :</label>
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-lg-2 p-0 controls">
+                    @Html.DisplayFor(m => m.TransportCharges, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+

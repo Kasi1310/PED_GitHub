@@ -1,0 +1,57 @@
+﻿@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+<div class="modal fade" id="CEmailForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <button class="btn btn-xs btn-icon btn-circle btn-default" id="emailFormclose"><i class="fa fa-close"></i></button>
+                    </div>
+                    <h4 class="panel-title" id="sendEmailTitle">Send Email</h4>
+                </div>
+                <form id="sendEmailFrm" method="post" class="form-horizontal" data-parsley-validate="true">
+                    <div class="panel-body panel-form p-t-15 m-t-10">
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">Mail Subject<span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls" data-parsley-validate="true">
+                                @Html.TextBox("MailSubject", null, new { @class = "form-control", @placeholder = "Enter Mail Subject", data_parsley_required = "true", @id = "MailSubject" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">Mail Body<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 controls" data-parsley-validate="true">
+                                @Html.TextArea("MailBody", null, new { @rows = "10", @cols = "20", @class = "form-control", @placeholder = "Enter Mail Body", data_parsley_required = "true", @id = "MailBody" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">To</label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls" data-parsley-validate="true">
+                                @Html.TextBox("MailTo", null, new { @class = "form-control", @placeholder = "Enter Mail To", @id = "MailTo" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                            <label class="control-label col-md-4 col-sm-4" for="Comments">CC</label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                                @Html.TextBox("MailToOthers", null, new { @class = "form-control", @placeholder = "Enter Mail ID", @id = "MailToOthers" })
+                                <span style="color:blue;font:bolder;font-size:10px;">(Multiple Mail Ids should be in comma ( , ) seperated)</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                            <label class="control-label col-md-4 col-sm-4" for="Attachements">Attachements</label>
+                            <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                                <div class="col-md-12 col-sm-12 col-lg-12 controls" id="divAttachements">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 text-center">
+                            <input type="button" id="btnSendMail" class="btn btn-sm btn-primary m-r-5" value="Send Mail" />
+                            <input type="button" id="btnCancelMail" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

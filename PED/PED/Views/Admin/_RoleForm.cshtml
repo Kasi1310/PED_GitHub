@@ -1,0 +1,68 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeroles">Add Roles</h4>
+    </div>
+    <form id="userForm" method="post" class="form-horizontal" data-parsley-validate="true">
+        @Html.AntiForgeryToken()
+        @Html.ValidationBootstrap()
+        @Html.Hidden("Id")
+        <div class="panel-body panel-form p-t-15 collapse m-t-10" id="divRoleForm">
+            <div class="form-group col-sm-4 col-md-4 col-lg-4">
+                <label class="control-label col-md-2 col-sm-2" for="Role">Role<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8 controls">
+                    @Html.TextBox("txtroleName", null, new { @class = "form-control", @placeholder = "Enter Role", data_parsley_required = "true" })
+                    <span class="text-danger" id="spanRoleName" hidden>Role Name is left <b>Blank</b> or <b>Already Exsit</b></span>
+                </div>
+            </div>
+            <div class="form-group col-sm-4 col-md-4 col-lg-4" id="chkRolePermissions">
+                <label class="control-label col-md-4 col-sm-4">Permissions<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8">
+                    <div class="checkbox checkbox-css checkbox-inline">
+                        <input type="checkbox" id="PermissionRead" value="1" name="Permissions" class="permissions" data-parsley-required="true" data-parsley-errors-container="#errorcheck"/>
+                        <label for="PermissionRead"> Read</label>
+                    </div>
+                    <div class="checkbox checkbox-css checkbox-inline hidden">
+                        <input type="checkbox" id="PermissionWrite" value="2" name="Permissions" class="permissions" />
+                        <label for="PermissionWrite">Write</label>
+                    </div>
+                    <div class="checkbox checkbox-css checkbox-inline">
+                        <input type="checkbox" id="PermissionFullControl" value="3" name="Permissions" class="permissions" />
+                        <label for="PermissionFullControl"> Full Control</label>
+                    </div>
+                </div>
+                <div id="errorcheck" style="padding-left:170px!important"></div>
+            </div>
+            <div class="form-group col-sm-4 col-md-4 col-lg-4" id="editRole">
+                <label class="control-label col-md-4 col-sm-4" for="username">Active<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8 controls" id="rabtn">
+                    <div class="radio radio-css radio-inline">
+                        <input type="radio" name="optionRadios" id="rdYes" value="1" data-parsley-required="true" data-parsley-errors-container="#errorcheck1" />
+                        <label for="rdYes">Yes</label>
+                    </div>
+                    <div class="radio radio-css radio-inline">
+                        <input type="radio" name="optionRadios" id="rdNo" value="2" />
+                        <label for="rdNo">No</label>
+                    </div>
+                </div>
+                <div id="errorcheck1" style=" padding-left:170px!important"></div>
+            </div>
+            
+            <div class="form-group col-sm-12 text-center">
+                <input id="addRoles" type="button" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                <input id="btnCancel" type="button" class="btn btn-sm btn-default" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>

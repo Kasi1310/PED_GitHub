@@ -1,0 +1,26 @@
+﻿@using PED.ViewModels.Contract
+@model Notes
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeCommentslist">Comments</h4>
+    </div>
+    <form id="CommentsForm" method="post" class="form-horizontal" data-parsley-validate="true">
+        <div class="panel-body panel-form p-t-15  m-t-10">
+            <div class="row m-10">
+                <table id="tblCommentsList" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="tr1">Comments</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</div>

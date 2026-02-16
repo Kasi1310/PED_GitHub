@@ -1,0 +1,261 @@
+﻿@using Microsoft.Extensions.Options;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IOptions<AppSettings> AppSettingsOptions
+@using WiseX.Helpers;
+
+@{
+    string CurrentProjectName = string.Empty;
+    string isAdmin = string.Empty;
+    var numCount = "";
+    var message = HttpContextAccessor.HttpContext.Session.Get<List<NotificationDetails>>("my-message");
+    var Changeproject = HttpContextAccessor.HttpContext.Session.Get<List<UserProjectRole>>("Changeproject");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    //var project = HttpContextAccessor.HttpContext.Session.Get<string>("SessionProjectName");
+    var NotificationCount = HttpContextAccessor.HttpContext.Session.Get<string>("NotificationCount");
+
+
+}
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Medicount's Provider Enrollment Database
+    </title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="icon" href='@Url.Content("~/img/favicon.ico")' type="image/gif" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap/css/bootstrap.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/BaseStyles.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/style.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/style-responsive.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/theme/blue.css")' rel="stylesheet" />
+    @RenderSection("Styles", false)
+
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src='@Url.Content("~/plugins/pace/pace.min.js")'></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade page-sidebar-toggled page-sidebar-minified page-header-fixed">
+        <!-- begin #header -->
+        @*@Html.Partial("_PageHeader")*@
+
+        <div id="header" class="header navbar navbar-default navbar-fixed-top">
+
+            <!-- begin container-fluid -->
+            <div class="container-fluid">
+                <!-- begin mobile sidebar expand / collapse button -->
+                @*<a href="~/Home" class="navbar-brand p-t-5 p-b-5 width-100"><img src="~/img/logo 03_06.png" height="40" /></a>*@
+
+
+                <div class="navbar-header">
+                    <a href="@Url.Action("Index", "Home")" style="text-decoration: none; color: #000;">
+                        <div class="brand">
+                            <img src="~/img/MedicountHeaderLogo.jpg" style="width: 50%;" />
+
+                        </div>
+                    </a>
+                    <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- end mobile sidebar expand / collapse button -->
+                <!-- begin header navigation right -->
+                <ul class="nav navbar-nav navbar-right">
+                    @RenderSection("TopIcons", false)
+                    @*<li>
+                            <form class="navbar-form full-width" onsubmit="return false">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Enter keyword" />
+                                    <button type="submit" class="btn btn-search"><i class="fa fa-search text-primary"></i></button>
+                                </div>
+                            </form>
+                        </li>*@
+
+                    <li class="dropdown navbar-user">
+                        @if (CurrentProjectName != "")
+                        {
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-right: 83px;">
+                                <span class="hidden-xs text-primary">@CurrentProjectName</span> <b class="caret"></b>
+                            </a>
+                        }
+                        <ul class="dropdown-menu animated fadeInLeft" id="Changeproject">
+                            @if (Changeproject != null)
+                            {
+                                foreach (var item in Changeproject)
+                                {
+                                    @*<li class="arrow"></li>*@
+                                    if (item.ProjectName == CurrentProjectName)
+                                    {
+                                        <li id="@item.ProjectRoleID"><a href="javascript:void(0)" class="p-l-1"><span class="fa fa-check p-l-5 text-primary"></span><span class="p-l-5">@item.ProjectName</span></a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li id="@item.ProjectRoleID"><a href="javascript:void(0)"><span class="p-l-10">@item.ProjectName</span></a></li>
+                                    }
+                                }
+                            }
+
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="Notification">
+                        <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+                            <i class="fa fa-bell-o text-primary"></i>
+                            <span class="label" id="spanm">@NotificationCount</span>
+                            <input type="hidden" id="inputMessage" value="@NotificationCount" />
+                        </a>
+                        <ul class="dropdown-menu media-list pull-right animated fadeInDown">
+                            <li class="dropdown-header" id="liNotifications">Notifications</li>
+                            @if (message != null)
+                            {
+                                foreach (var item in message)
+                                {
+                                    <li class="media">
+                                        <a href='@Url.Content("~/Contract/Contracts/?id=" + @item.ClientID + "&name=" + @item.CompanyName)'>
+                                            <div class="media-left"><i class="fa fa-envelope media-object bg-blue"></i></div>
+                                            <div class="media-body">
+                                                <h6 class="media-heading">@item.UserName</h6>
+                                                <p style=" background-color: yellow;">You have received Contract of </p>
+                                                <p style=" background-color: yellow;"> @item.CompanyID-@item.CompanyName</p>
+                                                @*<div class="text-muted f-s-11">@item.EffectiveDate</div>*@
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                    <li class="dropdown navbar-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src='@Url.Content("~/img/user.jpg")' alt="" />
+                            <span class="hidden-xs text-primary">@User.Identity.Name </span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInLeft">
+                            <li class="arrow"></li>
+                            <li><a href="@Url.Action("ChangePassword", "account")" class="p-l-1"><span class="fa fa-lg fa-key p-l-5"></span><span class="p-l-5">Change Password </span></a></li>
+                            <li class="divider m-2"></li>
+                            <li><a href="@Url.Action("login", "account")" class="p-l-1" data-action="userLogout"><span class="fa fa-lg fa-sign-out p-l-5"></span><span class="p-l-5">Logout</span></a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <!-- end container-fluid -->
+                <!-- begin breadcrumb -->
+                <!-- end header navigation right -->
+            </div>
+        </div>
+        <!-- end #header -->
+        <!-- begin #sidebar -->
+        <div id="sidebar" class="sidebar">
+            <!-- begin sidebar scrollbar -->
+            <div data-scrollbar="true" data-height="100%">
+                <!-- begin sidebar nav -->
+                @Html.Partial("_SideLeftbar")
+                <!-- end sidebar nav -->
+            </div>
+            <!-- end sidebar scrollbar -->
+        </div>
+        <div class="sidebar-bg"></div>
+
+        <!-- end #sidebar -->
+        @RenderBody()
+        <input type="hidden" id="hrfUrlSessionExpiry" value='@Url.Content("~/Account/Login")' />
+        <input type="hidden" id="hrfUrlAppError" value='@Url.Content("~/Home/Error")' />
+    </div>
+
+
+    <!-- end page container -->
+    <!-- ================== JS ================== -->
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/BaseScripts.js")'></script>
+    <script src='@Url.Content("~/js/apps.min.js")'></script>
+    <script src='@Url.Content("~/js/AjaxCall.js")'></script>
+    <script>
+        var validNavigation = false;
+        var timer = null;
+
+        $(document).ready(function ()
+        {
+            App.init();
+
+            if ($("#inputMessage").val() == 0) {
+                $("#liNotifications").hide();
+                $("#spanm").hide();
+            }
+
+            //To disable page controls until page loads completely
+            Pace.on("start", function () {
+                ShowOverlay();
+            });
+
+            //To enable page controls after loading the page completely
+            Pace.on("done", function () {
+                HideOverlay();
+            });
+            Pace.start();
+
+            //wireUpWindowUnloadEvents();
+            //windowCloseEvent();
+
+            SetSessionExpireTimer();
+
+            $(document).mousemove(function () {
+                SetSessionExpireTimer();
+            });
+
+        });
+
+        function SetSessionExpireTimer() {
+            var timeout = "@AppSettingsOptions.Value.SessionTimeOut";
+            var seconds = timeout * 60 * 1000;
+
+            if (timer) {
+                clearTimeout(timer); //cancel the previous timer.
+                timer = null;
+            }
+            timer = setTimeout(function () {
+                window.location = '@Url.Action("login", "account", new { p = "l" })';
+            }, seconds);
+        };
+
+        function ShowOverlay() {
+            $('body').addClass('overflow-hidden');
+            $("#overlay").show();
+        }
+
+        function HideOverlay() {
+            $('body').removeClass('overflow-hidden');
+            $("#overlay").hide();
+        }
+
+        function ScrollToTop() {
+            $('html, body').animate({
+                scrollTop: $("#page-container").offset().top
+            }, 2000);
+        }
+
+        @*$('#Notification').click(function () {
+            var Getcount = $('#inputMessage').val();
+            if (Getcount != 0) {
+                window.location.href = '@Url.Action("ContractApproval", "Contract")';
+            }
+        });*@
+    </script>
+    @RenderSection("Scripts", false)
+</body>
+</html>

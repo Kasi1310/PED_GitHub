@@ -1,0 +1,301 @@
+﻿@using WiseX.ViewModels.Home
+@model HomeViewModel
+    @*<h1 class="page-header">Dashboard</h1>
+    <div class="panel panel-inverse p-10" style="display:none;">
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            
+            <div class="row m-l-5">
+                
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats bg-green Agreements" id="AgreementsExpire">
+                        <div><a id="btnDashboardExport1" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o"></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-calendar"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.AgreementsExpire</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a id="Check" href="javascript:;" class="p-b-25">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <h4>Contracts Expires in Next 90 Days</h4>
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats Agreements" style="background-color:#bf7775" id="AgreementsOutStanding">
+                        <div><a id="btnDashboardExport2" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-anchor"></i></div>
+                            <div class="stats-info">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <p>@Model.ChartBoxes.AgreementsOutstanding</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <h4>Contracts Outstanding</h4>
+                            </a>
+
+
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats Agreements" style="background-color:#7f9a9e" id="ContractsSenToAE">
+                        <div><a id="btnDashboardExport3" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-forward"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.ContractsSenToAE</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25"> <i class="fa fa-file-o-right hide"></i>  <h4>Contracts Sent to AE</h4></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-20">
+                    <div class="widget widget-stats Agreements" style="background-color:#e4b776" id="ContractsReturnedbyAEtoManagement">
+                        <div><a id="btnDashboardExport4" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-reply-all"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.ContractsReturnedbyAEtoManagement</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;"> <i class="fa fa-reply-all hide"></i><h4>Contracts Returned by AE to Management</h4></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                    <div class="widget widget-stats Agreements" style="background-color:#adb574" id="ContractSentToClient">
+                        <div><a id="btnDashboardExport5" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-files-o"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.ContractSentToClient</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Signed Contracts</h4></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                    <div class="widget widget-stats bg-black-lighter Agreements" id="FeeChangedClients">
+                        <div><a id="btnDashboardExport6" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-money"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.FeeChangedClients</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Fee Changed Contracts </h4></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                    <div class="widget widget-stats Agreements" style="background-color:#9cc5c2 " id="ActiveClientsWillNotSign">
+                        <div><a id="btnDashboardExport7" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-pencil-square-o"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.ActiveClientsWillNotSignNewContracts</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;"><i class="fa fa-file-o-right hide"></i> <h4 class="p-b-20">Active Clients Will Not Sign New Contracts</h4></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                    <div class="widget widget-stats Agreements" style="background-color:#bebf6a" id="AutoRenewalClients">
+                        <div><a id="btnDashboardExport8" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-angellist"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.AutoRenewalClients</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;"><i class="fa fa-file-o-right hide"></i> <h4 class="p-b-20">No Auto Renewal For This Client</h4></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+
+    </div>*@
+
+
+    <h1 class="page-header">Provider Enrollment</h1>
+    <div class="panel panel-inverse p-10">
+
+        <div class="panel-body panel-form p-t-15 m-t-10">
+            <!-- begin row -->
+            <div class="row m-l-5">
+                <!-- begin col-4 -->
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats bg-green Agreements" id="LicenseExpire">
+                        <div><a id="btnDashboardExport9" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o"></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-calendar"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.LicenseExpire</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a id="Check" href="javascript:;" class="p-b-25">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <h4>License Expires in Next 90 Days</h4>
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-4 -->
+                <!-- begin col-4 -->
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats Agreements" style="background-color:#bf7775" id="LicenseOutstanding">
+                        <div><a id="btnDashboardExport10" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-anchor"></i></div>
+                            <div class="stats-info">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <p>@Model.ChartBoxes.LicenseOutstanding</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <h4>License Outstanding</h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-4 -->
+                <!-- begin col-4 -->
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                    <div class="widget widget-stats Agreements" style="background-color:#124578" id="MedicareExpires">
+                        <div><a id="btnDashboardExport11" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                        <a href="javascript:;">
+                            <div class="stats-icon"><i class="fa fa-calendar"></i></div>
+                            <div class="stats-info">
+                                <p>@Model.ChartBoxes.MedicareContractExpire</p>
+                            </div>
+                        </a>
+                        <div class="stats-link">
+                            <a href="javascript:;" class="p-b-25">
+                                <i class="fa fa-file-o-right hide"></i>
+                                <h4>
+                                    Medicare Expires in Next 90days
+                                </h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-4 -->
+                <!-- begin col-4 -->
+                <div class="col-md-3 col-sm-6 col-lg-3">
+                <div class="widget widget-stats Agreements" style="background-color:#d66fae;" id="MedicareOutstanding">
+                    <div><a id="btnDashboardExport15" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                    <a href="javascript:;">
+                        <div class="stats-icon"><i class="fa fa-anchor"></i></div>
+                        <div class="stats-info">
+                            <i class="fa fa-file-o-right hide"></i>
+                            <p>@Model.ChartBoxes.MedicareOutstanding</p>
+                        </div>
+                    </a>
+                    <div class="stats-link">
+                        <a href="javascript:;" class="p-b-25">
+                            <i class="fa fa-file-o-right hide"></i>
+                            <h4>Medicare Outstanding</h4>
+                        </a>
+                    </div>
+                </div>
+                </div>
+                <!-- end col-4 -->
+
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                <div class="widget widget-stats Agreements" style="background-color: #e4b776" id="MedicaidExpires">
+                    <div><a id="btnDashboardExport12" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                    <a href="javascript:;">
+                        <div class="stats-icon"><i class="fa fa-calendar"></i></div>
+                        <div class="stats-info">
+                            <p>@Model.ChartBoxes.MedicaidContractExpire</p>
+                        </div>
+                    </a>
+                    <div class="stats-link">
+                        <a href="javascript:;" class="p-b-25">
+                            <i class="fa fa-file-o-right hide"></i>
+                            <h4>
+                                Medicaid Expires in Next 90days
+                            </h4>
+                        </a>
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                <div class="widget widget-stats" style="background-color:#444c57;" Agreements" id="MedicaidOutstanding">
+                        <div><a id="btnDashboardExport16" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                    <a href="javascript:;">
+                        <div class="stats-icon"><i class="fa fa-anchor"></i></div>
+                        <div class="stats-info">
+                            <i class="fa fa-file-o-right hide"></i>
+                            <p>@Model.ChartBoxes.MedicaidOutstanding</p>
+                        </div>
+                    </a>
+                    <div class="stats-link">
+                        <a href="javascript:;" class="p-b-25">
+                            <i class="fa fa-file-o-right hide"></i>
+                            <h4>Medicaid Outstanding</h4>
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                <div class="widget widget-stats Agreements" style="background-color:#adb574;" id="OpenedTask">
+                    <div><a id="btnDashboardExport13" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                    <a href="javascript:;">
+                        <div class="stats-icon"><i class="fa fa-files-o"></i></div>
+                        <div class="stats-info">
+                            <p>@Model.ChartBoxes.OpenTask</p>
+                        </div>
+                    </a>
+                    <div class="stats-link">
+                        <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Open Task</h4></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-lg-3 p-b-25">
+                <div class="widget widget-stats" style="background-color:#494949;" Agreements" id="ClosedTask">
+                    <div><a id="btnDashboardExport14" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o "></i> </a></div>
+                    <a href="javascript:;">
+                        <div class="stats-icon"><i class="fa fa-money"></i></div>
+                        <div class="stats-info">
+                            <p>@Model.ChartBoxes.ClosedTask</p>
+                        </div>
+                    </a>
+                    <div class="stats-link">
+                        <a href="javascript:;" class="p-b-25"><i class="fa fa-file-o-right hide"></i> <h4>Closed Task</h4></a>
+                    </div>
+                </div>
+            </div>
+                
+            </div>
+        </div>
+    </div>

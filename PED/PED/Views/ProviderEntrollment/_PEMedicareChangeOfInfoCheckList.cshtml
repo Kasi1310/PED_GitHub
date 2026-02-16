@@ -1,0 +1,178 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var isEnabled = "";
+
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isEnabled = "disabled";
+    }
+}
+<form id="PEPracticeLocationChangeCheckList" class="form-horizontal">  
+    
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Name of Checklist Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Allocated To">Allocated To</label>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">ZOHO - Notify AE to update ZOHO</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIZOHONotifyAEToUpdateZOHO" class="form-control clsMCIZOHONotifyAEToUpdateZOHO" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.ZOHONotifyAEToUpdateZOHO)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIZOHONotifyAEToUpdateZOHOAllocatedTo" class="form-control clsMCIZOHONotifyAEToUpdateZOHOAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.ZOHONotifyAEToUpdateZOHOAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">PED - Update Info</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIPEDUpdateInfo" class="form-control clsMCIPEDUpdateInfo" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.PEDUpdateInfo)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIPEDUpdateInfoAllocatedTo" class="form-control clsMCIPEDUpdateInfoAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.PEDUpdateInfoAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicare - Change of Information Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIMedicareChangeOfInformationApplication" class="form-control clsMCIMedicareChangeOfInformationApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request from Client">Request from Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.MedicareChangeOfInformationApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIMedicareChangeOfInformationApplicationAllocatedTo" class="form-control clsMCIMedicareChangeOfInformationApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.MedicareChangeOfInformationApplicationAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Maintenance Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIMedicaidMaintenanceApplication" class="form-control clsMCIMedicaidMaintenanceApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.MedicaidMaintenanceApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCIMedicaidMaintenanceApplicationAllocatedTo" class="form-control clsMCIMedicaidMaintenanceApplicationApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.MedicaidMaintenanceApplicationAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">NPPES Website</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCINPPESWebsite" class="form-control clsMCINPPESWebsite" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.NPPESWebsite)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlMCINPPESWebsiteAllocatedTo" class="form-control clsMCINPPESWebsiteApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEMedicareChangeOfInfoCheckList.NPPESWebsiteAllocatedTo)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

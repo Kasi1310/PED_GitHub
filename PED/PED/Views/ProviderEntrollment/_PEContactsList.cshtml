@@ -1,0 +1,57 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<div class="row m-10">
+   
+    <table id="tblPEContactList" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Contact Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Fax</th>
+                <th>Email</th>
+                <th class="@isAdmin">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{int i = 0;
+                foreach (var item in Model.PEContactsList)
+                {
+                    i++;
+                    <tr id="@item.Id">
+                        @*<td id="tdSno" class="tr1">@i</td>*@
+                        <td class="tr1">@item.ContactType</td>
+                        <td class="tr1">@item.Title</td>
+                        <td class="tr1">@item.ContactName</td>
+                        <td class="tr1">@item.Address</td>
+                        <td class="tr1">@item.Phone</td>
+                        <td class="tr1">@item.Fax</td>
+                        <td class="tr1">@item.Email</td>
+                        <td class="tr1">
+                            <button id="btnContactEdit" type="button" Onclick="EditPEContact('@item.Id')" title="Edit" class="fa fa-lg fa-edit  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                            <button id="btnContactDelete" type="button" Onclick="ConfirmPEContactsDelete('@item.Id')" title="Delete" class="fa fa-lg fa-trash-o  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+    
+    </div>

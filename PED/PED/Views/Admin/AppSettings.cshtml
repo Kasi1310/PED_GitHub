@@ -1,0 +1,117 @@
+﻿@using WiseX.Models
+@model ChartListModel; 
+@{
+    ViewBag.Title = "App-Settings";
+
+}
+ 
+@section Styles {
+    <link href='@Url.Content("~/plugins/jquery.countdown/jquery.countdown.css")' rel="stylesheet" />
+<link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+}
+
+@*<div class="container">
+
+    <div class="coming-soon">
+        <div class="coming-soon-header">
+            <div class="bg-cover"></div>
+            <div class="brand" style="z-index: 1">
+                <span class="logo"></span> CodeComputer
+            </div>
+            <div class="timer" style="z-index: 1">
+                <div id="timer"></div>
+            </div>
+            <div class="desc" style="z-index: 1">
+                Our tool is almost there and it’s Upgrading! A lot of great new features <br />and improvements are coming.
+            </div>
+        </div>
+        <div class="coming-soon-content">
+            <div class="desc">
+                We are launching a closed <b>beta</b> soon!<br /> Try it before others and be the first to know when we <b>launch</b>.
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>*@
+<input type="hidden" id="hrfUrlList" value='@Url.Content("~/Admin/AppSettings/")'/>
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li class="active">Reset Charts</li>
+    </ol>
+    <h1 class="page-header">Reset Charts<small></small></h1>
+    
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-6">
+            <!-- begin panel -->
+            <div class="panel panel-default panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">Reset Chart Settings</h4>
+                </div>
+                <form id="ChangepasswordValidation" class="form-horizontal" data-parsley-validate="true">
+                    <div class="panel-body panel-form" id="divPassword">
+                        <div>
+                            <label class="control-label col-md-4 col-sm-4" for="Currentpassword">Select a Chart<span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6 controls ch p-b-5 p-t-5">
+                                @Html.DropDownListFor(m => m.chartsCleanup.Id, new SelectList(Model.ChartCleanupList, "Id", "FileName"), "Select a Chart Name", new { @class = "form-control", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group col-sm-12 text-center">
+                                <button id="btnSubmit" type="button" class="btn btn-sm btn-primary m-r-5">Clear</button>
+                                <button id="btnCancel" type="button" class="btn btn-sm btn-default">Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/plugins/jquery.countdown/jquery.plugin.js")'></script>
+    <script src='@Url.Content("~/plugins/jquery.countdown/jquery.countdown.js")'></script>
+    <script src='@Url.Content("~/js/coming-soon.demo.min.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //ComingSoon.init();
+            ClearCharts();
+            InitEvents();
+        })
+        function ClearCharts()
+        {
+            $('#btnSubmit').click(function () {
+                var CId = $('#chartsCleanup_Id').val() != 0 ? $('#chartsCleanup_Id').val() : 0;
+                 var url = '@Url.Action("ChartClearnUp", "Admin")';
+                 var jsonData = { ChartId: CId };
+                 console.log(jsonData);
+
+                 AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                     if (resp == "Success") {
+                         swal("Charts Cleaned");
+                         $('#chartsCleanup_Id').val(0);
+                     }
+                     else
+                     { 
+                         swal("Failed");
+                     }
+                 });
+            });
+
+        }
+    </script>
+
+}
+

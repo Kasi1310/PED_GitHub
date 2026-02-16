@@ -1,0 +1,81 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<form id="PERefusedEnrollmentFormfrm" method="post" class="form-horizontal">
+
+    <div class="row col-12 p-10" id="PERefusedEnrollmentForm">
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InsuranceName">Insurance Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="Comments">Comments</label>
+                </div>
+               <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">  
+                        @Html.HiddenFor(m => m.PERefusedEnrollment.Id)
+                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName, new { @class = "form-control", @placeholder = "Enter Insurance Name" })                   
+                    </div>
+                </div>
+
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                       <select id="ddlStatus" class="form-control" >@* onchange="EnableMandatory() *@
+                            <option value="0">selected</option>
+                            <option value="1">Accepted</option>
+                            <option value="2">Refused</option>
+                            <option value="3">Waiting for Client</option>
+                        </select>
+                        @Html.HiddenFor(m => m.PERefusedEnrollment.RefusedEnrollmentStatus)
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 controls">                        
+                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentComments, new { @class = "form-control", @placeholder = "Enter Comments" })
+                      </div>
+                </div>
+                
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPERefusedEnrollmentInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+       
+    </div>
+    <script type="text/javascript">
+        function EnableMandatory() {
+            if (document.getElementById('ddlActive').value == "1") {
+
+                $('#spnNextRevalidationDate').show();
+            }
+            else {
+                $('#spnNextRevalidationDate').hide();
+            }
+        }
+    </script>
+</form> 

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-WiseX-0BB5E4E5-0858-4819-BAEC-BCA04177A9B2</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Views\Archival\_ArchivalListFilter.cshtml" />
+    <Content Remove="Views\Audit\_AuditListFilter.cshtml" />
+    <Content Remove="Views\Quality\_EducationListFilter.cshtml" />
+    <Content Remove="Views\Quality\_ErrorListFilter.cshtml" />
+    <Content Remove="Views\Review\_CodeReviewListFilter.cshtml" />
+    <Content Remove="wwwroot\js\CommonUtils.js~RF48c45d54.TMP" />
+    <Content Remove="wwwroot\js\jquery.dataTables.rowGrouping.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AlanJuden.MvcReportViewer.NetCore" Version="1.0.10" />
+    <PackageReference Include="Aspose.PDF" Version="23.2.0" />
+    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="DotNetCore.NPOI" Version="1.0.2" />
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.SystemWeb" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\Files\">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Folder>
+    <Folder Include="wwwroot\Clients\" />
+    <Folder Include="wwwroot\Uploads\">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Folder>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Contract\_ContractNotes.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="wwwroot\Contracts\Sample Clients Master.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,126 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using WiseX.Helpers;
+
+@{
+    var UserMenuList = HttpContextAccessor.HttpContext.Session.Get<List<MenuAccessRole>>("UserMenuAccess");
+    var roleName = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleName");
+    //var ProjectName = HttpContextAccessor.HttpContext.Session.Get<string>("SessionProjectName");
+    var ValController = ViewContext.RouteData.Values["Controller"].ToString().Trim().ToLower();
+    var ValAction = ViewContext.RouteData.Values["Action"].ToString().Trim().ToLower();
+    var classActive = string.Empty;
+    
+
+
+
+}
+@*background: #ff5b57;*@
+<style>
+    .spamlabel {
+        position: absolute;
+        top: 5px;
+        left: 1px;
+        display: block;
+        background: #348fe2;
+        line-height: 10px;
+        font-weight: bold;
+        padding: 3px;
+        border-radius: 15px;
+        font-size: 65%;
+        font-family: 'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #fff !important;
+    }
+    .submenulabel {
+        /*left: 90%;*/
+        position: absolute;  
+        background: #348fe2;
+        line-height: 10px;
+        font-weight: bold;
+        padding: 3px;
+        border-radius: 15px;
+        font-size: 65%;
+        font-family: 'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #fff !important;
+    }
+</style>
+<!-- begin sidebar user -->
+<ul class="nav">
+    <li class="nav-profile">
+        <div class="image">
+            <a href="javascript:;"><img src='@Url.Content("~/img/user.jpg")' alt="" /></a>
+        </div>
+        <div class="info">
+            <span class="hidden-xs" style="color: #ffffff">@User.Identity.Name</span>
+            <small>@roleName</small>
+         </div>
+    </li>
+</ul>
+<!-- end sidebar user -->
+<ul class="nav" id="nav">
+    @if (UserMenuList != null)
+    {
+        foreach (var menu in UserMenuList.Where(x => x.parent == 1).OrderBy(x => x.OrderNo))
+        {
+            string menuId = string.Empty;
+            var filteredList = UserMenuList.Where(x => x.Controller.Trim().ToLower() == ValController && x.Action.Trim().ToLower() == ValAction);
+            if (filteredList.Count() > 0)
+            {
+                menuId = filteredList.FirstOrDefault().MenuId.ToString();
+            }
+            //if (menu.Controller.Trim().ToLower() == ValController)
+            string matchingMenuId = menuId;
+            if (menu.Id.ToString() == matchingMenuId)
+            {
+                classActive = "active";
+            }
+            else
+            {
+                classActive = "";
+            }
+            <li class="has-sub @classActive">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="@menu.UrlImage">
+                        @if ( menu.NotificationCount != 0)
+                        {
+                            var notifiCount = menu.NotificationCount.ToString().Length == 1 ? "0" + @menu.NotificationCount.ToString() : @menu.NotificationCount.ToString();
+                            <span class="spamlabel" id="spamlabel">@notifiCount</span>
+                        }
+                    </i>
+                    <span class="menuitem">@menu.MenuItem</span>
+                </a>
+
+                <ul class="sub-menu">
+                   
+                    @foreach (var submenu in UserMenuList.Where(x => x.MenuId == menu.Id && x.parent == 0).OrderBy(x => x.OrderNo))
+                    {
+                        if (submenu.Action.Trim().ToLower() == ValAction)
+                        {
+                            classActive = "active";
+                        }
+                        else
+                        {
+                            classActive = "";
+                        }
+                        <li class="@classActive">
+                            @if (submenu.NotificationCount != 0)
+                            {
+
+                                var countSubmenu = submenu.NotificationCount.ToString().Length == 1 ? "0" + submenu.NotificationCount.ToString() : submenu.NotificationCount.ToString();
+                                <a href="@Url.Action(submenu.Action, submenu.Controller)">@submenu.MenuItem<span class="submenulabel m-l-5">@countSubmenu</span></a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action(submenu.Action, submenu.Controller)">@submenu.MenuItem</a>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+    }
+    <!-- begin sidebar minify button -->
+    <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+    <!-- end sidebar minify button -->
+</ul>
+@*<li class="active"><a href="form_elements.html">Form Elements <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>*@

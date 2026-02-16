@@ -1,0 +1,58 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+@if (RolePermission == "F")
+{
+    <form id="ClientEmployeeDetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+        <h4>Employee Details</h4>
+        <hr />
+        <div class="form-group col-sm-2 col-md-2 col-lg-2">
+            <div class="col-md-12 col-sm-12 col-lg-12" data-parsley-validate="true">
+                <label class="control-label" for="EmployeePosition">Employee Position <span style="color:red">*</span></label>
+                @Html.HiddenFor(m => m.ClientsDetails.EmpID)
+                @Html.DropDownListFor(m => m.ClientsDetails.EmployeePosition, new SelectList(Model.EmployeePositionList, "Id", "Value"), "Select Position", new { @class = "form-control EmployeePositionList" })
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3">
+            <div class="col-md-12 col-sm-12 col-lg-12 controls" data-parsley-validate="true">
+                <label class="control-label" for="FirstName">First Name<span style="color:red">*</span></label>
+                @Html.TextBoxFor(m => m.ClientsDetails.FirstName, new { @class = "form-control", @placeholder = "Enter  First Name" })
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3">
+            <div class="col-md-12 col-sm-12 col-lg-12 controls">
+                <label class="control-label" for="LastName">Last Name<span style="color:red">*</span></label>
+                @Html.TextBoxFor(m => m.ClientsDetails.LastName, new { @class = "form-control", @placeholder = "Enter Last Name" })
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3">
+            <div class="col-md-12 col-sm-12 col-lg-12 controls">
+                <label class="control-label">Email</label>
+                @Html.TextBoxFor(m => m.ClientsDetails.EmailId, new { @class = "form-control", @placeholder = "Enter Email",  data_parsley_type = "email" })
+            </div>
+        </div>
+
+        <div class="form-group col-sm-1 col-md-1 col-lg-1">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <input type="button" id="btnEmployeeAdd" class="btn btn-sm btn-info m-t-25 @isAdmin" value="Add" />
+            </div>
+        </div>
+
+
+    </form>
+}

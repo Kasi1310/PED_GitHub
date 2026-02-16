@@ -1,0 +1,79 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+@if (RolePermission == "F")
+{
+    <form id="ClientInsuranceContractDetailsfrm" method="post" class="form-horizontal" data-parsley-validate="true">
+
+        <h4>Insurance Contract Details</h4>
+        <hr />
+        <div class="form-group col-sm-2 col-md-2 col-lg-2">
+            <div class="col-md-12 col-sm-12 col-lg-12" data-parsley-validate="true">
+                <label class="control-label" for="InsuranceContract">Document Type <span style="color:red">*</span></label>
+                @Html.DropDownListFor(m => m.ClientsDetails.DocumentType, new List<SelectListItem> {
+                           new SelectListItem { Value = "Application" , Text = "Application" },
+                           new SelectListItem { Value = "Contract" , Text = "Contract" },
+                           new SelectListItem { Value = "Others" , Text = "Others" }
+                        }, "Select Document Type", new { @class = "form-control InsuranceContractList" })
+            </div>
+        </div>
+        <div class="form-group col-sm-2 col-md-2 col-lg-2">
+            <div class="col-md-12 col-sm-12 col-lg-12" data-parsley-validate="true">
+                <label class="control-label" for="InsuranceContract">Insurance Name <span style="color:red">*</span></label>
+                @Html.HiddenFor(m => m.ClientsDetails.InsuranceID)
+                @Html.DropDownListFor(m => m.ClientsDetails.InsuranceContractID, new SelectList(Model.InsuranceContractList, "Id", "Name"), "Select Insurance Name", new { @class = "form-control InsuranceContractList" })
+            </div>
+        </div>
+        <div class="form-group col-sm-2 col-md-2 col-lg-2">
+            <div class="col-md-12 col-sm-12 col-lg-12 controls" data-parsley-validate="true">
+                <label class="control-label" for="EffectiveDate">Effective Date(Optional)</label>
+                <div class="p-0 controls input-daterange datepicker-autoClose input-group">
+                    @Html.TextBoxFor(m => m.ClientsDetails.EffectiveDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Effective Date", data_parsley_required = "true" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-2 col-md-2 col-lg-2">
+            <div class="col-md-12 col-sm-12 col-lg-12 controls">
+                <label class="control-label" for="TermedDate">Termed Date(Optional)</label>
+                <div class="p-0 controls input-daterange datepicker-autoClose input-group">
+                    @Html.TextBoxFor(m => m.ClientsDetails.TermedDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Termed Date", data_parsley_required = "true" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-3 col-md-3 col-lg-3">
+            <div class="col-md-12 col-sm-12 col-lg-12" data-parsley-validate="true">
+                <label class="control-label" for="InsContractFile">Upload Document <span style="color:red">*</span></label>
+                <input type="file" id="InsuranceContractFile" class="form-control" name="file" accept=".pdf,.xlsx,.xls,.docx,.doc" />
+                <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                <small class="text-primary">(Allowed Document Format : pdf,docx,doc,xlsx,xls)</small>
+            </div>
+        </div>
+        <div class="form-group col-sm-1 col-md-1 col-lg-1">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <input type="button" id="btnInsuranceContractAdd" class="btn btn-sm btn-info m-t-25 @isAdmin" value="Add" />
+            </div>
+        </div>
+
+
+    </form>
+}

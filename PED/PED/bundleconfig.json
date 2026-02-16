@@ -1,0 +1,140 @@
+[
+  {
+    "outputFileName": "wwwroot/css/BaseStyles.css",
+    "inputFiles": [
+      "wwwroot/plugins/font-awesome/css/font-awesome.min.css",
+      "wwwroot/css/animate.min.css",
+      "wwwroot/css/style.min.css",
+      "wwwroot/css/theme/blue.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/BaseScripts.js",
+    "inputFiles": [
+      "wwwroot/plugins/jquery/jquery-1.9.1.min.js",
+      "wwwroot/plugins/jquery/jquery-migrate-1.1.0.min.js",
+      "wwwroot/plugins/jquery-ui/ui/minified/jquery-ui.min.js",
+      "wwwroot/plugins/bootstrap/js/bootstrap.min.js",
+      "wwwroot/plugins/slimscroll/jquery.slimscroll.min.js",
+      "wwwroot/plugins/jquery-cookie/jquery.cookie.js",
+      "wwwroot/js/Custom.min.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/DataTables.css",
+    "inputFiles": [
+      "wwwroot/plugins/DataTables/media/css/dataTables.bootstrap.min.css",
+      "wwwroot/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/DataTables.js",
+    "inputFiles": [
+      "wwwroot/plugins/DataTables/media/js/jquery.dataTables.js",
+      "wwwroot/plugins/DataTables/media/js/dataTables.bootstrap.min.js",
+      "wwwroot/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/BootstrapDatepicker.css",
+    "inputFiles": [
+      "wwwroot/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css",
+      "wwwroot/plugins/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/AutoDropDown.css",
+    "inputFiles": [
+      "wwwroot/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css",
+      "wwwroot/plugins/bootstrap-combobox/css/bootstrap-combobox.css",
+      "wwwroot/plugins/bootstrap-select/bootstrap-select.min.css",
+      "wwwroot/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css",
+      "wwwroot/plugins/jquery-tag-it/css/jquery.tagit.css",
+      "wwwroot/plugins/select2/dist/css/select2.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Flot.js",
+    "inputFiles": [
+      "wwwroot/plugins/flot/jquery.flot.min.js",
+      "wwwroot/plugins/flot/jquery.flot.time.min.js",
+      "wwwroot/plugins/flot/jquery.flot.resize.min.js",
+      "wwwroot/plugins/flot/jquery.flot.pie.min.js",
+      "wwwroot/plugins/flot/jquery.flot.stack.min.js",
+      "wwwroot/plugins/flot/jquery.flot.crosshair.min.js",
+      "wwwroot/plugins/flot/jquery.flot.categories.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Jvectormap.js",
+    "inputFiles": [
+      "wwwroot/plugins/jquery-jvectormap/jquery-jvectormap.min.js",
+      "wwwroot/plugins/jquery-jvectormap/jquery-jvectormap-world-mill-en.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/apps.min.js",
+    "inputFiles": [
+      "wwwroot/js/apps.js"
+    ]
+  },
+  {
+    "outputFileName": "gulpfile.min.js",
+    "inputFiles": [
+      "gulpfile.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/style.min.css",
+    "inputFiles": [
+      "wwwroot/css/style.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/coming-soon.demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/coming-soon.demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/ReviewForm.css",
+    "inputFiles": [
+      "wwwroot/css/BootstrapDatepicker.css",
+      "wwwroot/plugins/bootstrap-daterangepicker/daterangepicker.css",
+      "wwwroot/plugins/select2/dist/css/select2.min.css",
+      "wwwroot/plugins/bootstrap-sweetalert/sweetalert.css",
+      "wwwroot/plugins/parsley/src/parsley.css",
+      "wwwroot/plugins/jstree/dist/themes/default/style.min.css",
+      "wwwroot/css/SlidePanel.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/ReviewForm.js",
+    "inputFiles": [
+      "wwwroot/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js",
+      "wwwroot/plugins/bootstrap-daterangepicker/daterangepicker.js",
+      "wwwroot/plugins/masked-input/masked-input.min.js",
+      "wwwroot/plugins/select2/dist/js/select2.min.js",
+      "wwwroot/plugins/bootstrap-sweetalert/sweetalert.min.js",
+      "wwwroot/js/CommonUtils.js",
+      "wwwroot/plugins/jstree/dist/jstree.min.js",
+      "wwwroot/js/ui-tree.demo.min.js",
+      "wwwroot/plugins/parsley/dist/parsley.js",
+      "wwwroot/plugins/jquery-ui/ui/jquery.ui.tooltip.js",
+      "wwwroot/js/CommonEvents.js",
+      "wwwroot/js/Viewer.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/plugins/bootstrap-wizard/js/bwizard.min.js",
+    "inputFiles": [
+      "wwwroot/plugins/bootstrap-wizard/js/bwizard.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Custom.min.js",
+    "inputFiles": [
+      "wwwroot/js/Custom.js"
+    ]
+  }
+]

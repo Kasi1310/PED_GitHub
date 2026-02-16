@@ -1,0 +1,28 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<form id="PECredentialingLicenseListfrm" method="post" class="form-horizontal">
+
+    <div class="row col-12 p-10" id="PEForms">
+
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+                    @*<input id="btnPEW9All" type="button" class="btn btn-success" value=" W-9(All Client)" />
+                    <input id="btnPETricareAll" type="button" class="btn btn-success" value=" Tricare(All Client)" />
+                    <input id="btnPEMMPIAll" type="button" class="btn btn-success" value=" MMPI(All Client)" />
+                    <input id="btnPEMedcoAll" type="button" class="btn btn-success" value=" Medco(All Client)" />*@
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

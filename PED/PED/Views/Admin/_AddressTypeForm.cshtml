@@ -1,0 +1,58 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model AddressType
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeteam">Add Address Type</h4>
+    </div>
+
+    <form id="AddressTypeform" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Name">Address Type<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-8 controls" data-parsley-validate="true">
+                    @Html.HiddenFor(m => m.AddressTypeDet.Id)
+                    @Html.TextBoxFor(m => m.AddressTypeDet.Name, new { @class = "form-control", @placeholder = "Enter Address Type", data_parsley_required = "true" })
+                    <span class="text-danger" id="spanAddressTypest" hidden> Address Type Already Exist! Enter New Value</span>
+                    @*<span class="text-danger" id="spanAddressTypest" hidden>User Name is left <b>Blank</b> or <b>Already Exsit</b></span>*@
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Active">Active<span style="color:red">*</span></label>
+                <div class="form-group" id="divActiveStatus">
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.AddressTypeDet.Active, 1, new { @class = "ActiveStatus", @required = "required", @id = "Active", data_parsley_errors_container = "#errorcheck" })
+                        <label for="Active">Yes</label>
+                    </div>
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.AddressTypeDet.Active, 0, new { @class = "ActiveStatus", @required = "required", @id = "InActive" })
+                        <label for="InActive">No</label>
+                    </div>
+                </div>
+                <div id="errorcheck" style="padding-left:175px!important"></div>
+
+            </div>
+            <div class="form-group col-sm-12 text-center">
+                <input type="button" id="btnSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,541 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var isEnabled = "";
+
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+        isEnabled = "disabled";
+    }
+}
+<form id="PEPracticeLocationChangeCheckList" class="form-horizontal">
+  
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Name of Checklist Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Status</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Allocated To">Allocated To</label>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Action">Action</label>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">ESO - Address Update</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCESOAddressUpdate" class="form-control clsPLCESOAddressUpdate" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ESOAddressUpdate)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCESOAddressUpdateAllocatedTo" class="form-control clsPLCESOAddressUpdateAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ESOAddressUpdateAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnESOAddressSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>   
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">ZOHO - Notify AE to update ZOHO</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCZOHONotifyAEToUpdateZOHO" class="form-control clsPLCZOHONotifyAEToUpdateZOHO" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ZOHONotifyAEToUpdateZOHO)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCZOHONotifyAEToUpdateZOHOAllocatedTo" class="form-control clsPLCZOHONotifyAEToUpdateZOHOAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ZOHONotifyAEToUpdateZOHOAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnZOHONotifyAEToUpdateZOHOSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">PED - Address Update</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCPEDAddressUpdate" class="form-control clsPLCPEDAddressUpdate" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.PEDAddressUpdate)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCPEDAddressUpdateAllocatedTo" class="form-control clsPLCPEDAddressUpdateAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.PEDAddressUpdateAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCPEDAddressUpdateSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicare - Change of information application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicareChangeOfInformationApplication" class="form-control clsPLCMedicareChangeOfInformationApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Request from Client">Request from Client</option>
+                        <option value="Waiting on Client">Waiting on Client</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicareChangeOfInformationApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicareChangeOfInformationApplicationAllocatedTo" class="form-control clsPLCMedicareChangeOfInformationApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicareChangeOfInformationApplicationAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCMedicareChangeOfInformationApplicationSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+  
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid - Maintenance Application</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicaidMaintenanceApplication" class="form-control clsPLCMedicaidMaintenanceApplication" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicaidMaintenanceApplication)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicaidMaintenanceApplicationAllocatedTo" class="form-control clsPLCMedicaidMaintenanceApplicationAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicaidMaintenanceApplicationAllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCMedicaidMaintenanceApplicationSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+     <div class="col-lg-12">
+         <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Railroad Medicare - Fax request with W9</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCRailroadMedicareFaxRequestWithW9" class="form-control clsPLCRailroadMedicareFaxRequestWithW9" @isEnabled>
+                        <option value="Waiting for Medicare approval">Waiting for Medicare approval</option>
+                        <option value="Faxed">Faxed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.RailroadMedicareFaxRequestWithW9)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCRailroadMedicareFaxRequestWithW9AllocatedTo" class="form-control clsPLCRailroadMedicareFaxRequestWithW9AllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.RailroadMedicareFaxRequestWithW9AllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCRailroadMedicareFaxRequestWithW9Submit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+     <div class="col-lg-12">
+         <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Availity</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCAvaility" class="form-control clsPLCAvaility" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.Availity)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCAvailityAllocatedTo" class="form-control clsPLCAvailityAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.AvailityAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCAvailitySubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">NPPES Website</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCNPPESWebsite" class="form-control clsPLCNPPESWebsite" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.NPPESWebsite)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCNPPESWebsiteAllocatedTo" class="form-control clsPLCNPPESWebsiteAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.NPPESWebsiteAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCNPPESWebsiteSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+ 
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Waystar</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCWaystar" class="form-control clsPLCWaystar" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.Waystar)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCWaystarAllocatedTo" class="form-control clsPLCWaystarAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.WaystarAllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCWaystarSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div> 
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Contract Payer - BCBS</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerBCBS" class="form-control clsPLCContractPayerBCBS" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerBCBS)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerBCBSAllocatedTo" class="form-control clsPLCContractPayerBCBSAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerBCBSAllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCContractPayerBCBSSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="InternalID">Contract Payer - MMO</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerMMO" class="form-control clsPLCContractPayerMMO" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerMMO)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerMMOAllocatedTo" class="form-control clsPLCContractPayerMMOAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerMMOAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCContractPayerMMOSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Name">Contract Payer - OH BWC</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerOHBWC" class="form-control clsPLCContractPayerOHBWC" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerOHBWC)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerOHBWCAllocatedTo" class="form-control clsPLCContractPayerOHBWCAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerOHBWCAllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCContractPayerOHBWCSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Contract Payer - Tricare</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerTricare" class="form-control clsPLCWaystar" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerTricare)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerTricareAllocatedTo" class="form-control clsPLCContractPayerTricareAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerTricareAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCContractPayerTricareSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Contract Payer - Other</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerOther" class="form-control clsPLCContractPayerOther" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerOther)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCContractPayerOtherAllocatedTo" class="form-control clsPLCContractPayerOtherAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.ContractPayerOtherAllocatedTo)
+                </div>
+            </div>
+           @*  <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCContractPayerOtherSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div class="col-lg-12" hidden>
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">Medicaid Application Task</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicaidApplicationTask" class="form-control clsPLCMedicaidApplicationTask" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Approved">Approved</option>
+                        <option value="WaitingForClient">Waiting for Client</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicaidApplicationTask)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCMedicaidApplicationTaskAllocatedTo" class="form-control clsPLCMedicaidApplicationTaskAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.MedicaidApplicationTaskAllocatedTo)
+                </div>
+            </div>
+          @*   <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCMedicaidApplicationTaskSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+    <div id="divNPPEStag" class="col-lg-12" hidden>
+        <div class="form-group" style="margin-bottom: 5px !important;">
+            <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Status">NPPES</label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCNPPES" class="form-control clsPLCNPPES" @isEnabled>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Approved">Approved</option>
+                        <option value="WaitingForClient">Waiting for Client</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.NPPES)
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 p-0">
+                <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                    <select id="ddlPLCNPPESAllocatedTo" class="form-control clsPLCNPPESAllocatedTo" @isEnabled>
+                        <option value="Select">Select</option>
+                        <option value="AmyKing">AmyKing</option>
+                        <option value="BillyWhite">Billy White</option>
+                        <option value="PamelaRoysdon">Pamela Roysdon</option>
+                    </select>
+                    @Html.HiddenFor(m => m.PEPracticeLocationChangeCheckList.NPPESAllocatedTo)
+                </div>
+            </div>
+            @* <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                <button id="BtnPLCNPPESSubmit" class="btn-primary col-md-2 col-sm-2" style="text-align:left !important;padding-left:2px !important">Submit</button>
+            </div> *@
+        </div>
+    </div>
+</form>

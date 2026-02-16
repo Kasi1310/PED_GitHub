@@ -1,0 +1,137 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<input type="hidden" id="hfContactsStateId" value="0" />
+<input type="hidden" id="hfContactsCityId" value="0" />
+<form id="PEContactsFormfrm" method="post" class="form-horizontal">
+    <div class="row col-12 p-10" id="PEContactsForm">
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Type">Type<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Title">Title<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="EffectiveDate">First Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="TermedDate">Last Name<span style="color:red">*</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.HiddenFor(m => m.PEContacts.Id)
+                        @Html.DropDownListFor(m => m.PEContacts.ContactTypeID, new SelectList(Model.PEContactTypeList, "Id", "Value"), "Select Contact Type", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.Title, new { @class = "form-control", @placeholder = "Enter Title" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.FirstName, new { @class = "form-control", @placeholder = "Enter First Name" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.LastName, new { @class = "form-control", @placeholder = "Enter Last Name" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AddressLine1">Address</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="State">State</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="City">City</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ZipCode">Zip Code</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.Address, new { @class = "form-control", @placeholder = "Enter Address" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.DropDownListFor(m => m.PEContacts.StateId, new SelectList(Model.StatesList, "Id", "Value"), "Select State", new { @class = "form-control ContactsStatesList" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.DropDownListFor(m => m.PEContacts.CityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select City", new { @class = "form-control ContactsCitiesList" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.ZipCode, new { @class = "form-control", @placeholder = "Enter Zip Code" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ZipCode">Phone</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ZipCode">Fax</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ZipCode">Email</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.Phone, new { @class = "form-control", @placeholder = "Enter Phone" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.Fax, new { @class = "form-control", @placeholder = "Enter Fax" })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEContacts.Email, new { @class = "form-control", @placeholder = "Enter Email" })
+                    </div>
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPEContactsInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

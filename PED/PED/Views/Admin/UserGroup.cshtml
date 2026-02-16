@@ -1,0 +1,209 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin
+@model UserGroup;
+
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+}
+<input type="hidden" id="hrfUserGroup" value='@Url.Content("~/Admin/UserGroup/")' />
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li class="active">User Group</li>
+    </ol>
+    <h1 class="page-header">User Group<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong> Details saved.
+    </div>
+    <div id="alertinfo" class="alert alert-info alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Sorry!</strong> User Group Exists.
+    </div>
+    <div id="divUserGroupform">
+        @{ Html.RenderPartial("_UserGroupForm", Model); }
+    </div>
+    <div id="divUserGroupList">
+        @{ Html.RenderPartial("_UserGroupList", Model); }
+
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/ApplicationError.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        LoadUserGroupList();
+        $('#alertsuccess').hide();
+        $('#alertinfo').hide();
+        InitEvents();
+        CancelTeam();
+    });
+    function createUserGroup()
+    {
+        var validationresult = $('#UserGroupform').parsley().validate();
+        if (validationresult) {
+            var GetGroupName = $('#ddlUserGroup').val();
+            var GetUserId = $('#@Html.IdFor(m => m.UserGroupDet.UserId)').val();
+            var GetActiveStatus = ($('.ActiveStatus:checked').val());
+            var activ;
+            if (GetActiveStatus == 1)
+                activ = 1;
+            else
+                activ = 0;
+            var GetId = $('#@Html.IdFor(m => m.UserGroupDet.Id)').val();
+            GetId = (GetId == "" ? 0 : GetId);
+            var UserGroupDetails = JSON.stringify({
+                Id: GetId,
+                GroupName: GetGroupName,
+                UserId: GetUserId,
+                Active: activ
+            });
+            var url = "@Url.Action("InsertUserGroup", "Admin")";
+            var jsonData = UserGroupDetails;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divUserGroupList').html(resp);
+                $('.collapse').hide();
+                $('#btnSubmit').val('Submit');
+                $('#alertsuccess').show();
+                $('#@Html.IdFor(m => m.UserGroupDet.Id)').val('');
+                setTimeout(function () {
+                    $('#alertsuccess').hide();
+                    $('#alertsuccess').removeClass('show');
+                }, 2000);
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+                $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+                $('#UserGroupform').parsley().destroy();
+                ClearForm();
+                LoadUserGroupList();
+            });
+        }
+    }
+
+    function ClearForm()
+    {
+        $('#UserGroupform').find('input:text').val('');
+        $("textarea").val("");
+        $('#UserGroupform').find('input:radio').removeAttr('checked');
+        $('#UserGroupform').find('select').val('');
+       // $('#EmployeePositionDetails_Id').val('');
+    }
+
+    function EditUserGroup(ID)
+    {
+        var url = "@Url.Action("EditUserGroup", "Admin")";
+        var jsonData = ID;
+        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+            $('#divUserGroupform').html(resp);
+            $('#ddlUserGroup').val($('#@Html.IdFor(m => m.UserGroupDet.GroupName)').val());
+
+            var hfdisable = $('#hfactiveDisable').val();
+            if (hfdisable == 'disabled') {
+                $('#Active').attr('disabled','disabled');
+                $('#InActive').attr('disabled', 'disabled');
+                $('#divActiveStatus').attr('title','Sorry Cannot be Edited');
+            }
+            else
+            {
+                $('#Active').removeAttr('disabled');
+                $('#InActive').removeAttr('disabled');
+            }
+            CancelTeam();
+            $('#btnSubmit').val('Update');
+            $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
+            $('.collapse').collapse();
+            $("#changeteam").html("Edit User Group");
+            ScrollToTop();
+        });
+    }
+
+    $('#btnSubmit').live('click', function () {
+        createUserGroup();
+        $("#changeteam").html("Add User Group");
+    });
+
+    function LoadUserGroupList() {
+        $('#tblUserGroupList').DataTable({
+        searching: true,
+        'aoColumnDefs': [{
+            'bSortable': false,
+            'aTargets': [-1]
+        }]
+    });
+    }
+    function CancelTeam(){
+        $('#btnCancel').click(function (e) {
+        swal({
+            title: "Are you sure?",
+            text: "Data in the page will be lost!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-primary',
+            confirmButtonText: 'Confirm'
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                location.href = $('#hrfUserGroup').val();
+            }
+        });
+    });
+    }
+    function ConfirmDelete(RID) {
+        $("#alertsuccess").hide();
+        $('#alertinfo').hide();
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this detail!",
+            type: "error",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-danger',
+            confirmButtonText: 'Yes, delete it!'
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+                var url = "@Url.Action("DeleteUserGroup", "Admin")";
+            var jsonData = { ID: RID };
+                AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                    if (resp.message == "Failed") {
+                        $('#alertinfo').show();
+                        setTimeout(function () {
+                            $('#alertinfo').hide();
+                            $('#alertinfo').removeClass('show');
+                        }, 2000);
+                        LoadUserGroupList();
+                    }
+                    else
+                    {
+                        $('#alertinfo').hide();
+                        $('#divUserGroupList').html(resp);
+                        ClearForm();
+                        LoadUserGroupList();
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        });
+    };
+    </script>
+}
+
+

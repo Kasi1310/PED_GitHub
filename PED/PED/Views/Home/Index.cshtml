@@ -1,0 +1,940 @@
+﻿@using WiseX.ViewModels.Home
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+@using Microsoft.Extensions.Options;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IOptions<AppSettings> AppSettingsOptions
+@using WiseX.Helpers;
+
+@{
+    string CurrentProjectName = string.Empty;
+    string isAdmin = string.Empty;
+    var numCount = "";
+    var message = HttpContextAccessor.HttpContext.Session.Get<List<NotificationDetails>>("my-message");
+    var Changeproject = HttpContextAccessor.HttpContext.Session.Get<List<UserProjectRole>>("Changeproject");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    //var project = HttpContextAccessor.HttpContext.Session.Get<string>("SessionProjectName");
+    var NotificationCount = HttpContextAccessor.HttpContext.Session.Get<string>("NotificationCount");
+    var RoleAccess = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess").ToString();
+   
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+
+}
+<!-- begin #content -->
+<input type="hidden" id="hrfBoxId" value="" />
+<input type="hidden" id="hfRoleAccess" value="@RoleAccess" />
+<div id="content" class="content">
+    <!-- begin breadcrumb -->
+    <ol class="breadcrumb pull-right">
+        <li><a href="javascript:;">Home</a></li>
+        <li><a href="javascript:;">Dashboard</a></li>
+        <li class="active">Dashboard</li>
+    </ol>
+    <!-- end breadcrumb -->
+    <!-- begin page-header -->
+    <!-- end page-header -->
+    <!-- begin row -->
+    <div class="row @isAdmin" id="divBoxes">
+        @{ Html.RenderPartial("_Boxes", Model); }
+    </div>
+    <div class="rowList hide" id="divBoxesList">
+        @{ Html.RenderPartial("_BoxesList", Model);}
+    </div>
+    <div class="rowList hide" id="divPECredentialingLicenseBoxesList">
+        @{ Html.RenderPartial("_PECredentialingLicenseBoxesList", Model);}
+    </div>
+    <div class="rowList hide" id="divPEContractBoxesList">
+        @{ Html.RenderPartial("_PEContractBoxesList", Model);}
+    </div>
+    <div class="rowList hide" id="divPECheckListBoxes">
+        @{ Html.RenderPartial("_PECheckListBoxes", Model);}
+    </div>
+    <div id="divBoxesTaskDetails">
+        @{ Html.RenderPartial("_BoxesTaskDetails", Model);}
+    </div>
+    <div class="rowList hide" id="divPECheckListBoxesForAllocatedUser">
+        @{
+            Html.RenderPartial("_PECheckListForAllocatedUser", Model);
+        }
+    </div>
+    <!-- end row -->
+</div>
+<div id="divNotificationForm">
+    @{await Html.RenderPartialAsync("_NotificationPupupForm", Model); }
+</div>
+<!-- end #content -->
+@section Styles
+    {
+    <link href='@Url.Content("~/plugins/gritter/css/jquery.gritter.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <style>
+        .stats-link h4 {
+            color: white !important;
+        }
+
+        .Agreements a, .Agreements a:hover, .Agreements a:focus {
+            color: #ffffff !important;
+        }
+    </style>
+}
+
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/plugins/DataTables/media/js/dataTables.bootstrap.js")'></script>
+    <script src='@Url.Content("~/js/ui-modal-notification.demo.min.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+    <script src='@Url.Content("~/plugins/masked-input/masked-input.min.js")'></script>
+    <script src='@Url.Content("~/js/CommonUtils.js")'></script>
+    <script src='@Url.Content("~/js/dashboard.min.js")'></script>
+    <script src='@Url.Content("~/js/apps.min.js")'></script>
+    <script>
+        $(document).ready(function () {
+            $('#divBoxesTaskDetails').addClass('hide');
+            LoadDashboardList();
+            LoadDashboardExcel();
+            if(@message.Count()>0)
+            {
+                $('#HNotifcationForm').modal('show');
+            }
+
+        });
+
+        function LoadDashboardList()
+        {
+            $('#btnNotificationOK').on('click', function () {
+                $('#HNotifcationForm').modal('hide');
+            });
+
+            $('#AgreementsExpire').on('click', function () {
+                var name = $(this).find('h4').text;
+                $("#Contractsname").html();
+                var BoxName = "B1";
+                $("#hrfBoxId").val("B1");
+                $('#Contractsname').text('Contracts Expires in Next 90 Days');
+                ApprovalDatatable();
+            });
+            $('#AgreementsOutStanding').on('click', function () {
+                var BoxName = "B2";
+                $("#hrfBoxId").val("B2");
+                $('#Contractsname').text('Contracts Outstanding');
+                ApprovalDatatable();
+            });
+            $('#ContractsSenToAE').on('click', function () {
+                var BoxName = "B3";
+                $("#hrfBoxId").val("B3");
+                $('#Contractsname').text('Contracts Sent to AE');
+                ApprovalDatatable();
+            });
+            $('#ContractsReturnedbyAEtoManagement').on('click', function () {
+                var BoxName = "B4";
+                $("#hrfBoxId").val("B4");
+                $('#Contractsname').text('Contracts Returned by AE to Management');
+                ApprovalDatatable();
+            });
+            $('#ContractSentToClient').on('click', function () {
+                var BoxName = "B5";
+                $("#hrfBoxId").val("B5");
+                $('#Contractsname').text('Signed Contracts');
+                ApprovalDatatable();
+            });
+            $('#FeeChangedClients').on('click', function () {
+                var BoxName = "B6";
+                $("#hrfBoxId").val("B6");
+                $('#Contractsname').text('Fee Changed Contracts');
+                ApprovalDatatable();
+            });
+            $('#ActiveClientsWillNotSign').on('click', function () {
+                var BoxName = "B7";
+                $("#hrfBoxId").val("B7");
+                $('#Contractsname').text('Active  Clients Will Not Sign New Contracts');
+                ApprovalDatatable();
+            });
+            $('#AutoRenewalClients').on('click', function () {
+                var BoxName = "B8";
+                $("#hrfBoxId").val("B8");
+                $('#Contractsname').text('Auto Renewal Clients');
+                ApprovalDatatable();
+
+            });
+            $('#LicenseExpire').on('click', function () {
+               $('#divBoxesTaskDetails').hide();
+                var BoxName = "B9";
+                $("#hrfBoxId").val("B9");
+                $('#PECLListName').text('License Expires in Next 90 Days');
+                PECredentialingLicenseDatatable();
+
+            });
+            $('#LicenseOutstanding').on('click', function () {
+                $('#divBoxesTaskDetails').hide();
+                var BoxName = "B10";
+                $("#hrfBoxId").val("B10");
+                $('#PECLListName').text('License Outstanding');
+                PECredentialingLicenseDatatable();
+
+            });
+            $('#MedicareExpires').on('click', function () {
+                $('#divBoxesTaskDetails').hide();
+                var BoxName = "B11";
+                $("#hrfBoxId").val("B11");
+                $('#PECListName').text('Medicare Expires in Next 90days');
+                PEContractBoxesListDatatable();
+
+            });
+            $('#MedicareOutstanding').on('click', function () {
+                $('#divBoxesTaskDetails').hide();
+                var BoxName = "B15";
+                $("#hrfBoxId").val("B15");
+                $('#PECListName').text('Medicare Outstanding');
+                PEContractBoxesListDatatable();
+
+            });
+            $('#MedicaidExpires').on('click', function () {
+                $('#divBoxesTaskDetails').hide();
+                var BoxName = "B12";
+                $("#hrfBoxId").val("B12");
+                $('#PECListName').text('Medicaid Expires in Next 90days');
+                PEContractBoxesListDatatable();
+               
+            });
+            $('#MedicaidOutstanding').on('click', function () {
+                $('#divBoxesTaskDetails').hide();
+                var BoxName = "B16";
+                $("#hrfBoxId").val("B16");
+                $('#PECListName').text('Medicaid Outstanding');
+                PEContractBoxesListDatatable();
+                
+            });
+            // $('#OpenedTask').on('click', function () {
+            //     var BoxName = "B13";
+            //     $("#hrfBoxId").val("B13");
+            //     $('#PECheckListName').text('Open Task');
+            //     PECheckListBoxesListDatatable();
+            // });
+            $('#OpenedTask').on('click', function () {
+                var BoxName = "B17";
+                $("#hrfBoxId").val("B17");
+                // $('#PECheckListNameAllocatedUser').text('Allocated User Task Info');
+                //PECheckListBoxesListDatatable();
+                AllocatedUserTaskDetailBaxes();
+               
+            });
+            $('#ClosedTask').on('click', function () {                
+                var BoxName = "B14";
+                $("#hrfBoxId").val("B14");
+                $('#PECheckListName').text('Closed Task');
+                PECheckListBoxesListDatatable();                
+                $('#divBoxesTaskDetails').hide();
+            });
+            $('#BillyWhiteOpenedTask').on('click', function () {
+                //$('#divBoxesTaskDetails').hide();
+                var BoxName = "B17";
+                $("#hrfBoxId").val("B17");
+                //$('#PECListName').text('Medicaid Outstanding');
+                PECheckListBoxesListForAllocatedUserDatatable();
+
+            });
+            $('#AmyKingOpenedTask').on('click', function () {
+                //$('#divBoxesTaskDetails').hide();
+                var BoxName = "B18";
+                $("#hrfBoxId").val("B18");
+                //$('#PECListName').text('Medicaid Outstanding');
+                PECheckListBoxesListForAllocatedUserDatatable();
+
+            });
+            $('#PamelaRoysdonOpenedTask').on('click', function () {
+                //$('#divBoxesTaskDetails').hide();
+                var BoxName = "B19";
+                $("#hrfBoxId").val("B19");
+                //$('#PECListName').text('Medicaid Outstanding');
+                PECheckListBoxesListForAllocatedUserDatatable();
+
+            });
+
+        }
+        function AllocatedUserTaskDetailBaxes()
+        {
+            $('#divBoxesList').removeClass('show');
+            $('#divBoxesList').addClass('hide');
+
+            $('#divPECredentialingLicenseBoxesList').removeClass('show');
+            $('#divPECredentialingLicenseBoxesList').addClass('hide');
+
+            $('#divPEContractBoxesList').removeClass('show');
+            $('#divPEContractBoxesList').addClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('show');
+            $('#divPECheckListBoxes').addClass('hide');
+
+            $('#divBoxesTaskDetails').removeClass('hide');
+            $('#divBoxesTaskDetails').addClass('show');
+
+
+            $('#divPECheckListBoxesForAllocatedUser').removeClass('show');
+            $('#divPECheckListBoxesForAllocatedUser').addClass('hide');
+
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblPECheckListBoxesForAllocatedUser')) {
+                dtTblApprovalList = $('#tblPECheckListBoxesForAllocatedUser').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblPECheckListBoxesForAllocatedUser').DataTable(
+                    {
+                        ajax: {
+                            url: '@Url.Content("~/Home/GetPECheckListBoxesForAllocatedUser")',
+                            type: "POST",
+                            datatype: "json",
+                            data: function (d) {
+                                d.BoxName = $("#hrfBoxId").val();
+                            },
+                            error: function (result) {
+                                console.log(result);
+                            }
+                        },
+                        columns: [
+                            { data: "companyId", name: "companyId", "width": "2%" },
+                            { data: "companyName", name: "companyName", "width": "30%" },
+                            { data: "billingType", name: "billingType", "width": "13%" },
+                            { data: "task", name: "task", "width": "35%" },
+                            { data: "status", name: "status", "width": "20%" },
+                            { data: "allocatedUser", name: "allocatedUser", "width": "25%" }
+                        ],
+                                              
+                        autoWidth: false,
+                        searching: true,
+                        "order": [0, 'asc'],
+                        language: {
+                            processing: "Processing...Please Wait"
+                        },
+                    })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                $('#tblPECheckListBoxes tbody tr').live('click', function (evt) {
+                    var data = dtTblApprovalList.row(this).data();
+                    var baseUrl = '@Url.Content("~/ProviderEntrollment/ProviderEntrollment/?id=")';
+                    var url = baseUrl + data["clientId"];
+                    window.location.href = url;
+                });
+                //}
+            }
+        }
+        
+        function LoadDashboardExcel()
+        {
+            $('#btnNotificationOK').on('click', function () {
+                $('#HNotifcationForm').modal('hide');
+            });
+
+            $('#btnDashboardExport1').on('click', function () {
+                var name = $(this).find('h4').text;
+                $("#Contractsname").html();
+                var BoxName = "B1";
+                $("#hrfBoxId").val("B1");
+                $('#Contractsname').text('Contracts Expires in Next 90 Days');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport2').on('click', function () {
+                var BoxName = "B2";
+                $("#hrfBoxId").val("B2");
+                $('#Contractsname').text('Contracts Outstanding');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport3').on('click', function () {
+                var BoxName = "B3";
+                $("#hrfBoxId").val("B3");
+                $('#Contractsname').text('Contracts Sent to AE');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport4').on('click', function () {
+                var BoxName = "B4";
+                $("#hrfBoxId").val("B4");
+                $('#Contractsname').text('Contracts Returned by AE to Management');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport5').on('click', function () {
+                var BoxName = "B5";
+                $("#hrfBoxId").val("B5");
+                $('#Contractsname').text('Signed Contracts');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport6').on('click', function () {
+                var BoxName = "B6";
+                $("#hrfBoxId").val("B6");
+                $('#Contractsname').text('Fee Changed Contracts');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport7').on('click', function () {
+                var BoxName = "B7";
+                $("#hrfBoxId").val("B7");
+                $('#Contractsname').text('Active  Clients Will Not Sign New Contracts');
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport8').on('click', function () {
+                var BoxName = "B8";
+                $("#hrfBoxId").val("B8");
+                $('#Contractsname').text('Auto Renewal Clients');
+                Dashboarddata(BoxName);
+
+            });
+            $('#btnDashboardExport9').on('click', function () {
+                var BoxName = "B9";
+                $("#hrfBoxId").val("B9");
+                $('#Contractsname').text('License Expires in Next 90 Days');
+                Dashboarddata(BoxName);
+
+            });
+            $('#btnDashboardExport10').on('click', function () {
+                var BoxName = "B10";
+                $("#hrfBoxId").val("B10");
+                $('#Contractsname').text('License Outstanding');
+                Dashboarddata(BoxName);
+
+            });
+            $('#btnDashboardExport11').on('click', function () {
+                var BoxName = "B11";
+                $("#hrfBoxId").val("B11");
+                $('#Contractsname').text('Medicare Expires in Next 90days');
+                Dashboarddata(BoxName);
+
+            });
+            $('#btnDashboardExport12').on('click', function () {
+                var BoxName = "B12";
+                $("#hrfBoxId").val("B12");
+                $('#Contractsname').text('Medicaid Expires in Next 90days');
+                Dashboarddata(BoxName);
+
+            });
+            $('#btnDashboardExport13').on('click', function () {
+                var BoxName = "B13";
+                $('#PECheckListName').text('Open Task');
+                $("#hrfBoxId").val("B13");
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport14').on('click', function () {
+                var BoxName = "B14";
+                $('#PECheckListName').text('Closed Task');
+                $("#hrfBoxId").val("B14");
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport15').on('click', function () {
+                var BoxName = "B15";
+                $('#Contractsname').text('Medicare Outstanding');
+                $("#hrfBoxId").val("B15");
+                Dashboarddata(BoxName);
+            });
+            $('#btnDashboardExport16').on('click', function () {
+                var BoxName = "B16";
+                $('#Contractsname').text('Medicaid Outstanding');
+                $("#hrfBoxId").val("B16");
+                Dashboarddata(BoxName);
+            });
+             $('#btnDashboardExport17').on('click', function () {
+                var BoxName = "B17";
+                $('#PECheckListName').text('Amy King Open Task');
+                $("#hrfBoxId").val("B17");
+                Dashboarddata(BoxName);
+            });
+             $('#btnDashboardExport18').on('click', function () {
+                var BoxName = "B18";
+                $('#PECheckListName').text('Billy White Open Task');
+                $("#hrfBoxId").val("B18");
+                Dashboarddata(BoxName);
+            });
+             $('#btnDashboardExport19').on('click', function () {
+                var BoxName = "B19";
+                $('#PECheckListName').text('PamelaRoysdon Open Task');
+                $("#hrfBoxId").val("B19");
+                Dashboarddata(BoxName);
+            });
+        }
+        function Dashboarddata(Dashboardname)
+        {
+            var GetBoxname=Dashboardname;
+            //alert(GetBoxname);
+            $.ajax({
+                url: '@Url.Content("~/Home/DownloadDashboardData")',
+                type: "POST",
+                datatype: "json",
+                data:{
+                    BoxName: $("#hrfBoxId").val()
+                },
+                success:function(data){
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = data;
+                    a.download = 'DashboardData.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    console.log(data);
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+
+
+         }
+
+
+
+
+
+        function LoadRoleList() {
+           $('#tblUserList').DataTable({
+                    searching: true,
+                    'aoColumnDefs': [{
+                        //'bSortable': true,
+                        'aTargets': [-1]
+                    }],
+                    "columnDefs": [
+                        { "type": "num", "targets": 1 }
+                    ],
+                    "order": [ 1, 'asc' ],
+                });
+        }
+
+
+        function ApprovalDatatable(BoxName) {
+
+            $('#divBoxesList').removeClass('hide');
+            $('#divBoxesList').addClass('show');
+
+            $('#divPECredentialingLicenseBoxesList').removeClass('show');
+            $('#divPECredentialingLicenseBoxesList').addClass('hide');
+
+            $('#divPEContractBoxesList').removeClass('show');
+            $('#divPEContractBoxesList').addClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('show');
+            $('#divPECheckListBoxes').addClass('hide');
+
+            $('#divBoxesTaskDetails').addClass('hide');
+
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblUserList')) {
+                dtTblApprovalList = $('#tblUserList').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblUserList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Home/GetDashboardList1")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.BoxName = $("#hrfBoxId").val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "companyID", name: "companyID", "width": "2%" },
+                           { data: "companyName", name: "companyName", "width": "35%"},
+                           { data: "residencyCode", name: "residencyCode", "width": "5%"},
+                           { data: "contractExpiryDate", name: "contractExpiryDate", "width": "10%" },
+                           //{ data: "aggrementType", name: "aggrementType", "width": "10%" },
+                           { data: "userName", name: "userName", "width": "15%" },
+                           { data: "status", name: "status", "width": "8%" },
+                           { data: "notes", name: "notes", "width": "25%" }
+                       ],
+
+                       //serverSide: true,
+                       //processing: true,
+                       autoWidth: false,
+                       searching: true,
+                       "order": [ 0, 'asc' ],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       },
+                       @*dom: 'l<"toolbar">frtip',
+                       initComplete: function () {
+                           $("div.toolbar")
+                           .html('<a id="btnDashboardExport" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o text-success"></i> </a>');
+                           $('#btnDashboardExport').on('click', function () {
+                               $.ajax({
+                                   url: '@Url.Content("~/Home/DownloadDashboardData")',
+                                   type: "POST",
+                                   datatype: "json",
+                                   data:{
+                                       BoxName: $("#hrfBoxId").val()
+                                   },
+                                   success:function(data){
+                                       const a = document.createElement('a');
+                                       a.style.display = 'none';
+                                       a.href = data;
+                                       a.download = 'DashboardData.xlsx';
+                                       document.body.appendChild(a);
+                                       a.click();
+                                       console.log(data);
+                                   },
+                                   error: function (result) {
+                                       console.log(result);
+                                   }
+                               });
+                           });
+                       }*@
+                   })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                    $('#tblUserList tbody tr').live('click', function (evt) {
+                        var data = dtTblApprovalList.row(this).data();
+                        var baseUrl =  '@Url.Content("~/Contract/Contracts/?id=")';
+                        var url = baseUrl + data["clientId"]+"&name=" + data["companyName"];
+                        window.location.href = url;
+                    });
+                //}
+            }
+        }
+
+
+        function PECredentialingLicenseDatatable(BoxName) {
+
+            //divPECredentialingLicenseBoxesList
+            //divPEContractBoxesList
+            $('#divBoxesList').removeClass('show');
+            $('#divBoxesList').addClass('hide');
+
+            $('#divPECredentialingLicenseBoxesList').addClass('show');
+            $('#divPECredentialingLicenseBoxesList').removeClass('hide');
+
+            $('#divPEContractBoxesList').removeClass('show');
+            $('#divPEContractBoxesList').addClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('show');
+            $('#divPECheckListBoxes').addClass('hide');
+
+            $('#divBoxesTaskDetails').removeClass('show');
+            $('#divBoxesTaskDetails').addClass('hide');
+
+
+            $('#divPECheckListBoxesForAllocatedUser').removeClass('show');
+            $('#divPECheckListBoxesForAllocatedUser').addClass('hide');
+
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblPECredentialingLicenseBoxesList')) {
+                dtTblApprovalList = $('#tblPECredentialingLicenseBoxesList').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblPECredentialingLicenseBoxesList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Home/GetPECredentialingLicenseBoxesList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.BoxName = $("#hrfBoxId").val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "companyId", name: "companyId", "width": "2%" },
+                           { data: "companyName", name: "companyName", "width": "35%"},
+                           { data: "licenseType", name: "licenseType", "width": "15%"},
+                           { data: "certificationLevel", name: "certificationLevel", "width": "15%" },
+                           { data: "licenseNo", name: "licenseNo", "width": "20%" },
+                           { data: "expiryDate", name: "expiryDate", "width": "13%" }
+                       ],
+
+                       //serverSide: true,
+                       //processing: true,
+                       autoWidth: false,
+                       searching: true,
+                       "order": [ 0, 'asc' ],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       },
+                   })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                $('#tblPECredentialingLicenseBoxesList tbody tr').live('click', function (evt) {
+                        var data = dtTblApprovalList.row(this).data();
+                        var baseUrl =  '@Url.Content("~/ProviderEntrollment/ProviderEntrollment/?id=")';
+                        var url = baseUrl + data["clientId"];
+                        window.location.href = url;
+                    });
+                //}
+            }
+        }
+
+        function PEContractBoxesListDatatable(BoxName) {
+
+            //divPECredentialingLicenseBoxesList
+            //divPEContractBoxesList
+            $('#divBoxesList').removeClass('show');
+            $('#divBoxesList').addClass('hide');
+
+            $('#divPECredentialingLicenseBoxesList').removeClass('show');
+            $('#divPECredentialingLicenseBoxesList').addClass('hide');
+
+            $('#divPEContractBoxesList').addClass('show');
+            $('#divPEContractBoxesList').removeClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('show');
+            $('#divPECheckListBoxes').addClass('hide');
+
+            $('#divBoxesTaskDetails').removeClass('show');
+            $('#divBoxesTaskDetails').addClass('hide');
+
+
+            $('#divPECheckListBoxesForAllocatedUser').removeClass('show');
+            $('#divPECheckListBoxesForAllocatedUser').addClass('hide');
+
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblPEContractBoxesList')) {
+                dtTblApprovalList = $('#tblPEContractBoxesList').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblPEContractBoxesList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Home/GetPEContractBoxesList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.BoxName = $("#hrfBoxId").val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "companyId", name: "companyId", "width": "2%" },
+                           { data: "companyName", name: "companyName", "width": "35%"},
+                           { data: "insuranceContract", name: "insuranceContract", "width": "23%" },
+                           { data: "lastRevalidateDate", name: "lastRevalidateDate", "width": "10%" },
+                           { data: "effectiveDate", name: "effectiveDate", "width": "10%" },
+                           { data: "nextUpdateDue", name: "nextUpdateDue", "width": "10%" },
+                           { data: "termedDate", name: "termedDate", "width": "10%" }
+                       ],
+
+                       //serverSide: true,
+                       //processing: true,
+                       autoWidth: false,
+                       searching: true,
+                       "order": [ 0, 'asc' ],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       },
+                   })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                $('#tblPEContractBoxesList tbody tr').live('click', function (evt) {
+                        var data = dtTblApprovalList.row(this).data();
+                        var baseUrl =  '@Url.Content("~/ProviderEntrollment/ProviderEntrollment/?id=")';
+                        var url = baseUrl + data["clientId"];
+                        window.location.href = url;
+                    });
+                //}
+            }
+        }
+
+
+        function PECheckListBoxesListDatatable(BoxName) {
+
+            //divPECredentialingLicenseBoxesList
+            //divPEContractBoxesList
+            $('#divBoxesList').removeClass('show');
+            $('#divBoxesList').addClass('hide');
+
+            $('#divPECredentialingLicenseBoxesList').removeClass('show');
+            $('#divPECredentialingLicenseBoxesList').addClass('hide');
+
+            $('#divPEContractBoxesList').removeClass('show');
+            $('#divPEContractBoxesList').addClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('hide');
+            $('#divPECheckListBoxes').addClass('show');
+
+            $('#divBoxesTaskDetails').removeClass('show');
+            $('#divBoxesTaskDetails').addClass('hide');
+
+
+            $('#divPECheckListBoxesForAllocatedUser').removeClass('show');
+            $('#divPECheckListBoxesForAllocatedUser').addClass('hide');
+            
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblPECheckListBoxes')) {
+                dtTblApprovalList = $('#tblPECheckListBoxes').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblPECheckListBoxes').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Home/GetPECheckListBoxes")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.BoxName = $("#hrfBoxId").val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "companyId", name: "companyId", "width": "2%" },
+                           { data: "companyName", name: "companyName", "width": "30%" },
+                           { data: "billingType", name: "billingType", "width": "13%" },
+                           { data: "task", name: "task", "width": "35%" },
+                           { data: "status", name: "status", "width": "20%" }
+                        ],
+
+                       // columnDefs: [
+                       //{
+                       //    targets: 5,
+                       //    render: function (data, type, row, meta) {
+                       //        return '<a href="javascript:;" id="' + row["id"] + '" class="fa fa-eye btnClientView hide"></a>';
+                       //    }
+                       //}
+                       //],
+
+                       //serverSide: true,
+                       //processing: true,
+                       autoWidth: false,
+                       searching: true,
+                       "order": [ 0, 'asc' ],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       },
+                   })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                $('#tblPECheckListBoxes tbody tr').live('click', function (evt) {
+                        var data = dtTblApprovalList.row(this).data();
+                        var baseUrl =  '@Url.Content("~/ProviderEntrollment/ProviderEntrollment/?id=")';
+                        var url = baseUrl + data["clientId"];
+                        window.location.href = url;
+                    });
+                //}
+            }
+        }
+
+        function PECheckListBoxesListForAllocatedUserDatatable(BoxName) {
+
+            //divPECredentialingLicenseBoxesList
+            //divPEContractBoxesList
+            $('#divBoxesList').removeClass('show');
+            $('#divBoxesList').addClass('hide');
+
+            $('#divPECredentialingLicenseBoxesList').removeClass('show');
+            $('#divPECredentialingLicenseBoxesList').addClass('hide');
+
+            $('#divPEContractBoxesList').removeClass('show');
+            $('#divPEContractBoxesList').addClass('hide');
+
+            $('#divPECheckListBoxes').removeClass('show');
+            $('#divPECheckListBoxes').addClass('hide');
+
+            $('#divBoxesTaskDetails').removeClass('hide');
+            $('#divBoxesTaskDetails').addClass('show');
+
+
+            $('#divPECheckListBoxesForAllocatedUser').removeClass('hide');
+            $('#divPECheckListBoxesForAllocatedUser').addClass('show');
+
+
+
+            var dtTblApprovalList;
+
+            //PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblPECheckListBoxesForAllocatedUser')) {
+                dtTblApprovalList = $('#tblPECheckListBoxesForAllocatedUser').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+
+                dtTblApprovalList = $('#tblPECheckListBoxesForAllocatedUser').DataTable(
+                    {
+                        ajax: {
+                            url: '@Url.Content("~/Home/GetPECheckListBoxesForAllocatedUser")',
+                            type: "POST",
+                            datatype: "json",
+                            data: function (d) {
+                                d.BoxName = $("#hrfBoxId").val();
+                            },
+                            error: function (result) {
+                                console.log(result);
+                            }
+                        },
+                        columns: [
+                            { data: "companyId", name: "companyId", "width": "2%" },
+                            { data: "companyName", name: "companyName", "width": "30%" },
+                            { data: "billingType", name: "billingType", "width": "13%" },
+                            { data: "task", name: "task", "width": "35%" },
+                            { data: "status", name: "status", "width": "20%" },
+                            { data: "allocatedUser", name: "allocatedUser", "width": "25%" }
+                        ],
+
+                        
+                        autoWidth: false,
+                        searching: true,
+                        "order": [0, 'asc'],
+                        language: {
+                            processing: "Processing...Please Wait"
+                        },
+                    })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                var varRoleAccess = $('#hfRoleAccess').val();
+
+                //if(varRoleAccess == 'F')
+                //{
+                $('#tblPECheckListBoxes tbody tr').live('click', function (evt) {
+                    var data = dtTblApprovalList.row(this).data();
+                    var baseUrl = '@Url.Content("~/ProviderEntrollment/ProviderEntrollment/?id=")';
+                    var url = baseUrl + data["clientId"];
+                    window.location.href = url;
+                });
+                //}
+            }
+        }
+
+    </script>
+}
+

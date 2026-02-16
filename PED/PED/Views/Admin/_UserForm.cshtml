@@ -1,0 +1,144 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using WiseX.ViewModels.Admin;
+@model Users
+@{
+    var fn = Model.UserDetails.FirstName;
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title" id="changeuser">Add User</h4>
+    </div>
+    <form id="frmUser" name="frmUser1" class="form-horizontal" data-parsley-validate="true" method="post">
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.UserDetails.UserDetailId)
+        @Html.HiddenFor(m => m.UserDetails.Permissions)
+        @Html.HiddenFor(m => m.PasswordHash)
+        <div class="panel-body panel-form  m-t-5 collapse">
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4">First Name<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    @Html.TextBoxFor(m => m.UserDetails.FirstName, new { @value = Model.UserDetails.FirstName, @class = "form-control", @placeholder = "Enter First Name", data_parsley_required = "true" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="lastname">Last Name<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    @Html.TextBoxFor(m => m.UserDetails.LastName, new { @class = "form-control", @placeholder = "Enter Last Name", data_parsley_required = "true" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="username">User Name<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Enter User Name", data_parsley_required = "true",@readonly= "", data_parsley_pattern = "[a-zA-Z0-9-_]{3,20}" })
+                    <span class="text-danger" id="spanUserName" hidden>User Name is left <b>Blank</b> or <b>Already Exist</b></span>
+                </div>
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="email">Email<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Enter Email", data_parsley_required = "true", data_parsley_type = "email" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="username">Password<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                    @Html.TextBox("txtPassword", null, new { @class = "form-control", @placeholder = "Enter Password", data_parsley_required = "true", type = "password", @data_toggle = "password", @data_placement = "after", data_parsley_length = "[6,12]" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+
+                <label class="control-label col-md-4 col-sm-4" for="username">Confirm Password<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                    @Html.TextBox("txtConfirmPassword", null, new { @class = "form-control", @placeholder = "Enter Confirm Password", data_parsley_required = "true", data_parsley_equalto = "#txtPassword", type = "password", @data_toggle = "password", @data_placement = "after", data_parsley_length = "[6,12]" })
+                    <span class="text-danger" id="spanPassword" hidden>Password not matching</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Phone">Phone Number</label>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Enter Phone Number", data_parsley_pattern = "^[0-9]{10,15}$" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="Role">Role <span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    @Html.DropDownListFor(m => m.UserDetails.UserRole, new SelectList(Model.RolesList, "Id", "Name"), "Select Role", new { @class = "form-control RoleList" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4">Gender<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8 controls">
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.UserDetails.Gender, "Male", new { @class = "Gender", data_parsley_required = "true", @id = "Male", data_parsley_errors_container = "#errorcheck" })
+                        <label for="Male">Male</label>
+                    </div>
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.UserDetails.Gender, "Female", new { @class = "Gender", data_parsley_required = "true", @id = "Female" })
+                        <label for="Female">Female</label>
+                    </div>
+                </div>
+                <div id="errorcheck" style="padding-left:253px!important"></div>
+            </div>
+
+            <div class="form-group col-sm-6 col-md-6 col-lg-6">
+                <label class="control-label col-md-4 col-sm-4" for="username">Active<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8">
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.UserDetails.Active, "Y", new { @class = "Active", data_parsley_required = "true", @id = "ActiveYes", data_parsley_errors_container = "#errorcheck1" })
+                        <label for="ActiveYes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="radio radio-css radio-inline">
+                        @Html.RadioButtonFor(m => m.UserDetails.Active, "N", new { @class = "Active", data_parsley_required = "true", @id = "ActiveNo" })
+                        <label for="ActiveNo">
+                            No
+                        </label>
+                    </div>
+                </div>
+                <div id="errorcheck1" style="padding-left:253px!important"></div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6 hide" id="divClient">
+                <label class="control-label col-md-4 col-sm-4">Client<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls">
+                    @Html.DropDownListFor(m => m.UserDetails.Client, new SelectList(Model.ClientList, "Id", "Value"), new { @class = "form-control AccountUsers", multiple = "multiple" })
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-md-6 col-lg-6" id="chkRolePermissions">
+                <label class="control-label col-md-4 col-sm-4">Permissions<span style="color:red">*</span></label>
+                <div class="col-md-8 col-sm-8 col-lg-8">
+                    <div class="checkbox checkbox-css checkbox-inline">
+                        <input type="checkbox" id="PermissionRead" value="1" name="Permissions" class="permissions" data-parsley-errors-container="#errorcheck2" />
+                        <label for="PermissionRead"> Read</label>
+                    </div>
+                    <div class="checkbox checkbox-css checkbox-inline hidden">
+                        <input type="checkbox" id="PermissionWrite" value="2" name="Permissions" class="permissions" />
+                        <label for="PermissionWrite">Write</label>
+                    </div>
+                    <div class="checkbox checkbox-css checkbox-inline">
+                        <input type="checkbox" id="PermissionFullControl" value="3" name="Permissions" class="permissions" />
+                        <label for="PermissionFullControl"> Full Control</label>
+                    </div>
+                    <div id="errorcheck2"></div>
+                </div>
+                
+            </div>
+
+            <div class="form-group col-sm-12 text-center">
+                <input type="button" id="btnSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>

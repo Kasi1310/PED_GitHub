@@ -1,0 +1,62 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model IEnumerable<ProviderEntrollmentDetailsList>
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>
+        ("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+        </div>
+        <h4 class="panel-title">Provider Enrollment List</h4>
+    </div>
+    <div class="panel-body">
+        <table id="tblProviderEntrollment" class="table table-striped table-bordered table-hover" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Company Code</th>
+                    <th>Description</th>
+                    <th>Contact Name</th>
+                    <th>Contact Phone</th>
+                    <th>NPI Number</th>
+                    <th>Tax ID</th>
+                    <th class="@isAdmin">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{int i = 0;
+                    foreach (var item in Model)
+                    {
+                        i++;
+                        <tr id="@item.ID">
+
+                            <td id="txtCompanyId" class="tr1">@item.CompanyId</td>
+                            <td id="txtDescription" class="tr1">@item.Description</td>
+                            <td id="txtContactName" class="tr1">@item.ContactName</td>
+                            <td id="txtContactPhone" class="tr1">@item.ContactPhone</td>
+                            <td id="txtNPINumber" class="tr1">@item.NPINumber</td>
+                            <td id="txtTaxID" class="tr1">@item.TaxID</td>
+
+
+                            <td class="tr1 clsAction @isAdmin">
+                                <button id="btnedit" onclick="EditProviderEntrollment('@item.ID')" title="Edit" class="fa fa-lg fa-edit @isAdmin text-inverse form-control1" style="border:none; background-color:transparent"></button>
+
+                                <button id="btnDelete" Onclick="DeleteProviderEntrollment('@item.ID')" title="Delete" class="fa fa-lg fa-trash-o @isAdmin  text-inverse form-control1 p-l-0 p-r-0" style="border:none; background-color:transparent"></button>
+
+                            </td>
+                        </tr>
+                    } }
+            </tbody>
+        </table>
+    </div>
+</div>
+

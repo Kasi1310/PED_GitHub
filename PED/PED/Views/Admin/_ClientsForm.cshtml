@@ -1,0 +1,146 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<input type="hidden" id="hfStateId" value="@Model.ClientsDetails.StateId" />
+<input type="hidden" id="hfCityId" value="@Model.ClientsDetails.CityId" />
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        @if (RolePermission == "F")
+        {
+            <h4 class="panel-title" id="changeteam">Add Client</h4>
+        }
+        @if (RolePermission == "R")
+        {
+            <h4 class="panel-title" id="changeteam">View Client</h4>
+        }
+    </div>
+
+    <form id="Clientsfrm" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                <div class="col-lg-12">
+                    <h4>Company Details</h4><hr />
+
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <label class="col-md-3 col-sm-3" for="CompanyID">Company ID<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="CompanyName">Company Name<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="ResidencyCode">Residency Code<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="LocationStreetAddress">Address<span style="color:red">*</span></label>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.HiddenFor(m => m.ClientsDetails.ID)
+                            @Html.HiddenFor(m => m.ClientsDetails.ReferenceID)
+                            @Html.HiddenFor(m => m.ClientsDetails.InsuranceContractRefID)
+                            @Html.TextBoxFor(m => m.ClientsDetails.CompanyId, new { @class = "form-control", @placeholder = "Enter Company ID", data_parsley_required = "true", data_parsley_type = "digits", data_parsley_length = "[1,4]" })
+                            <span class="text-danger" id="spanCompanyId" hidden>CompanyId Already Exist! Enter a new ID</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                            @Html.TextBoxFor(m => m.ClientsDetails.CompanyName, new { @class = "form-control", @placeholder = "Enter Company Name", data_parsley_required = "true" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.DropDownListFor(m => m.ClientsDetails.ResidencyCodeID, new SelectList(Model.ResidencyCodeList, "Id", "Value"), "Select Residency Code", new { @class = "form-control ResidencyCodeList", data_parsley_required = "true" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.TextBoxFor(m => m.ClientsDetails.LocationStreetAddress, new { @class = "form-control", @placeholder = "Enter Location Street Address", data_parsley_required = "true" })
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <label class="col-md-3 col-sm-3" for="State">State<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="City">City<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="Country">County<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="ZipCode">Zip Code<span style="color:red">*</span></label>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                            @Html.DropDownListFor(m => m.ClientsDetails.StateId, new SelectList(Model.StatesList, "Id", "Value"), "Select State", new { @class = "form-control StatesList" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls">
+                            @Html.DropDownListFor(m => m.ClientsDetails.CityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select City", new { @class = "form-control CitiesList" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.TextBoxFor(m => m.ClientsDetails.County, new { @class = "form-control", @placeholder = "Enter County", data_parsley_required = "true" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.TextBoxFor(m => m.ClientsDetails.ZipCode, new { @class = "form-control", @placeholder = "Enter Zip Code", data_parsley_required = "true" })
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <label class="col-md-3 col-sm-3" for="Active">Active<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="AccountExecutive">Account Executive<span style="color:red">*</span></label>
+                        <label class="col-md-3 col-sm-3" for="Client">Billing<span style="color:red">*</span></label>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12 p-0">
+                        <div class="form-group col-md-3 col-sm-3 col-lg-3 " id="divActiveStatus">
+                            <div class="checkbox checkbox-css radio-inline">
+                                @Html.CheckBoxFor(m => m.ClientsDetails.Active, new { @class = "ActiveStatus clsActive", @id = "Active" })
+                                <label for="Active">Yes</label>
+                            </div>
+                            <div class="checkbox checkbox-css radio-inline">
+                                @Html.CheckBoxFor(m => m.ClientsDetails.Active, new { @class = "ActiveStatus clsInActive", @id = "InActive" })
+                                <label for="InActive">No</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            @Html.DropDownListFor(m => m.ClientsDetails.AccountExecutiveID, new SelectList(Model.AccountExecutiveList, "Id", "Value"), "Select Account Executive", new { @class = "form-control AccountExecutiveList", data_parsley_required = "true" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-lg-3 controls" data-parsley-validate="true">
+                            <select id="ddlBilling" class="form-control clsBilling">
+                                <option value="" selected="selected">Select Billing</option>
+                                <option value="New to Billing">New to Billing</option>
+                                <option value="Existing Biller">Existing Biller</option>
+                            </select>
+
+                            @Html.HiddenFor(m => m.ClientsDetails.BillingType)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div id="divClientCheckList" class="form-group col-sm-12">
+                @{ Html.RenderPartial("_ClientCheckList", Model); }
+            </div>*@
+            @*<div id="divContractFeesDetailsform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_ContractFeesDetails", Model); }
+        </div>
+        <div id="divClientsEmployeeDetailsform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_ClientEmployeeDetails", Model); }
+        </div>
+        <div id="divClientsEmployeeform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_ClientEmployeeList", Model); }
+        </div>
+        <div id="divClientsInsuranceContractDetailsform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_ClientsInsuranceContractDetails", Model); }
+        </div>
+        <div id="divClientsInsuranceContractListform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_ClientsInsuranceContractList", Model); }
+        </div>
+        <div id="divAnnualChargeRateDetailsform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_AnnualChargeRateDetails", Model); }
+        </div>
+        <div id="divAnnualChargeRateListform" class="form-group col-sm-12">
+            @{ Html.RenderPartial("_AnnualChargeRateList", Model); }
+        </div>*@
+            @if (RolePermission == "F")
+            {
+                <div class="form-group col-sm-12 text-center">
+                    <input type="button" id="btnClientsSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                    <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                </div>
+            }
+        </div>
+    </form>
+</div>

@@ -1,0 +1,77 @@
+﻿@using PED.ViewModels.ProviderEntrollment
+@model ProviderEntrollment
+<form id="userForm" method="post" class="form-horizontal">
+    <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+        <div class="panel-heading">
+            <h4 class="panel-title">Clients List</h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12 form-group">
+                <a id="aW9" href="javascript:" onclick="DownloadW9Form('0')"
+                   title="W9" style="text-decoration:none;">W9 (All Client)</a>
+            </div>
+            <div class="col-lg-12 form-group">
+                <a id="aTricare" href="javascript:" onclick="DownloadTricareForm('0')"
+                   title="Tricare" style="text-decoration:none;">Tricare (All Client)</a>
+            </div>
+            <div class="col-lg-12 form-group">
+                <a id="aMMPI" href="javascript:" onclick="DownloadMMPIForm('0')"
+                   title="MMPI" style="text-decoration:none;">Medical Mutual (All Client)</a>
+            </div>
+            <div class="col-lg-12 form-group">
+                <a id="aMedco" href="javascript:" onclick="DownloadMedcoForm('0')"
+                   title="Medco" style="text-decoration:none;">Medco (All Client)</a>
+            </div>
+
+            <table id="tblPEClients" class="table table-striped table-bordered table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Company ID</th>
+                        <th>Company Name</th>
+                        <th>Action</th>
+                        <th>W-9 Form</th>
+                        <th>Tricare Form</th>
+                        <th>Medical Mutual Form</th>
+                        <th>Medco Form</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i = 0;
+                        foreach (var item in Model.PEDetailsList)
+                        {
+                            i++;
+                            <tr id="@item.ID">
+                                <td id="txtCompanyId" class="tr1">@item.ClientID</td>
+                                <td id="txtName" class="tr1">
+                                    @Html.Raw(item.ClientName)
+                                </td>
+                                <td id="btnEdit" class="tr1">
+                                    <a id="aEdit" href="javascript:" onclick="LoadPEDetails('@item.ClientDetailsID')"
+                                       title="Edit/View" style="text-decoration:none;">Edit/View</a>
+                                </td>
+                                <td id="btnW9" class="tr1">
+                                    <a id="aW9" href="javascript:" onclick="DownloadW9Form('@item.ClientDetailsID')"
+                                       title="W9" style="text-decoration:none;">W9</a>
+                                </td>
+                                <td id="lnkTricare" class="tr1">
+                                    <a id="aTricare" href="javascript:" onclick="DownloadTricareForm('@item.ClientDetailsID')"
+                                       title="Tricare" style="text-decoration:none;">Tricare</a>
+                                </td>
+                                <td id="lnkMMPI" class="tr1">
+                                    <a id="aMMPI" href="javascript:" onclick="DownloadMMPIForm('@item.ClientDetailsID')"
+                                       title="MMPI" style="text-decoration:none;">Medical Mutual</a>
+                                </td>
+                                <td id="lnkMedco" class="tr1">
+                                    <a id="aMedco" href="javascript:" onclick="DownloadMedcoForm('@item.ClientDetailsID')"
+                                       title="Medco" style="text-decoration:none;">Medco</a>
+                                </td>
+
+                            </tr>
+                        } }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+

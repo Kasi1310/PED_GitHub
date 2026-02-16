@@ -1,0 +1,203 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<input type="hidden" id="hfPayToStateId" value="@Model.ProviderEntrollmentDetails.PayToStateId" />
+<input type="hidden" id="hfPayToCityId" value="@Model.ProviderEntrollmentDetails.PayToCityId" />
+<input type="hidden" id="hfBillingProviderStateId" value="@Model.ProviderEntrollmentDetails.BillingProviderStateId" />
+<input type="hidden" id="hfBillingProviderCityId" value="@Model.ProviderEntrollmentDetails.BillingProviderCityId" />
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        @if (RolePermission == "F")
+        {
+            <h4 class="panel-title" id="changeteam">Add Billing Provider</h4>
+        }
+        @if (RolePermission == "R")
+        {
+            <h4 class="panel-title" id="changeteam">View Billing Provider</h4>
+        }
+    </div>
+
+    <form id="ProviderEntrollmentfrm" method="post" class="form-horizontal">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="row col-12 p-10" id="CompanyDetails">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="CompanyID">Company ID<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.HiddenFor(m => m.ProviderEntrollmentDetails.ID)
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.CompanyId, new { @class = "form-control", @placeholder = "Enter Company ID", data_parsley_required = "true", data_parsley_type = "digits", data_parsley_length = "[1,4]" })
+
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="Description">Description<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.Description, new { @class = "form-control", @placeholder = "Enter Description", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="ContactName">Contact Name<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.ContactName, new { @class = "form-control", @placeholder = "Enter Contact Name", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="ContactPhone">Contact Phone<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.ContactPhone, new { @class = "form-control", @placeholder = "Enter Contact Phone", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="NPINumber">NPI Number<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.NPINumber, new { @class = "form-control", @placeholder = "Enter NPI Number", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="TaxID">Tax ID<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.TaxID, new { @class = "form-control", @placeholder = "Enter Tax ID", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="CollectionsCompanyName">Collections Company Name</label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.CollectionsCompanyName, new { @class = "form-control", @placeholder = "Enter Collections Company Name", data_parsley_required = "true" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToName">Pay to Name<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.PayToName, new { @class = "form-control", @placeholder = "Enter Pay to Name", data_parsley_required = "true" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToAddressLine1">Pay to Address Line 1<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.PayToAddressLine1, new { @class = "form-control", @placeholder = "Enter Pay to Address Line 1", data_parsley_required = "true" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToAddressLine2">Pay to Address Line 2</label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.PayToAddressLine2, new { @class = "form-control", @placeholder = "Enter Pay to Address Line 2", data_parsley_required = "true" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToState">Pay to State<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.DropDownListFor(m => m.ProviderEntrollmentDetails.PayToStateId, new SelectList(Model.StatesList, "Id", "Value"), "Select Pay to State", new { @class = "form-control PayToStatesList" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToCity">Pay to City<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.DropDownListFor(m => m.ProviderEntrollmentDetails.PayToCityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select Pay to City", new { @class = "form-control PayToCitiesList" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="PayToZipCode">Pay to Zip Code<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.PayToZipCode, new { @class = "form-control", @placeholder = "Enter Pay to Zip", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderName">Billing Provider Name<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.BillingProviderName, new { @class = "form-control", @placeholder = "Billing Provider Name", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderAddressLine1">Billing Provider Address Line 1<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.BillingProviderAddressLine1, new { @class = "form-control", @placeholder = "Enter Billing Provider Address Line 1", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderAddressLine2">Billing Provider Address Line 2</label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.BillingProviderAddressLine2, new { @class = "form-control", @placeholder = "Enter Billing Provider Address Line 2", data_parsley_required = "true" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderState">Billing Provider State<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.DropDownListFor(m => m.ProviderEntrollmentDetails.BillingProviderStateId, new SelectList(Model.StatesList, "Id", "Value"), "Select Billing Provider State", new { @class = "form-control BillingProviderStatesList" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderCity">Billing Provider City<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls">
+                                @Html.DropDownListFor(m => m.ProviderEntrollmentDetails.BillingProviderCityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select Billing Provider City", new { @class = "form-control BillingProviderCitiesList" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="BillingProviderZipCode">Billing ProviderZip Code<span style="color:red">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls" data-parsley-validate="true">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.BillingProviderZipCode, new { @class = "form-control", @placeholder = "Enter Billing Provider Zip", data_parsley_required = "true" })
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="LastDOS">Last DOS</label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls  input-daterange datepicker-autoClose input-group">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.LastDOS, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Last DOS", data_parsley_required = "true" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4 p-0">
+                            <label class="control-label col-md-4 col-sm-4" for="ContractEndDate">Contract End Date</label>
+                            <div class="col-md-8 col-sm-8 col-lg-8 p-0 controls input-daterange datepicker-autoClose input-group">
+                                @Html.TextBoxFor(m => m.ProviderEntrollmentDetails.ContractEndDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "Enter Contract End Date", data_parsley_required = "true" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+                </div>
+            @if (RolePermission == "F")
+            {
+                <div class="form-group col-sm-12 text-center">
+                    <input type="button" id="btnBillingProviderSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                    <input type="button" id="btnCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                </div>
+            }
+        </div>
+    </form>
+</div>

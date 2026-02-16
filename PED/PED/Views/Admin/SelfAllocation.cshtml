@@ -1,0 +1,171 @@
+﻿@using WiseX.ViewModels.Admin;
+@model Allocation
+
+<input type="hidden" id="hrfUrl" value='@Url.Content("~/Admin/UserFileAllocation/")' />
+
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+}
+
+    <div id="content" class="content">
+        <ol class="breadcrumb pull-right">
+            <li><a href="javascript:;">Home</a></li>
+            <li><a href="javascript:;">Administrator</a></li>
+            <li class="active">User File Allocation</li>
+        </ol>
+        <h2 class="page-header">User File Allocation<small></small></h2>
+        <div id="alertHeader" class="alert alert-info fade in m-b-15">
+            <strong>Sorry!</strong>Header not matching with Template
+            <span class="close" data-dismiss="alert">&times;</span>
+        </div>
+        <div id="alertColumn" class="alert alert-info fade in m-b-15">
+            <strong>Sorry!</strong>Total No. of columns does not match with the Template
+            <span class="close" data-dismiss="alert">&times;</span>
+        </div>
+        <div id="alertsuccess" class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            <strong>Success!</strong> Details saved.
+        </div>
+        <div>
+            <div id="AllocationForm">
+                @{ Html.RenderPartial("_SelfAllocationForm", Model); }
+            </div>
+            <div id="AllocationList">
+                @if (Model.AllocatedList.Count != 0)
+                {
+                     Html.RenderPartial("_SelfAllocationExistingList", Model.AllocatedList);
+
+                }
+            </div>
+        </div>
+
+
+    </div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.collapse').collapse();
+            $('#alertHeader').hide();
+            $('#alertColumn').hide();
+            $('#alertsuccess').hide();
+        });
+
+        $('#btnUpload').on('click', function () {
+            BuildData(1);
+        });  
+
+        $('#btnSubmit').live('click', function () {
+            BuildData(2);
+        });
+
+        function BuildData(type) {
+            // Checking whether FormData is available in browser  
+            if (window.FormData !== undefined) {
+                var formData = new FormData();
+                formData.append('file', $('#ExcelFileUpload')[0].files[0]); // myFile is the input type="file" control
+                formData.append('Type', type);
+
+                var url = "@Url.Action("ReadExcelSheet", "Admin")";
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: false, // Not to set any content header  
+                    processData: false, // Not to process data  
+                    data: formData,
+                    success: function (result) {
+                        SetSessionExpireTimer();
+                        if (result.message == "HeadeFormatFailed") {
+                                $('#alertHeader').show();
+                                setTimeout(function () {
+                                    $('#alertHeader').hide();
+                                    $('#alertHeader').removeClass('show');
+                                }, 2000);
+                                return false; 
+                        }
+                        else if (result.message == "ColumnCountFailed")
+                        {
+                                $('#alertColumn').show();
+                                setTimeout(function () {
+                                    $('#alertColumn').hide();
+                                    $('#alertColumn').removeClass('show');
+                                }, 2000);
+                                return false; 
+                        }
+                        else {
+                            if (type === 1) {
+                                $('#AllocationList').html(result);
+                                LoadUserList();
+                            }
+                            else {
+
+                                //$('#alertsuccess').show();
+                                //setTimeout(function () {
+                                //    $('#alertsuccess').hide();
+                                //    $('#alertsuccess').removeClass('show');
+                                //}, 2000);
+                                location.href = '@Url.Action("UserFileAllocation", "Admin")';
+                            }
+                        }
+                       
+                    },
+                    error: function (err) {
+                        
+                    }
+                });
+            } else {
+                //alert("FormData is not supported.");
+            }
+        }
+
+        $('#btCancel').on('click', function () {
+            swal({
+                title: "Are you sure?",
+                text: "Data in the page will be lost!",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-primary',
+                confirmButtonText: 'Confirm'
+
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.href = $('#hrfUrl').val();
+
+                    }
+                    else {
+
+                    }
+                });
+        });
+        $("#ExcelFileUpload").change(function () {
+            fileErrorMessage.innerHTML = '';
+            var vtrUpload = $("#ExcelFileUpload").val().toLowerCase();
+            var regexVTRUpload = new RegExp("(.*?)\.(xlsx)$");
+            if (!(regexVTRUpload.test(vtrUpload))) {
+                fileErrorMessage.innerHTML = 'Please choose .xlsx file';
+                return false;
+            }
+            else {
+               // alert("1");
+            }
+
+        });
+        function LoadUserList() {
+            $('#tblfileallocation').DataTable({
+                searching: true,
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': [-1]
+                }]
+            });
+        }
+    </script>
+}

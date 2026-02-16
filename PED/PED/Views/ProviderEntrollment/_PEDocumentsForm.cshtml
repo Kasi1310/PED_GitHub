@@ -1,0 +1,67 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<form id="PEDocumentsFormfrm" method="post" class="form-horizontal">
+    
+    <div class="row col-12 p-10" id="PEDocumentsForm">
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Title">Title</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Document">Document(drag and drop)</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.HiddenFor(m => m.PEDocuments.Id)
+                        @Html.HiddenFor(m => m.PEDocuments.ClientDetailsID)
+
+                        @Html.DropDownListFor(m => m.PEDocuments.TitleID, new SelectList(Model.PEDocumentTitleList, "Id", "Value"), "Select Title", new { @class = "form-control" })
+                        <br />
+                        @*@Html.TextBoxFor(m => m.PEDocuments.TitleName, new { @class = "form-control", @placeholder = "Enter Title", data_parsley_required = "true", })*@
+
+                        @Html.HiddenFor(m => m.PEDocuments.TitleName)
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @*<input type="file" id="fuDocuments" class="form-control" name="file" accept=".pdf"
+                                   style="height:100px;" data-parsley-required="true" />
+                            <span style="color:red;font:bolder;" id="fileErrorMessage"></span>*@
+
+                        <div id="dropZone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" data-parsley-validate="true" class="dropZone">
+                            <p>Drag and drop a PDF file here</p>
+                        </div>
+                        <span style="color: #e5603b; font-size: 12px !important;" id="spanPEDocumentfileErrorMessage"></span>
+                    </div>
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPEDocumentsInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+
+
+
+    </script>
+
+</form>

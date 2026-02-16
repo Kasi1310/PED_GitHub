@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Downloads";
+
+} 
+@section Styles {
+    <link href='@Url.Content("~/plugins/jquery.countdown/jquery.countdown.css")' rel="stylesheet" />
+}
+
+<div class="container">
+
+    <div class="coming-soon">
+        <div class="coming-soon-header">
+            <div class="bg-cover"></div>
+            <div class="brand" style="z-index: 1">
+                <span class="logo"></span> CodeComputer
+            </div>
+            <div class="timer" style="z-index: 1">
+                <div id="timer"></div>
+            </div>
+            <div class="desc" style="z-index: 1">
+                Our tool is almost there and it’s Upgrading! A lot of great new features <br />and improvements are coming.
+            </div>
+        </div>
+        <div class="coming-soon-content">
+            <div class="desc">
+                We are launching a closed <b>beta</b> soon!<br /> Sign up to try it before others and be the first to know when we <b>launch</b>.
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script src='@Url.Content("~/plugins/jquery.countdown/jquery.plugin.js")'></script>
+    <script src='@Url.Content("~/plugins/jquery.countdown/jquery.countdown.js")'></script>
+    <script src='@Url.Content("~/js/coming-soon.demo.min.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ComingSoon.init();
+        })
+    </script>
+
+}

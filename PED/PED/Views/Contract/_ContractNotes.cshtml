@@ -1,0 +1,57 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Contract
+@model Contracts
+@{
+    string isPermission = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    //if (RolePermission == "R")
+    //{
+    //    isPermission = "hide";
+    //}
+}
+
+<div id="alertNotessuccess" class="alert alert-success alert-dismissable">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+    <strong>Success!</strong> Details saved.
+</div>
+<div class="row m-10">
+    <form id="NotesForm" method="post" class="form-horizontal">
+        <div class="row m-10 @isPermission">
+            <div class="form-group col-sm-4 col-md-4 col-lg-4" id="divIns">
+                <label class="control-label col-md-4 col-sm-4" style="text-align:right" for="otherdocuments">Insurance Name</label>
+                <div class="col-md-8 col-sm-8 col-lg-8 controls" controls">
+
+                    @Html.DropDownListFor(m => m.ClientsDetails.InsuranceContractID, new SelectList(Model.InsuranceContractList, "Id", "Name"), "Select Insurance Name", new { @class = "form-control InsuranceContractList" })
+
+                </div>
+            </div>
+            <div class="form-group col-sm-7 col-md-7 col-lg-7" id="divdoc">
+                <label class="control-label col-md-2 col-sm-2" style="text-align:right" for="otherdocuments">Notes<span style="color:red">*</span></label>
+                <div class="col-md-10 col-sm-10 col-lg-10 controls" controls">
+                    @Html.TextArea("CommonNote", null, new { @class = "form-control", @maxlength = "500", data_parsley_required = "true",@style="resize:none;" })
+                    <small id="CommonNoteChar" class="text-primary pull-right">Maximum allowed characters: 500</small>
+                </div>
+            </div>
+            <input type="hidden" id="hrfCommonNotesId" value="" />
+            <input type="button" id="btnNoteSubmit" class="btn btn-sm btn-primary m-r-5" value="Submit" />
+            <input type="button" id="btnNoteClear" class="btn btn-sm btn-default m-r-5" value="Clear" />
+        </div>
+    </form>
+    <div class="row m-10">
+        <table id="tblContractNotesTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Insurance Name</th>
+                    <th>Notes</th>
+                    <th>Added By</th>
+                    <th>Added On</th>
+                    <th class="@isPermission">Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+

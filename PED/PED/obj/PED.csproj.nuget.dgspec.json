@@ -1,0 +1,129 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\MedicountApplication\\wetransfer_ccms-zip_2025-04-01_0552\\PED_GitHub\\PED\\PED.csproj": {}
+  },
+  "projects": {
+    "E:\\MedicountApplication\\wetransfer_ccms-zip_2025-04-01_0552\\PED_GitHub\\PED\\PED.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\MedicountApplication\\wetransfer_ccms-zip_2025-04-01_0552\\PED_GitHub\\PED\\PED.csproj",
+        "projectName": "PED",
+        "projectPath": "E:\\MedicountApplication\\wetransfer_ccms-zip_2025-04-01_0552\\PED_GitHub\\PED\\PED.csproj",
+        "packagesPath": "C:\\Users\\kasir\\.nuget\\packages\\",
+        "outputPath": "E:\\MedicountApplication\\wetransfer_ccms-zip_2025-04-01_0552\\PED_GitHub\\PED\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\kasir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.0": {
+            "targetAlias": "netcoreapp2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "netcoreapp2.0": {
+          "targetAlias": "netcoreapp2.0",
+          "dependencies": {
+            "AlanJuden.MvcReportViewer.NetCore": {
+              "target": "Package",
+              "version": "[1.0.10, )"
+            },
+            "Aspose.PDF": {
+              "target": "Package",
+              "version": "[23.2.0, )"
+            },
+            "BuildBundlerMinifier": {
+              "target": "Package",
+              "version": "[2.8.391, )"
+            },
+            "DotNetCore.NPOI": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[4.5.2.1, )"
+            },
+            "Microsoft.AspNet.WebApi.Core": {
+              "target": "Package",
+              "version": "[5.3.0, )"
+            },
+            "Microsoft.AspNetCore.All": {
+              "target": "Package",
+              "version": "[2.0.7, )"
+            },
+            "Microsoft.AspNetCore.DataProtection.SystemWeb": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.4, )"
+            },
+            "Microsoft.jQuery.Unobtrusive.Ajax": {
+              "target": "Package",
+              "version": "[3.2.5, )"
+            },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.0.8.3, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

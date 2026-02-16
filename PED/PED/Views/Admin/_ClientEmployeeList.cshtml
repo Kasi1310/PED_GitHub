@@ -1,0 +1,57 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="row panel-body">
+    <div class="col-lg-10 m-10">
+        <input type="hidden" id="hrfReferenceId" value='@Model.ReferenceId' />
+        @if (Model.ClientsEmployeeList.Count != 0)
+        {
+            <table id="tblClientEmployee" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Sno</th>
+                        <th>Employee Position</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email ID</th>
+                        <th class="@isAdmin">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{int i = 0;
+                        foreach (var item in Model.ClientsEmployeeList)
+                        {
+                            i++;
+                            <tr id="@item.ID">
+                                <td id="txtSno" class="tr1">@i</td>
+                                <td id="txtEmployeePosition" class="tr1">@item.EmployeePosition</td>
+                                <td id="txtFirstName" class="tr1">@item.FirstName</td>
+                                <td id="txtLastName" class="tr1">@item.LastName</td>
+                                <td id="txtEmailID" class="tr1">@item.EmailId</td>
+                                <td class="tr1">
+                                    <button id="btnEmployeeEdit" type="button" Onclick="ConfirmEmployeeEdit('@item.ID')" title="Edit" class="fa fa-lg fa-edit  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                                    <button id="btnEmployeeDelete" type="button" Onclick="ConfirmEmployeeDelete('@item.ID')" title="Delete" class="fa fa-lg fa-trash-o  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                                </td>
+                            </tr>
+                        } }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

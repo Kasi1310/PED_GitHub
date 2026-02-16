@@ -1,0 +1,2345 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Contract
+@model Contracts
+@{
+    string isAdmin = string.Empty;
+    string isPermission = string.Empty;
+    var Changeproject = HttpContextAccessor.HttpContext.Session.Get<List<UserProjectRole>>("Changeproject");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var NotificationCount = HttpContextAccessor.HttpContext.Session.Get<string>("NotificationCount");
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    string UserId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionUserID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isPermission = "hide";
+    }
+    if (RoleId == "194c4cc1-4a1e-4861-abbb-302d02f7d825")
+    {
+        isAdmin = "AE";
+    }
+    if (RolePermission == "R")
+    {
+        isPermission = "hide";
+    }
+
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Contract</title>
+    @section Styles {
+        <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/css/BootstrapDatepicker.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/DataTables/media/css/dataTables.bootstrap.min.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/simple-line-icons/css/simple-line-icons.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+
+        <style>
+            td.details-control {
+                background: url('~/img/details_open.png') no-repeat center center;
+                cursor: pointer;
+            }
+
+            tr.shown td.details-control {
+                background: url('~/img/details_close.png') no-repeat center center;
+            }
+
+
+            .input-daterange input {
+                text-align: left !important;
+            }
+
+            #tblErrorList tfoot .form-control {
+                padding-left: 3px !important;
+                height: 20px;
+                font-size: 11px;
+                font-weight: normal;
+            }
+
+            tfoot {
+                display: table-header-group !important;
+            }
+
+            .modal-dialog {
+                width: 970px !important;
+                margin: 30px auto;
+            }
+
+            .lbl-align {
+                text-align: left !important;
+                font-weight: 700;
+            }
+
+            #userForm hr {
+                margin-top: 5px !important;
+                margin-bottom: 10px !important;
+            }
+
+            #userForm h4 {
+                margin: 0px;
+                padding-left: 10px;
+            }
+
+            .head-div {
+                float: right;
+                margin-top: -30px;
+            }
+
+            .ui-autocomplete {
+                overflow: auto;
+                height: 300px;
+            }
+
+            #divClientDetails .form-group {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+                margin-bottom: 0px !important;
+            }
+
+            #divClientDetails .text-success {
+                color: #009591 !important;
+            }
+
+            .ui-front {
+                z-index: 2000 !important;
+            }
+
+            .text-decoration {
+                text-decoration: none !important;
+            }
+        </style>
+    }
+
+</head>
+<body>
+    <input type="hidden" id="hrfContractDetails" value='@Url.Content("~/Contract/Contracts/")' />
+    <input type="hidden" id="hrfSearchClient" value='@Url.Content("~/Contract/GetSearchClient")' />
+    <input type="hidden" id="hrfClientId" value="" />
+    <input type="hidden" id="hrfCompanyname" value="" />
+    <input type="hidden" id="hrfContractId" value="" />
+    <input type="hidden" id="hrfStatus" value="" />
+    <input type="hidden" id="hrfStatusID" value="" />
+    <input type="hidden" id="hfReviewYear" />
+    <input type="hidden" id="hfrClientID" value="" />
+    <input type="hidden" id="hfrDataClientID" value=0 />
+    <input type="hidden" id="hrfSentBy" value="" />
+    <input type="hidden" id="hrfMailTo" value="" />
+    <input type="hidden" id="hrfMailAttachment" value="" />
+
+    <div class="content" id="content">
+        <ol class="breadcrumb pull-right">
+            <li><a href="@Url.Action("Index","Home")">Home</a></li>
+            <li><a href="javascript:;">Clients & Contracts</a></li>
+            <li class="active">Contract</li>
+        </ol>
+        <h1 class="page-header">Contract<small></small></h1>
+
+        <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title" id="changeTeam">Client Search</h4>
+            </div>
+            <div id="divClientSearch">
+                @{ await Html.RenderPartialAsync("_ClientSearch"); }
+            </div>
+
+            <div id="divContractList" class="m-10 hide">
+                <h4>Contracts</h4>
+                <hr />
+
+                <ul class="nav nav-tabs customtab" role="tablist">
+                    <li class="nav-item active"> <a class="nav-link" data-toggle="tab" id="tcontractdetails" href="#divClientContractDetails" role="tab"><span class="hidden-sm-up"><i class="fa fa-th-list"></i></span> <span class="hiddpen-xs-down">Contracts List</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tInsuranceContractDetails" href="#divInsuranceContractDetails" role="tab"><span class="hidden-sm-up"><i class="fa fa-list-ol"></i></span> <span class="hidpden-xs-down">Insurance Contract List</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tPassThruContract" href="#divPassThruContract" role="tab"><span class="hidden-sm-up"><i class="fa fa-file"></i></span> <span class="hidpden-xs-down">Pass-Thru Contract</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tCrewLogList" href="#divCrewLogList" role="tab"><span class="hidden-sm-up"><i class="fa fa-file"></i></span> <span class="hidpden-xs-down">Crew Log List</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tAnnualChargeRateDetails" href="#divAnnualChargeRateDetails" role="tab"><span class="hidden-sm-up"><i class="fa fa-list-ol"></i></span> <span class="hidpden-xs-down">Annual Charge Rate List</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherDocumentDetails" href="#divOtherDocumentDetails" role="tab"><span class="hidden-sm-up"><i class="fa fa-file"></i></span> <span class="hidpden-xs-down">Other Documents List</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tCommonNotess" href="#divCommomNotes" role="tab"><span class="hidden-sm-up"><i class="fa fa-sticky-note"></i></span> <span class="hidpden-xs-down">Notes</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tversionhistory" href="#divVersionHistroy" role="tab"><span class="hidden-sm-up"><i class="fa fa-history"></i></span> <span class="hidpden-xs-down">History</span></a> </li>
+                </ul>
+
+                <div class="tab-pane active" id="divClientContractDetails" role="tabpanel">
+                    <div id="ClientContractDetails">
+                        @{ await Html.RenderPartialAsync("_ClientContractDetails", Model); }
+                    </div>
+                </div>
+                <div class="tab-pane active" id="divInsuranceContractDetails" role="tabpanel">
+                    <div id="InsuranceContractDetails">
+                        @{ await Html.RenderPartialAsync("_ClientInsuranceContractDetails", Model); }
+                    </div>
+                </div>
+
+                <div class="tab-pane active" id="divPassThruContract" role="tabpanel">
+                    <div id="PassThruContract">
+                        @{ await Html.RenderPartialAsync("_ContractPassThruContract", Model); }
+                    </div>
+                </div>
+                <div class="tab-pane active" id="divCrewLogList" role="tabpanel">
+                    <div id="CrewLogList">
+                        @{ await Html.RenderPartialAsync("_ContractCrewLogList", Model); }
+                    </div>
+                </div>
+
+                <div class="tab-pane active" id="divAnnualChargeRateDetails" role="tabpanel">
+                    <div id="AnnualChargeRateDetails">
+                        @{ await Html.RenderPartialAsync("_ContractAnnualChargeRateList", Model); }
+                    </div>
+                </div>
+                <div class="tab-pane" id="divOtherDocumentDetails" role="tabpanel">
+                    <div id="OtherDocumentDetails">
+                        @{ await Html.RenderPartialAsync("_ContractOtherDocumentDetails", Model); }
+                    </div>
+                </div>
+                <div class="tab-pane" id="divCommomNotes" role="tabpanel">
+                    <div id="CommomNotes">
+                        @{ await Html.RenderPartialAsync("_ContractNotes", Model); }
+                    </div>
+                </div>
+                <div class="tab-pane" id="divVersionHistroy" role="tabpanel">
+                    <div id="VersionHistroy">
+                        @{ await Html.RenderPartialAsync("_ContractHistory", Model); }
+                    </div>
+                </div>
+
+            </div>
+            <div id="divContractApprovalList">
+                @{await Html.RenderPartialAsync("_ContractList", Model); }
+            </div>
+            @if (Model.ClientsDetailsList != null)
+            {
+                <div id="divClientList">
+                    @{await Html.RenderPartialAsync("_ClientList", Model); }
+                </div>
+            }
+        </div>
+    </div>
+    <div id="divContractform">
+        @{await Html.RenderPartialAsync("_ContractForm"); }
+    </div>
+    <div id="divNotesform">
+        @{await Html.RenderPartialAsync("_CommentsForm"); }
+    </div>
+    <div id="divSendEmailform">
+        @{await Html.RenderPartialAsync("_SendEmailForm"); }
+    </div>
+</body>
+</html>
+
+@section Scripts{
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/plugins/DataTables/media/js/dataTables.bootstrap.js")'></script>
+    <script src='@Url.Content("~/js/ui-modal-notification.demo.min.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+    <script src='@Url.Content("~/plugins/masked-input/masked-input.min.js")'></script>
+    <script src='@Url.Content("~/js/CommonUtils.js")'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Notification.init();
+            InitControls();
+            CancelTeam();
+            CancelNotes()
+            ApprovalDatatable();
+            ClientSearch();
+            MailSearch();
+            ClientEdit();
+            BtnSearch();
+            hides();
+            LoadclientsList();
+            $('#alertNotessuccess').hide();
+            $("#tcontractdetails").click();
+            $("#VersionHistroy").hide();
+            $("#OtherDocumentDetails").hide();
+            $("#CommomNotes").hide();
+            $(".nav-link").click(function () {
+                var tabid = this.id;
+                if (tabid == "tcontractdetails") {
+                    $("#ClientContractDetails").show();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#VersionHistroy").hide();
+                    $("#CommomNotes").hide();
+                }
+                else if (tabid == "tInsuranceContractDetails") {
+                    $("#InsuranceContractDetails").show();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#ClientContractDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#VersionHistroy").hide();
+                    $("#CommomNotes").hide();
+                }
+                else if (tabid == "tPassThruContract") {
+                    $("#PassThruContract").show();
+                    $("#ClientContractDetails").hide();
+                    $("#InsuranceContractDetails").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#VersionHistroy").hide();
+                    $("#CommomNotes").hide();
+                }
+                else if (tabid == "tCrewLogList") {
+                    $("#CrewLogList").show();
+                    $("#ClientContractDetails").hide();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#VersionHistroy").hide();
+                    $("#CommomNotes").hide();
+                }
+                else if (tabid == "tAnnualChargeRateDetails") {
+                    $("#AnnualChargeRateDetails").show();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#ClientContractDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#VersionHistroy").hide();
+                    $("#CommomNotes").hide();
+                }
+                else if (tabid == "tversionhistory") {
+                   $("#VersionHistroy").show();
+                    $("#ClientContractDetails").hide();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                   $("#CommomNotes").hide();
+                   $("#OtherDocumentDetails").hide();
+                }
+                else if (tabid == "tOtherDocumentDetails") {
+                    $("#VersionHistroy").hide();
+                    $("#ClientContractDetails").hide();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#CommomNotes").hide();
+                    $("#OtherDocumentDetails").show();
+                    ClearForm();
+                }
+                else if (tabid == "tCommonNotess") {
+                    $("#VersionHistroy").hide();
+                    $("#ClientContractDetails").hide();
+                    $("#InsuranceContractDetails").hide();
+                    $("#PassThruContract").hide();
+                    $("#CrewLogList").hide();
+                    $("#AnnualChargeRateDetails").hide();
+                    $("#OtherDocumentDetails").hide();
+                    $("#CommomNotes").show();
+                    ClearForm();
+                }
+
+            });
+        });
+
+        function FeesChangeDisable()
+        {
+            if ($('#FeesChangedDate').text() == ' ')
+                $("#FeesChangedDate").text('--');
+                //$(".FeesChange").addClass('hide');
+            //else
+                //$(".FeesChange").removeClass('hide');
+        }
+
+        function logDatatable()
+        {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblContarctHistoryTable')) {
+                dtTblList = $('#tblContarctHistoryTable').DataTable().ajax.reload();
+
+            } else
+            {
+                dtTblList = $('#tblContarctHistoryTable').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/ClientContractsLog1")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.contractId = $('#hrfClientId').val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                            { data: "version", name: "version" },
+                           { data: "logTime", name: "date" },
+                           { data: "userName", name: "actionby" },
+                           { data: "status", name: "action" },
+                           { data: "comments", name: "comments" },
+                       ],
+                       autoWidth: false,
+                       order: [],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+
+            }
+        }
+
+        function OtherDocumentDatatable() {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            if ($.fn.DataTable.isDataTable('#tblContractOtherDocumentTable')) {
+                dtTblList = $('#tblContractOtherDocumentTable').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblContractOtherDocumentTable').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/ClientContractsOtherDocument")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.contractId = $('#hrfClientId').val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "documentName", name: "documentname" },
+                           { data: "uploadedBy", name: "uploaded by" },
+                           { data: "uploadedOn", name: "uploaded on" },
+                       ],
+                       columnDefs: [
+                       {
+                           targets: 0,
+                           render: function (data, type, row, meta) {
+                               //console.log(row);
+                               var DocName = row["documentName"];
+                               var fileName = row["fileName"];
+                               var clientId = row["clientId"];
+
+                               var linktext = '@Html.ActionLink("Doc*","ViewOtherContractFile", "Contract", new { fileName = "FN**", clientId = "CI**"}, new { @target = "_blank", style = "border:none; background-color:transparent;display: initial;" })';
+                               linktext = linktext.replace('FN**', escape(fileName)).replace('CI**', clientId).replace('Doc*', DocName);
+                               return linktext
+                               //'<a href="' + row["fileName"] + '" id="' + row["id"] + '" target="_blank" style="border:none; background-color:transparent;display: initial;">' + row["documentName"] + '</a>';
+                           }
+                       },
+                       {
+                           targets: 3,
+                           render: function (data, type, row, meta) {
+                               return '<a href="javascript:;" id="' + row["id"] + '" class="btnOtherDocFilesdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
+
+                           }
+                       }
+                       ],
+                       autoWidth: false,
+                       order: [0, "desc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblContractOtherDocumentTable tbody td .btnOtherDocFilesdelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var DocID = $(this).attr("id");
+
+                    ConfirmOtherDocumentDelete(DocID);
+                });
+            }
+        }
+
+        function ConfirmOtherDocumentDelete(DocID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var url = "@Url.Action("DeleteOtherDocument", "Contract")";
+                        var jsonData = { Id: DocID };
+                        AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+
+                            OtherDocumentDatatable();
+                            var formData = new FormData();
+                            formData.append('companyId', $('#hrfClientId').val());
+                            formData.append('Version', "v");
+                            formData.append('ContractId', $('#hrfContractId').val());
+                            formData.append('Status', 'Other Documents Deleted');
+
+                            var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                            $.ajax({
+                                url: url,
+                                type: "POST",
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                data: formData,
+                                success: function (result) {
+                                    logDatatable();
+                                    OtherDocumentDatatable();
+                                    NotesDatatable();
+                                },
+                                error: function (err) {
+
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                });
+        };
+
+        function PassThruContractDatatable() {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            if ($.fn.DataTable.isDataTable('#tblPassThruContract')) {
+                dtTblList = $('#tblPassThruContract').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblPassThruContract').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/ClientContractsPassThruContract")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.contractId = $('#hrfClientId').val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "documentName", name: "documentname" },
+                           { data: "uploadedBy", name: "uploaded by" },
+                           { data: "uploadedOn", name: "uploaded on" },
+                       ],
+                       columnDefs: [
+                       {
+                           targets: 0,
+                           render: function (data, type, row, meta) {
+                               //console.log(row);
+                               var DocName = row["documentName"];
+                               var fileName = row["fileName"];
+                               var clientId = row["clientId"];
+
+                               var linktext = '@Html.ActionLink("Doc*", "ViewPassThruContractFile", "Contract", new { fileName = "FN**", clientId = "CI**"}, new { @target = "_blank", style = "border:none; background-color:transparent;display: initial;" })';
+                               linktext = linktext.replace('FN**', escape(fileName)).replace('CI**', clientId).replace('Doc*', DocName);
+                               return linktext
+                               //'<a href="' + row["fileName"] + '" id="' + row["id"] + '" target="_blank" style="border:none; background-color:transparent;display: initial;">' + row["documentName"] + '</a>';
+                           }
+                       },
+                       {
+                           targets: 3,
+                           render: function (data, type, row, meta) {
+                               return '<a href="javascript:;" id="' + row["id"] + '" class="btnPassThruContractdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
+
+                           }
+                       }
+                       ],
+                       autoWidth: false,
+                       order: [0, "desc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblPassThruContract tbody td .btnPassThruContractdelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var DocID = $(this).attr("id");
+
+                    ConfirmPassThruContractDelete(DocID);
+                });
+            }
+        }
+
+        function ConfirmPassThruContractDelete(DocID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    var url = "@Url.Action("DeletePassThruContract", "Contract")";
+                    var jsonData = { Id: DocID };
+                    AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+
+                        PassThruContractDatatable();
+                        var formData = new FormData();
+                        formData.append('companyId', $('#hrfClientId').val());
+                        formData.append('Version', "v");
+                        formData.append('ContractId', $('#hrfContractId').val());
+                        formData.append('Status', 'Pass-Thru Contract Deleted');
+
+                        var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: formData,
+                            success: function (result) {
+                                /*logDatatable();
+                                OtherDocumentDatatable();*/
+                                PassThruContractDatatable();
+                                /*NotesDatatable();*/
+                            },
+                            error: function (err) {
+
+                            }
+                        });
+
+                    });
+                }
+                else {
+                    return false;
+                }
+            });
+        };
+
+        function CrewLogListDatatable() {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            if ($.fn.DataTable.isDataTable('#tblCrewLogList')) {
+                dtTblList = $('#tblCrewLogList').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblCrewLogList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/ClientContractsCrewLogList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.contractId = $('#hrfClientId').val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "documentName", name: "documentname" },
+                           { data: "uploadedBy", name: "uploaded by" },
+                           { data: "uploadedOn", name: "uploaded on" },
+                       ],
+                       columnDefs: [
+                       {
+                           targets: 0,
+                           render: function (data, type, row, meta) {
+                               //console.log(row);
+                               var DocName = row["documentName"];
+                               var fileName = row["fileName"];
+                               var clientId = row["clientId"];
+
+                               var linktext = '@Html.ActionLink("Doc*", "ViewCrewLogListFile", "Contract", new { fileName = "FN**", clientId = "CI**"}, new { @target = "_blank", style = "border:none; background-color:transparent;display: initial;" })';
+                               linktext = linktext.replace('FN**', escape(fileName)).replace('CI**', clientId).replace('Doc*', DocName);
+                               return linktext
+                               //'<a href="' + row["fileName"] + '" id="' + row["id"] + '" target="_blank" style="border:none; background-color:transparent;display: initial;">' + row["documentName"] + '</a>';
+                           }
+                       },
+                       {
+                           targets: 3,
+                           render: function (data, type, row, meta) {
+                               return '<a href="javascript:;" id="' + row["id"] + '" class="btnCrewLogListdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
+
+                           }
+                       }
+                       ],
+                       autoWidth: false,
+                       order: [0, "desc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblCrewLogList tbody td .btnCrewLogListdelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var DocID = $(this).attr("id");
+
+                    ConfirmCrewLogListDelete(DocID);
+                });
+            }
+        }
+
+        function ConfirmCrewLogListDelete(DocID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    var url = "@Url.Action("DeleteCrewLogList", "Contract")";
+                    var jsonData = { Id: DocID };
+                    AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+
+                        CrewLogListDatatable();
+                        var formData = new FormData();
+                        formData.append('companyId', $('#hrfClientId').val());
+                        formData.append('Version', "v");
+                        formData.append('ContractId', $('#hrfContractId').val());
+                        formData.append('Status', 'Crew Log List Deleted');
+
+                        var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: formData,
+                            success: function (result) {
+                                /*logDatatable();
+                                OtherDocumentDatatable();*/
+                                CrewLogListDatatable();
+                                /*NotesDatatable();*/
+                            },
+                            error: function (err) {
+
+                            }
+                        });
+
+                    });
+                }
+                else {
+                    return false;
+                }
+            });
+        };
+
+        function NotesDatatable() {
+            var dtTblList;
+            if ($.fn.DataTable.isDataTable('#tblContractNotesTable')) {
+                dtTblList = $('#tblContractNotesTable').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblContractNotesTable').DataTable(
+                {
+                    ajax: {
+                        url: '@Url.Content("~/Contract/ClientContractsNotesDetails")',
+                        type: "POST",
+                        datatype: "json",
+                        data: function (d) {
+                            d.ClientId = $('#hrfClientId').val();
+                        },
+                        error: function (result) {
+                            console.log(result);
+                        }
+                    },
+                    columns: [
+                        { data: "insuranceContractName", name: "insuranceContractName" },
+                        { data: "notes", name: "notes" },
+                        { data: "addedBy", name: "added by" },
+                        { data: "addedOn", name: "added on" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 4,
+                            render: function (data, type, row, meta) {
+                                var Edit = '<a href="javascript:;" id="' + row["id"] + '" class="btnNotesedit fa fa-lg fa-edit text-inverse form-control1 p-l-0 p-r-0 m-5 @*@isPermission*@" style="border:none; background-color:transparent;display: initial;"></a>';
+                                var Delete = '<a href="javascript:;" id="' + row["id"] + '" class="btnNotesdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @*@isPermission*@" style="border:none; background-color:transparent;display: initial;"></a>';
+
+                                if (row["userID"] == '@UserId' || '@RoleId' == '2c0cdf89-9984-4f82-bcf3-f3382e5a843c')
+                                    return Edit + Delete;
+                                else
+                                    return '';
+                            }
+                        }
+                    ],
+                    autoWidth: false,
+                    order: [],
+                    dom: 'l<"toolbar">frtip',
+                    initComplete: function () {
+                        $("div.toolbar")
+                            .html('<div class="pull-right"><a id="btnContractNotesExport" href="javascript:;" class="" title="Download"><i class="fa fa-lg fa-file-excel-o text-success"></i> </a></div>');
+                        //Download Notes
+                        $('#btnContractNotesExport').on('click', function () {
+                            var ClientId = $('#hrfClientId').val();
+                            var url = "@Url.Action("DownloadContractNotes", "Contract")";
+                            var jsonData = ClientId;
+                            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                                const a = document.createElement('a');
+                                a.style.display = 'none';
+                                a.href = resp;
+                                a.download = 'ContractNotes.xlsx';
+                                document.body.appendChild(a);
+                                a.click();
+                            });
+                        });
+                    },
+                    language: {
+                        processing: "Processing...Please Wait"
+                    }
+
+                });
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblContractNotesTable tbody td .btnNotesdelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var NotesID = $(this).attr("id");
+                    $("#hrfCommonNotesId").val(NotesID);
+                    ConfirmNotesDelete(NotesID);
+                });
+
+                $('#tblContractNotesTable tbody td .btnNotesedit').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var NotesID = $(this).attr("id");
+                    EditNote(NotesID);
+
+                });
+            }
+        }
+
+        //Delete Notes
+        function EditNote(NotesID) {
+                var url = "@Url.Action("EditNotes", "Contract")";
+            var formData = new FormData();
+            formData.append('Id', NotesID);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    $("#hrfCommonNotesId").val(NotesID);
+                    $('#@Html.IdFor(m => m.ClientsDetails.InsuranceContractID)').val(result.data[0]["insuranceContractID"]);
+                    $("#CommonNote").val(result.data[0]["notes"]);
+                    $("#btnNoteSubmit").prop('value', 'Update');
+                },
+                error: function (err) {
+                }
+            });
+        };
+
+        //Delete Notes
+        function ConfirmNotesDelete(NotesID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var url = "@Url.Action("DeleteClientContractNotes", "Contract")";
+                        var jsonData = { Id: NotesID };
+                        AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                            $("#hrfCommonNotesId").val("");
+                            NotesDatatable();
+                            logDatatable();
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                });
+        };
+
+        //Delete ContractOtherDocument from contractlist
+
+        //Download Notes
+         $('#btnContractNotesExport').on('click', function () {
+            var ClientId=$('#hrfClientId').val();
+            var url = "@Url.Action("DownloadContractNotes", "Contract")";
+             var jsonData = ClientId;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = resp;
+                a.download = 'ContractNotes.xlsx';
+                document.body.appendChild(a);
+                a.click();
+            });
+        });
+
+        function Datatable()
+        {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblContractList')) {
+                dtTblList = $('#tblContractList').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblContractList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/ContractLoadList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.id = $('#hrfClientId').val();
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                            { data: "version", name: "version" },
+                           { data: "agreementType", name: "agreementType" },
+                           { data: "contractSignedDate", name: "contractSignedDate" },
+                           { data: "contractExpiryDate", name: "contractExpiryDate" },
+                           { data: "status", name: "status" },
+                       ],
+
+                       columnDefs: [
+                        {
+                            targets: 5,
+                            render: function (data, type, row, meta) {
+                                //console.log(row);
+                                if (row["statusID"] == 3 && row["isLatestVersion"] == 1) {
+                                    var s = '<a title="Send Contract" href="javascript:;" id="' + row["contractId"] + '" class="btn btn-success btn-xs  SendtoAE m-r-5 @isPermission">Send</a>';
+                                    // var t = '<a title="Mail to Client" href="javascript:;" id="' + row["contractId"] + '" data-Attachment="' + row["fileName"] + '" class="fa fa-envelope fa-lg SendtoClient text-inverse form-control1 p-l-0 p-r-0 m-5"></a>';
+                                    var b = Action(row["fid"], row["contractId"], row["fileName"], row["id"], row["version"], row["statusID"], row["isLatestVersion"], row["companyId"]);
+                                    return s + b;
+                                }
+                                else if (row["statusID"] == 2 && row["sentTo"] == '@UserId')
+                                {
+                                    var s = '<a href="javascript:;" id="' + row["contractId"] + '" data-SentBy="' + row["sentby"] + '" class="btn btn-success btn-xs  SendtoManagement">Send To Management</a>';
+                                    var b = Action(row["fid"], row["contractId"], row["fileName"], row["id"], row["version"], row["statusID"], row["isLatestVersion"], row["companyId"]);
+                                    return s + b;
+                                }
+                                if (row["statusID"] == 5 && row["sentTo"] == '@UserId') {
+                                    var s = '<a href="javascript:;" id="' + row["contractId"] + '" data-SentBy="' + row["sentby"] + '" class="btn btn-success btn-xs  SendtoApprove @isPermission">Approve</a>';
+                                    var b = Action(row["fid"], row["contractId"], row["fileName"], row["id"], row["version"], row["statusID"], row["isLatestVersion"], row["companyId"]);
+                                    return s + b;
+                                }
+                                else
+                                {
+                                    var b = Action(row["fid"], row["contractId"], row["fileName"], row["id"], row["version"], row["statusID"], row["isLatestVersion"], row["companyId"]);
+                                    return b;
+                                }
+
+                            }
+                        },
+                       ],
+
+                       serverSide: true,
+                       processing: true,
+                       autoWidth: false,
+                       order: [0, "desc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+
+                $('#tblContractList tbody td img').live('click', function () {
+                    @*var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    if (row.child.isShown()) {
+                        /* This row is already open - close it */
+                        this.src = '@Url.Content("~/img/details_open.png")';
+                        row.child.hide();
+                        tr.removeClass('shown');
+
+                    }
+                    else {
+                        /* Open this row */
+                        this.src = '@Url.Content("~/img/details_close.png")';
+                        var contractId = $(this).attr("id");
+                        var check = '@Url.Content("~/Contract/ClientContractsLog?contractId=")' + contractId;
+                        $.post(check, function (ChartError) {
+                            row.child(ChartError).show();
+                            tr.addClass('shown');
+                        });
+                    }*@
+                    });
+                $('#tblContractList tbody td .SendtoAE').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var ContractId = $(this).attr("id");
+
+                    $('#hrfContractId').val(ContractId);
+                    $('#hrfStatus').val(2);
+                    //CancelTeam();
+                    ClearForm();
+                    $('#CNotesForm').modal('show');
+                    $('#divuser').addClass('show');
+                });
+                $('#tblContractList tbody td .SendtoClient').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var ContractId = $(this).attr("id");
+                    $('#hrfContractId').val(ContractId);
+                    $('#hrfStatus').val(2);
+                    var MailAttachment = $(this).attr("data-Attachment");
+                    $('#hrfMailAttachment').val(MailAttachment);
+                    //CancelTeam();
+                    ClearForm();
+                    $('#CEmailForm').modal('show');
+                });
+                $('#tblContractList tbody td .SendtoApprove').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var ContractId = $(this).attr("id");
+                    var Sentby = $(this).attr("data-SentBy");
+                    $('#hrfSentBy').val(Sentby);
+                    $('#hrfContractId').val(ContractId);
+                    $('#hrfStatus').val(3);
+                    $('#divuser').addClass('hide');
+                    $('#CNotesForm').modal('show');
+                    $('#@Html.IdFor(m => m.ClientContractDetails.Users)').attr("data-parsley-required", false);
+                    //CancelTeam();
+                    ClearForm();
+                });
+                $('#tblContractList tbody td .SendtoManagement').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var ContractId = $(this).attr("id");
+                    var Sentby = $(this).attr("data-SentBy");
+                    $('#hrfSentBy').val(Sentby);
+                    $('#hrfContractId').val(ContractId);
+                    $('#hrfStatus').val(5);
+                    $('#divuser').addClass('hide');
+                    $('#CNotesForm').modal('show');
+                    $('#@Html.IdFor(m => m.ClientContractDetails.Users)').attr("data-parsley-required", false);
+                    //CancelTeam();
+                    ClearForm();
+                });
+                $('#tblContractList tbody td .btnedit').live('click', function () {
+
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var companyId = $(this).attr("id");
+                    $('#hrfContractId').val(companyId);
+                    var Status = $(this).attr("data-Status");
+                    var LatestVersion = $(this).attr("data-LatestVersion");
+
+                    if (Status == 5)
+                    {
+                        swal("Pending for Approval");
+                    }
+                    else
+                    {
+                        var check = '@Url.Content("~/Contract/ContractDetails?Id=")' + $('#hrfClientId').val();
+                        $.post(check, function (ChartError) {
+
+                            // $('#divContractform').html(ChartError);
+                            //CancelTeam();
+                            ClearForm();
+                            $('#CEditForm').modal('show');
+
+                        });
+                    }
+
+                });
+
+                $('#tblContractList tbody td .btndelete').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var companyId = $(this).attr("id");
+                    $('#hrfContractId').val(companyId);
+                    var Version = $(this).attr("data-Version");
+                    var Contract = $(this).attr("data-Contract");
+                    var HiscompanyId = $(this).attr("data-CompanyId");
+
+                    ConfirmContractDelete($('#hrfContractId').val(), HiscompanyId, Version, Contract, 'Contract Deleted');
+
+                });
+
+                $('#tblContractList tbody td .btnDocview').on('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblList.row(tr);
+                    var companyId = $(this).attr("id");
+                    var Version = $(this).attr("data-Version");
+                    var Contract = $(this).attr("data-Contract");
+                    //exports();
+                    //Contract History
+                    History(companyId, Version, Contract, 'Contract Viewed');
+                });
+            }
+        }
+
+        function Action(fid, contractId, fileName, id, version, Status, LatestVersion,companyid)
+        {
+            var linktext = '@Html.ActionLink("", "ViewContractFile", "Contract", new { fileName = "FN**", contractId = "CI**", id="Id**", version = "V**",Status="S**" }, new { @target = "_blank", @class = "btnDocview fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" })';
+            linktext = linktext.replace('FN**', escape(fileName)).replace('CI**', contractId).replace('Id**', id).replace('V**', version).replace('S**', Status);
+
+            if (fid != 0 && '@isAdmin' != "AE" && LatestVersion == 1) {
+                var a = '<a title="Mail to Client" href="javascript:;" id="' + contractId + '" data-Attachment="' + fileName + '" class="fa fa-envelope fa-lg SendtoClient text-inverse form-control1 p-l-0 p-r-0 m-5"></a>'
+                     + '<a title="Edit Contract" href="javascript:;" id="' + contractId + '" data-LatestVersion="' + LatestVersion + '" data-Status="' + Status + '" class="btnedit fa fa-edit fa-lg text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration @isPermission" style="border:none; background-color:transparent;display: initial;"></a>'
+                    + '<a title="Delete Contract" href="javascript:;" id="' + contractId + '" data-Version="' + version + '"  data-CompanyId="' + id + '"  data-contract="' + contractId + '" class="btndelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>'
+                    //+ '<a title="View Contract" href="' + fileName + '" id="' + id + '" data-Version="' + version + '" data-contract="' + contractId + '" class="btnDocview fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" target="_blank" style="border:none; background-color:transparent;display: initial;"></a>';
+                + linktext;
+            }
+            else if (fid != 0 && '@isAdmin' != "AE" && LatestVersion != 1) {
+                var a = '<a title="Mail to Client" href="javascript:;" id="' + contractId + '" data-Attachment="' + fileName + '" class="fa fa-envelope fa-lg SendtoClient text-inverse form-control1 p-l-0 p-r-0 m-5"></a>'
+                    + '<a title="Delete Contract" href="javascript:;" id="' + contractId + '" data-Version="' + version + '"  data-CompanyId="' + id + '"  data-contract="' + contractId + '" class="btndelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>'
+                //+ '<a title="View Contract" href="' + fileName + '" id="' + id + '" data-Version="' + version + '" data-contract="' + contractId + '" class="btnDocview fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" target="_blank" style="border:none; background-color:transparent;display: initial;"></a>';
+                + linktext;
+            }
+            else if ('@isAdmin' != "AE" && LatestVersion == 1) {
+
+                var a = '<a title="Edit Contract" href="javascript:;" id="' + contractId + '" data-LatestVersion="' + LatestVersion + '" data-Status="' + Status + '" class="btnedit fa fa-edit fa-lg text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration @isPermission" style="border:none; background-color:transparent;display: initial;"></a>'
+                    + '<a title="Delete Contract" href="javascript:;" id="' + contractId + '" data-Version="' + version + '"  data-CompanyId="' + id + '" data-contract="' + contractId + '" class="btndelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
+            }
+            else if ('@isAdmin' != "AE" && LatestVersion != 1) {
+
+                var a =
+                    //'<a title="Edit Contract" href="javascript:;" id="' + contractId + '" data-LatestVersion="' + LatestVersion + '" data-Status="' + Status + '" class="btnedit fa fa-edit fa-lg text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration @isPermission" style="border:none; background-color:transparent;display: initial;"></a>'
+                    '<a title="Delete Contract" href="javascript:;" id="' + contractId + '" data-Version="' + version + '"  data-CompanyId="' + id + '" data-contract="' + contractId + '" class="btndelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
+            }
+            else {
+                //var a = '<a title="View Contract" href="' + fileName + '" id="' + id + '" class="fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5" target="_blank" style="border:none; background-color:transparent;display: initial;"></a>';
+                var a = linktext;
+            }
+            return a;
+        }
+
+        function History(companyId, Version, Contract,Status) {
+            var formData = new FormData();
+            formData.append('companyId', companyId);
+            formData.append('Version', Version);
+            formData.append('ContractId', Contract);
+            formData.append('Status', Status);
+
+            var url = "@Url.Action("UpdateViewDetails", "Contract")";
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: formData,
+                success: function (result) {
+                    logDatatable();
+                },
+                error: function (err) {
+
+                }
+            });
+        }
+
+        function LoadclientsList() {
+            $('#tblClients').DataTable({
+                searching: false,
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': [-1]
+                }],
+                "columnDefs": [
+                    { "type": "num", "targets": 0 }
+                ],
+                "order": [0, 'asc'],
+            });
+        }
+
+        $('.btnClientView').on('click', function () {
+            var companyName = $(this).attr('data-compname');
+            var companyId = $(this).attr('data-compId');
+          //  alert(companyId + '  ' + companyName);
+            if (companyName !== '' && companyName !== null && typeof (companyName) !== undefined)
+            {
+                $('#hrfClientId').val(companyId);
+               // alert($(this).attr('data-clientId'));
+                $('#hrfClientId').val($(this).attr('data-clientId'));
+                ClientDetailsLoad();
+                //FeesChangeDisable();
+                //SetClientSearch(companyName);
+            }
+        });
+
+        function ApprovalDatatable() {
+
+            var dtTblApprovalList;
+
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblApprovalContractList')) {
+                dtTblApprovalList = $('#tblApprovalContractList').DataTable().ajax.reload();
+                //$('#tblChartList')
+            } else {
+                dtTblApprovalList = $('#tblApprovalContractList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/LoadList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                           },
+                           error: function (result) {
+                               console.log(result);
+                           }
+                       },
+                       columns: [
+                           { data: "version", name: "version" },
+                           { data: "companyID", name: "companyID" },
+                           { data: "companyName", name: "companyName" },
+                           { data: "residencyCode", name: "residencyCode" },
+                           { data: "contractSignedDate", name: "contractSignedDate" },
+                           { data: "contractExpiryDate", name: "contractExpiryDate" },
+                           { data: "status", name: "status" }
+                       ],
+
+                       columnDefs: [
+                       {
+                           targets: 6,
+                           render: function (data, type, row, meta) {
+                               return '<a href="javascript:;" id="' + row["id"] + '" class="fa fa-eye btnClientView hide"></a>';
+                           }
+                       }
+                       ],
+
+                       serverSide: true,
+                       processing: true,
+                       autoWidth: false,
+                       order: [0, "asc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+
+                $(dtTblApprovalList.table().container()).removeClass('form-inline');
+                $('#tblApprovalContractList tbody td img').live('click', function () {
+                    @*var tr = $(this).closest('tr');
+                    var row = dtTblApprovalList.row(tr);
+                    if (row.child.isShown()) {
+                        /* This row is already open - close it */
+                        this.src = '@Url.Content("~/img/details_open.png")';
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    }
+                    else {
+                        /* Open this row */
+                        this.src = '@Url.Content("~/img/details_close.png")';
+                        var contractId = $(this).attr("id");
+                        var check = '@Url.Content("~/Contract/ClientContractsLog?contractId=")' + contractId;
+                        $.post(check, function (ChartError) {
+                            row.child(ChartError).show();
+                            tr.addClass('shown');
+                        });
+                    }*@
+                });
+
+                $('#tblApprovalContractList tbody td .btnClientView').live('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = dtTblApprovalList.row(tr);
+                    var ClientId = $(this).attr("id");
+                    $('#hrfClientId').val(ClientId);
+                    ClientDetailsLoad();
+                    $("#divContractApprovalList").addClass('hide');
+                    $("#divClientSearch").addClass('show');
+                    $("#Companyfilter").addClass('hide');
+                    $("#changeTeam").html("Contract");
+                });
+
+                $('#tblApprovalContractList tbody tr').live('click', function (evt) {
+
+                    var $cell=$(evt.target).closest('td');
+                    if ($cell.index() > 0) {
+                        var data = dtTblApprovalList.row(this).data();
+                        //var tr = $(this).closest('tr');
+                        //var row = dtTblApprovalList.row(tr);
+                        //var ClientId = $(this).attr("id");
+                        $('#hrfClientId').val(data["id"]);
+                        ClientDetailsLoad();
+                        $("#divContractApprovalList").addClass('hide');
+                        $("#divClientSearch").addClass('show');
+                        $("#Companyfilter").addClass('hide');
+                        $("#changeTeam").html("Contract");
+                    }
+                });
+
+
+            }
+        }
+
+        function hides()
+        {
+            var AE = '@isAdmin';
+            if (AE == "AE") {
+
+                $(".AEshow").addClass('show');
+                $(".AEHide").addClass('hide');
+                //$("#divClientSearch").addClass('hide');
+                //$("#changeTeam").html("Contract Approval");
+                //$('#divClientList').addClass('hide');
+                $("#divContractApprovalList").addClass('hide');
+            }
+            else
+            {
+                $("#divContractApprovalList").addClass('hide');
+                $(".AEshow").addClass('hide');
+                $(".AEHide").addClass('show');
+            }
+        }
+        function ClientSearch() {
+            var eleClientSearch = $('#ClientSearch').autocomplete({
+                scroll: true,
+                minLength: 0,
+                source: function (request, response) {
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: $('#hrfSearchClient').val(),
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.value, value: item.value, CompanyId: item.id };
+                            }));
+                        },
+                        error: function (req, status, error) {
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    hides();
+                    $('#hrfClientId').val(ui.item.CompanyId);
+                    ClientDetailsLoad();
+                    return ui.item.value;
+                },
+            }).focus(function () {
+                $(this).autocomplete("search", "");
+                FeesChangeDisable();
+            });
+        }
+
+        function ClientEdit()
+        {
+            //var urlParams = new URLSearchParams(window.location.search);
+            //if (urlParams !== null && typeof (urlParams) !== undefined) {
+            //    var companyId = urlParams.get('id');
+            //    var companyName = urlParams.get('name');
+            //    if (companyId != null && companyName != null)
+            //    {
+            //        SetClientSearch(companyName);
+            //    }
+            //}
+
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams !== null && typeof (urlParams) !== undefined) {
+                var companyId = urlParams.get('id');
+                var companyName = urlParams.get('name');
+
+                if (companyId != null && companyName != null) {
+                    $('#hrfClientId').val(companyId);
+                    // alert($(this).attr('data-clientId'));
+                    ClientDetailsLoad();
+
+                    $("#divContractApprovalList").addClass('hide');
+                    $("#divClientSearch").addClass('show');
+
+                }
+            }
+
+        }
+
+        function SetClientSearch(companyName)
+        {
+            var downKeyEvent = $.Event("keydown");
+            downKeyEvent.keyCode = $.ui.keyCode.DOWN; // event for pressing "down" key
+
+            var enterKeyEvent = $.Event("keydown");
+            enterKeyEvent.keyCode = $.ui.keyCode.ENTER; // event for pressing "enter" key
+
+            $('#ClientSearch').autocomplete("search", companyName);
+            $('#ClientSearch').autocomplete("option", "autoFocus", true);
+            setTimeout(function () {
+                $("#ClientSearch").trigger(enterKeyEvent); // Enter key selects highlighted item
+                $('#btnSearch').trigger('click');
+            }, 2000);
+        }
+
+        function BtnSearch() {
+            $('#btnSearch').on('click', function () {
+                ClientDetailsLoad();
+            });
+        }
+
+        $('#btnClientsUpdate').live('click', function () {
+                @*var GetContractSt = $('#@Html.IdFor(m => m.ClientsDetails.ContractStatusID)').val();
+                if(GetContractSt != 0)
+                {*@
+                    ClientContractStatusUpdate();
+                //}
+                //else
+                //{
+                //swal("Contract Status is Empty");
+                //}
+            });
+
+        function ClientContractStatusUpdate()
+        {
+            var GetId = $('#@Html.IdFor(m => m.ClientsDetails.ID)').val();
+            var GetCompanyId = $('#@Html.IdFor(m => m.ClientsDetails.CompanyId)').val();
+            var GetContractStatus = $('#@Html.IdFor(m => m.ClientsDetails.ContractStatusID)').val();
+            if (GetContractSt != 0)
+            { var GetContractSt = GetContractStatus; }
+            else { var GetContractSt = 0 }
+            var ClientsStatusDetails = JSON.stringify({
+                'ID': GetId,
+                'CompanyId': GetCompanyId,
+                'ContractStatusID': GetContractSt
+            });
+            var url = "@Url.Action("UpdateClientStatus", "Contract")";
+            var jsonData = ClientsStatusDetails;
+
+            //History(GetClientId, "V1", GetId, "Contract Modified");
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req)
+            {
+                if (resp.message == "Failed") {
+                    console.log("Error");
+                }
+                else {
+                    swal("Updated Successfully");
+                }
+                logDatatable();
+            });
+        }
+
+        function runScript(e) {
+            //See notes about 'which' and 'key'
+            if (e.keyCode == 13) {
+                if ($('#hrfClientId').val() != '') {
+                    ClientDetailsLoad();
+
+                }
+                return false;
+            }
+        }
+
+        function ClientDetailsLoad()
+        {
+            $("#tcontractdetails").click();
+
+            var url = "@Url.Action("ClientContractDetails", "Contract")";
+            var jsonData = { Id: $('#hrfClientId').val() };
+
+            AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                $('#divClientSearch').html(resp);
+                //   alert($('#@Html.IdFor(m => m.ClientsDetails.Transport)').val())
+                FeesChangeDisable();
+                if (new Date($('#@Html.IdFor(m => m.ClientsDetails.ContractExpiryDate)').val()) < new Date()) {
+                    swal({
+                        title: "This Contract is Expired !",
+                        text: "Do you want to Continue?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-primary',
+                        confirmButtonText: 'Confirm'
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            if ($('#@Html.IdFor(m => m.ClientsDetails.Transport)').val() == "False") {
+                                $('.Transport').html("No");
+                                $('.TransportCharges').html("");
+                            }
+                            else {
+                                $('.Transport').html("Yes");
+                            }
+                            $('#@Html.IdFor(m => m.ClientContractDetails.AgreementType)').val(1)
+                            $('#@Html.IdFor(m => m.ClientContractDetails.ContractSignedDate)').val($('#@Html.IdFor(m => m.ClientsDetails.ContractSignedDate)').val())
+                            $('#@Html.IdFor(m => m.ClientContractDetails.ContractExpiryDate)').val($('#@Html.IdFor(m => m.ClientsDetails.ContractExpiryDate)').val())
+                            $('#divClientDetails').removeClass('hide');
+                            $('#divClientList').addClass('hide');
+
+                            ClientSearch();
+                            hides();
+                            Datatable();
+                            logDatatable();
+                            OtherDocumentDatatable();
+                            PassThruContractDatatable();
+                            CrewLogListDatatable();
+                            NotesDatatable();
+                            InsuranceContractDatatable();
+                            AnnualChargeRateDatatable();
+                        }
+                        else {
+                            var baseUrl = '@Url.Content("~/Contract/Contracts/")';
+                            var url = baseUrl;
+                            window.location.href = url;
+                        }
+                    });
+                }
+                else {
+                    if ($('#@Html.IdFor(m => m.ClientsDetails.Transport)').val() == "False") {
+                        $('.Transport').html("No");
+                        $('.TransportCharges').html("");
+                    }
+                    else {
+                        $('.Transport').html("Yes");
+                    }
+                    $('#@Html.IdFor(m => m.ClientContractDetails.AgreementType)').val(1)
+                    $('#@Html.IdFor(m => m.ClientContractDetails.ContractSignedDate)').val($('#@Html.IdFor(m => m.ClientsDetails.ContractSignedDate)').val())
+                    $('#@Html.IdFor(m => m.ClientContractDetails.ContractExpiryDate)').val($('#@Html.IdFor(m => m.ClientsDetails.ContractExpiryDate)').val())
+                    $('#divClientDetails').removeClass('hide');
+                    $('#divClientList').addClass('hide');
+
+                    ClientSearch();
+                    hides();
+                    Datatable();
+                    logDatatable();
+                    OtherDocumentDatatable();
+                    PassThruContractDatatable();
+                    CrewLogListDatatable();
+                    NotesDatatable();
+                    InsuranceContractDatatable();
+                    AnnualChargeRateDatatable();
+                }
+            });
+        }
+
+        function CancelTeam() {
+            $('#btnAddCancel, #Contractclose').click(function (e) {
+                $('#CEditForm').modal('hide');
+                ClearForm();
+            });
+            //$('#Contractclose').click(function (e) {
+            //    $('#CEditForm').modal('hide');
+            //    ClearForm();
+            //});
+        }
+
+        function CancelNotes() {
+            $('#btnNotesCancel, #commentsclose').click(function (e) {
+                $('#CNotesForm').modal('hide');
+                ClearForm();
+            });
+            //$('#commentsclose').click(function (e) {
+            //    $('#CNotesForm').modal('hide');
+            //    ClearForm();
+            //});
+            $('#emailFormclose, #btnCancelMail').click(function (e) {
+                $('#CEmailForm').modal('hide');
+                ClearForm();
+            });
+        }
+
+        //Delete Contract from contractlist
+        function ConfirmContractDelete(ContractId, companyId, Version, Contract,Status) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var url = "@Url.Action("DeleteContract", "Contract")";
+                        var jsonData = { Id: ContractId};
+                        AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                            $('#hfrDataClientID').val(resp.clientId);
+                            //History
+                            History(companyId, Version, Contract, Status);
+                            //Reload
+                            Datatable();
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+                });
+        };
+
+
+
+        function createContractDetails()
+        {
+            $('#@Html.IdFor(m => m.ClientContractDetails.AgreementType)').attr("data-parsley-required", true);
+            $('#Agreementfile').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.ClientContractDetails.ContractSignedDate)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.ClientContractDetails.ContractExpiryDate)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.ClientContractDetails.Year1Fee)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.ClientContractDetails.Year2Fee)').attr("data-parsley-required", true);
+
+            //alert($('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val());
+            //alert($('#hrfClientId').val());
+
+            var validationresult = $('#contractdetailsfrm').parsley().validate();
+            if (validationresult)
+            {
+                var GetAgreementType = $('#@Html.IdFor(m => m.ClientContractDetails.AgreementType)').val();
+                var GetClientId = $('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val() == "" || $('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val() == "0" ? $('#hrfClientId').val() : $('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val();
+                var GetContractSignedDate = $('#@Html.IdFor(m => m.ClientContractDetails.ContractSignedDate)').val();
+                var GetContractExpiryDate = $('#@Html.IdFor(m => m.ClientContractDetails.ContractExpiryDate)').val();
+                var GetYear1Fee = $('#@Html.IdFor(m => m.ClientContractDetails.Year1Fee)').val();
+                var GetYear2Fee = $('#@Html.IdFor(m => m.ClientContractDetails.Year2Fee)').val();
+
+                var GetYear3Fee = $('#@Html.IdFor(m => m.ClientContractDetails.Year3Fee)').val();
+                GetYear3Fee = (GetYear3Fee == "" ? 0 : GetYear3Fee);
+                var GetYear4Fee = $('#@Html.IdFor(m => m.ClientContractDetails.Year4Fee)').val();
+                GetYear4Fee = (GetYear4Fee == "" ? 0 : GetYear4Fee);
+
+                var GetId = $('#hrfContractId').val();
+                GetId = (GetId == "" ? 0 : GetId);
+
+                if (GetAgreementType == '1')
+                {
+                    if ($('#Agreementfile').val() != '')
+                        SaveContractFiles();
+                    History(GetClientId,"V1",GetId,"Contract Modified");
+                    //if ($('#OtherDocumentfile').val() != '')
+                    //    SaveClientContractOtherFiles();
+                }
+                else {
+                    if ($('#Agreementfile').val() != '') {
+                        var ClientContractEditDetails = JSON.stringify({
+                            ID: GetId,
+                            ClientId: GetClientId,
+                            AgreementType: GetAgreementType,
+                            ContractSignedDate: GetContractSignedDate,
+                            ContractExpiryDate: GetContractExpiryDate,
+                            Year1Fee: GetYear1Fee,
+                            Year2Fee: GetYear2Fee,
+                            Year3Fee: GetYear3Fee,
+                            Year4Fee: GetYear4Fee
+
+                        });
+                        var jsonData = ClientContractEditDetails;
+                        var url = "@Url.Action("SaveContractDetails", "Contract")";
+                        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+
+                            $('#hrfContractId').val(resp.contractId)
+                            SaveContractFiles();
+                            $('.btnedit').addClass('hide');
+                            //if ($('#OtherDocumentfile').val() != '')
+                            //    SaveClientContractOtherFiles();
+                        });
+                    }
+                }
+            }
+
+           // AfterContractSubmit();
+        }
+
+        function SaveContractFiles() {
+            var formData = new FormData();
+            formData.append('file', $('#Agreementfile')[0].files[0]);
+            formData.append('ClientId', $('#hrfClientId').val());
+            formData.append('ContractId', $('#hrfContractId').val());
+
+            var url = "@Url.Action("SaveContractFiles", "Contract")";
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: formData,
+                success: function (result) {
+                    //$('#divClientSearch').html(result);
+                    //$('#divClientDetails').removeClass('hide');
+                    AfterContractSubmit();
+                    ClientDetailsLoad();
+                    Datatable();
+                    logDatatable();
+                    OtherDocumentDatatable();
+                    PassThruContractDatatable();
+                    CrewLogListDatatable();
+                    NotesDatatable();
+                    InsuranceContractDatatable();
+                    AnnualChargeRateDatatable();
+                },
+                error: function (err) {
+
+                }
+            });
+        }
+
+        //Other Document Deatils Insert
+        $('#btnOtherFilesSubmit').on('click', function () {
+            $('#OtherDocumentfile').attr("data-parsley-required", true);
+            var validationresult = $('#otherDocsForm').parsley().validate();
+            if (validationresult)
+            {
+                SaveClientContractOtherFiles();
+            }
+        });
+
+        function SaveClientContractOtherFiles()
+        {
+            var formOtherFileData = new FormData();
+            formOtherFileData.append('file', $('#OtherDocumentfile')[0].files[0]);
+            formOtherFileData.append('ClientId', $('#hrfClientId').val());
+            formOtherFileData.append('ContractId', $('#hrfContractId').val());
+            var url = "@Url.Action("SaveClientContractOtheFiles", "Admin")";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formOtherFileData,
+                success: function (result) {
+                    //push to history table
+
+                    var formData = new FormData();
+                    formData.append('companyId', $('#hrfClientId').val());
+                    formData.append('Version', "v");
+                    formData.append('ContractId', $('#hrfContractId').val());
+                    formData.append('Status', 'Other Documents Added');
+
+                    var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: formData,
+                        success: function (result) {
+                            logDatatable();
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+
+                    $("#OtherDocumentfile").val('');
+                    OtherDocumentDatatable();
+                    logDatatable();
+                },
+                error: function (err) {
+                }
+            });
+            //if (resp.msge = 'Success')
+            //{
+
+            //}
+            //else {
+            //    AfterContractSubmit();
+            //}
+        }
+
+        $('#btnPassThruContract').on('click', function () {
+            $('#fuPassThruContract').attr("data-parsley-required", true);
+            var validationresult = $('#PassThruContractForm').parsley().validate();
+            if (validationresult)
+            {
+                SaveClientContractPassThruFiles();
+            }
+        });
+
+        function SaveClientContractPassThruFiles()
+        {
+            var formOtherFileData = new FormData();
+            formOtherFileData.append('file', $('#fuPassThruContract')[0].files[0]);
+            formOtherFileData.append('ClientId', $('#hrfClientId').val());
+            formOtherFileData.append('ContractId', $('#hrfContractId').val());
+            var url = "@Url.Action("SaveClientContractPassThruFiles", "Admin")";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formOtherFileData,
+                success: function (result) {
+                    //push to history table
+
+                    var formData = new FormData();
+                    formData.append('companyId', $('#hrfClientId').val());
+                    formData.append('Version', "v");
+                    formData.append('ContractId', $('#hrfContractId').val());
+                    formData.append('Status', 'Pass-Thru Documents Added');
+
+                    var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: formData,
+                        success: function (result) {
+                            logDatatable();
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+
+                    $("#fuPassThruContract").val('');
+                    PassThruContractDatatable();
+                    logDatatable();
+                },
+                error: function (err) {
+                }
+            });
+            //if (resp.msge = 'Success')
+            //{
+
+            //}
+            //else {
+            //    AfterContractSubmit();
+            //}
+        }
+
+        $('#btnCrewLogList').on('click', function () {
+            $('#fuCrewLogList').attr("data-parsley-required", true);
+            var validationresult = $('#CrewLogListForm').parsley().validate();
+            if (validationresult)
+            {
+                SaveClientContractCrewLogFiles();
+            }
+        });
+
+        function SaveClientContractCrewLogFiles()
+        {
+            var formOtherFileData = new FormData();
+            formOtherFileData.append('file', $('#fuCrewLogList')[0].files[0]);
+            formOtherFileData.append('ClientId', $('#hrfClientId').val());
+            formOtherFileData.append('ContractId', $('#hrfContractId').val());
+            var url = "@Url.Action("SaveClientContractCrewLogFiles", "Admin")";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formOtherFileData,
+                success: function (result) {
+                    //push to history table
+
+                    var formData = new FormData();
+                    formData.append('companyId', $('#hrfClientId').val());
+                    formData.append('Version', "v");
+                    formData.append('ContractId', $('#hrfContractId').val());
+                    formData.append('Status', 'Crew Log Documents Added');
+
+                    var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: formData,
+                        success: function (result) {
+                            logDatatable();
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+
+                    $("#fuCrewLogList").val('');
+                    CrewLogListDatatable();
+                    logDatatable();
+                },
+                error: function (err) {
+                }
+            });
+            //if (resp.msge = 'Success')
+            //{
+
+            //}
+            //else {
+            //    AfterContractSubmit();
+            //}
+        }
+
+
+
+
+
+        function AfterContractSubmit()
+        {
+            $('#CEditForm').modal('hide');
+            $('.collapse').hide();
+            $('#btnContractDetailsSubmit').val('Submit');
+            $('#alertsuccess').show();
+            setTimeout(function () {
+                $('#alertsuccess').hide();
+                $('#alertsuccess').removeClass('show');
+            }, 2000);
+            $('#Active').removeAttr('disabled');
+            $('#InActive').removeAttr('disabled');
+            $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+            $('#contractdetailsfrm').parsley().destroy();
+            ClearForm();
+        }
+
+        function ClearForm()
+        {
+            $("#Agreementfile").val('');
+            $('#contractdetailsfrm').find('input:text').val('');
+            $("textarea").val("");
+            $(".ContractUSersList").prop('selectedIndex', 0);
+            $('#contractdetailsfrm').find('input:radio').removeAttr('checked');
+            $('#contractdetailsfrm').find('select').val(0);
+            $('#notesdetailsfrm').find('input:text').val('');
+            $('#clientContractDetails_ID').val('');
+            $('#sendEmailFrm').find('input, textarea').not('input[type=button]').val('');
+            $('#contractdetailsfrm').parsley().destroy();
+            $('#sendEmailFrm').parsley().destroy();
+            $('#notesdetailsfrm').parsley().destroy();
+            $('#NotesForm').parsley().destroy();
+            $('#otherDocsForm').parsley().destroy();
+            $('#hrfMailTo').val("");
+            ClientSearch();
+        }
+
+        $('#btnContractDetailsSubmit').live('click', function () {
+            createContractDetails();
+            $("#changeteam").html("Add Contract");
+            // ClearForm();
+
+        });
+        $('#btnNotesSubmit').live('click', function () {
+            var contractId = $('#hrfContractId').val()
+            var StatusID = $('#hrfStatus').val();
+            var status;
+            if (StatusID == 2)
+                status = "Sent To";
+            else if(StatusID == 5)
+            status = "Pending for Approval";
+            else
+                status = "Approved";
+            @*if ($('#divuser').find('hide'))
+            {
+                alert('success');
+                $('#@Html.IdFor(m => m.ClientContractDetails.Users)').attr("data-parsley-required", false);
+            }
+            else
+        alert('fail');
+                $('#@Html.IdFor(m => m.ClientContractDetails.Users)').attr("data-parsley-required", true);*@
+
+            $('#@Html.IdFor(m => m.ClientContractDetails.Comments)').attr("data-parsley-required", true);
+
+            var validationresult = $('#notesdetailsfrm').parsley().validate();
+            if (validationresult)
+            {
+                var GetClientId = $('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val() == "" ? $('#hrfClientId').val() : $('#@Html.IdFor(m => m.ClientContractDetails.ClientId)').val();
+                var GetComments = $('#@Html.IdFor(m => m.ClientContractDetails.Comments)').val();
+                var GetUserName = $('#@Html.IdFor(m => m.ClientContractDetails.Users)').val() == "" ? $('#hrfSentBy').val() : $('#@Html.IdFor(m => m.ClientContractDetails.Users)').val();
+                var GetCompanyname = $('#@Html.IdFor(m => m.ClientsDetails.CompanyName)').val();
+                var GetCompanyname = $('#@Html.IdFor(m => m.ClientsDetails.CompanyName)').val()
+
+                var EmailContractDetails = JSON.stringify({
+                    ContractID: contractId,
+                    ClientId: GetClientId,
+                    CompanyName: GetCompanyname,
+                    Status: status,
+                    StatusID:StatusID,
+                    Comments: GetComments,
+                    SendTo: GetUserName
+                });
+
+                var jsonData = EmailContractDetails;
+                var url = "@Url.Action("EmailContractSendToAE", "Contract")";
+
+                AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                    @*var formOtherFileData = new FormData();
+                    formOtherFileData.append('file', $('#OtherDocumentfile')[0].files[0]);
+                    formOtherFileData.append('ClientId', GetClientId);
+                    formOtherFileData.append('ContractId', contractId);
+                    var url = "@Url.Action("SaveClientContractOtheFiles", "Admin")";
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: formOtherFileData,
+                        success: function (result) {
+                        },
+                        error: function (err) {
+                        }
+                    });*@
+
+                    if (resp.msge = 'Success') {
+                        $('#CNotesForm').modal('hide');
+                        CancelTeam();
+                        $('#hrfStatus').val("");
+                        if (StatusID == 5)
+                            location.href = "@Url.Action("Contracts", "Contract")";
+                        else
+                            Datatable();
+                            logDatatable();
+                            OtherDocumentDatatable();
+                            PassThruContractDatatable();
+                            CrewLogListDatatable();
+                            NotesDatatable();
+                            InsuranceContractDatatable();
+                            AnnualChargeRateDatatable();
+                    }
+                });
+            }
+
+
+        });
+
+        function MailSearch() {
+            var eleClientSearch = $('#MailTo').autocomplete({
+                scroll: true,
+                minLength: 0,
+                source: function (request, response) {
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "@Url.Action("GetSearchClientEmployee", "Contract")",
+                        data: {
+                            Prefix: request.term,
+                            clientId: $('#hrfClientId').val(),
+                            Mailto: $('#MailTo').val()
+                        },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.value, value: item.value, mail: item.email };
+                            }));
+                        },
+                        error: function (req, status, error) {
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    if ($("#MailTo").val() === "")
+                        $("#hrfMailTo").val("");
+
+                    var inp = $("#hrfMailTo");
+
+                    if (inp.val() === "") {
+                        $('#hrfMailTo').val(ui.item.mail);
+                    }
+                    else {
+                        var LastValue = splitCurrentText($('#hrfMailTo').val());
+                        LastValue.pop();
+                        LastValue.push(ui.item.mail);
+                        LastValue.push("");
+                        $('#hrfMailTo').val(LastValue.join(","));
+                    }
+                    var LastValue = splitCurrentText(this.value);
+                    LastValue.pop();
+                    LastValue.push(ui.item.value);
+                    LastValue.push("");
+                    this.value = LastValue.join(",");
+                    return false;
+                },
+                change: function (event, ui) {
+                    if ($.trim($("#MailTo").val()) === "")
+                        $("#hrfMailTo").val("");
+                }
+            }).focus(function () {
+                $(this).autocomplete("search", "");
+                return false;
+            });
+        }
+
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+
+        $('#btnSendMail').on('click', function () {
+            $('#MailSubject').attr("data-parsley-required", true);
+            $('#MailBody').attr("data-parsley-required", true);
+                var splitmail = $("#MailToOthers").val().split(',');
+
+                var validationresult = $('#sendEmailFrm').parsley().validate();
+                if (validationresult) {
+                    if ($('#MailTo').val() != "" || $('#MailToOthers').val() != "") {
+                        var mailto = null;
+
+                        if ($('#hrfMailTo').val() != "" && $('#MailToOthers').val() != "") {
+                            mailto = $('#hrfMailTo').val() +','+ $('#MailToOthers').val();
+                        }
+                        else {
+                            if ($('#hrfMailTo').val() != "") {
+                                mailto = $('#hrfMailTo').val();
+                            }
+                            else {
+                                mailto = $('#MailToOthers').val();
+                            }
+                        }
+
+                        var url = "@Url.Action("SendEmailToClient", "Contract")";
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: url,
+                            data: {
+                                Subject: $('#MailSubject').val(),
+                                Body: $('#MailBody').val(),
+                                MailTo: mailto,
+                                Attachment: $('#hrfMailAttachment').val()
+                            },
+                            success: function (data) {
+
+                                var formData = new FormData();
+                                formData.append('companyId', $('#hrfClientId').val());
+                                formData.append('Version', 0);
+                                formData.append('ContractId', 0);
+                                formData.append('Status', 'Mail Sent To ' + mailto);
+
+                                var url = "@Url.Action("UpdateViewDetails", "Contract")";
+                                $.ajax({
+                                    url: url,
+                                    type: "POST",
+                                    contentType: false, // Not to set any content header
+                                    processData: false, // Not to process data
+                                    data: formData,
+                                    success: function (result) {
+                                        logDatatable();
+                                    },
+                                    error: function (err) {
+
+                                    }
+                                });
+
+                                $('#CEmailForm').modal('hide');
+                                ClearForm();
+                            },
+                            error: function (req, status, error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+                    else {
+                        swal('Please Enter Client or Others');
+                    }
+                }
+
+        });
+
+        $("#btnNoteSubmit").on('click', function () {
+            $('#hrfCommonNotesId').attr("data-parsley-required", true);
+            $('#CommonNote').attr("data-parsley-required", true);
+
+            var validationresult = $('#NotesForm').parsley().validate();
+            if (validationresult) {
+                SaveNotes();
+            }
+            //if ($("#CommonNote").val() != "") {
+            //    SaveNotes();
+            //}
+            //else
+            //{
+            //    swal("Notes should not be empty");
+            //}
+        });
+
+        $("#btnNoteClear").on('click', function () {
+            $("#btnNoteSubmit").prop('value', 'Submit');
+            $("#CommonNote").val("");
+            $("#hrfCommonNotesId").val("");
+            $('#@Html.IdFor(m => m.ClientsDetails.InsuranceContractID)').val(0);
+            NotesDatatable();
+        });
+
+        function SaveNotes(status)
+        {
+            var GetId = $('#hrfCommonNotesId').val();
+            GetId = (GetId == "" ? 0 : GetId);
+            var GetClientId = $('#hrfClientId').val();
+            var GetContractId = $('#hrfContractId').val();
+            var GetInsuranceContractId=$('#@Html.IdFor(m => m.ClientsDetails.InsuranceContractID)').val()
+            var GetNotes = $('#CommonNote').val();
+
+            var ClientContractNoteDetails = JSON.stringify({
+                ID: GetId,
+                ClientId: GetClientId,
+                ContractId: GetContractId,
+                InsuranceContractId: GetInsuranceContractId,
+                Notes: GetNotes
+
+            });
+            var url = "@Url.Action("SaveClientContractNotes", "Contract")";
+            var formData = new FormData();
+            formData.append('Id', GetId);
+            formData.append('ClientId', GetClientId);
+            formData.append('ContractId', GetContractId);
+            formData.append('InsuranceContractId', GetInsuranceContractId);
+            formData.append('Notes', GetNotes);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    ClientDetailsLoad();
+                    $("#CommonNote").val("");
+                    $("#hrfCommonNotesId").val("");
+                    $('#@Html.IdFor(m => m.ClientsDetails.InsuranceContractID)').val(0);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+        function InsuranceContractDatatable()
+        {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblInsuranceContractList')) {
+                dtTblList = $('#tblInsuranceContractList').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblInsuranceContractList').DataTable(
+                    {
+                        ajax: {
+                            url: '@Url.Content("~/Contract/InsuranceContractList")',
+                            type: "POST",
+                            datatype: "json",
+                            data: function (d) {
+                                d.id = $('#hrfClientId').val();
+                            },
+                            error: function (result) {
+                                //console.log(result);
+                            }
+                        },
+                        columns: [
+                            { data: "documentType", name: "documentType" },
+                            { data: "insuranceContractName", name: "insuranceContractName" },
+                            { data: "effectiveDate", name: "effectiveDate" },
+                            { data: "termedDate", name: "termedDate" }
+                        ],
+
+                        columnDefs: [
+                            {
+                                targets: 4,
+                                render: function (data, type, row, meta) {
+                                    if (row["fileName"] != "") {
+                                        var b = InsuranceContractAction(row["insuranceContractId"], row["fileName"], row["id"]);
+                                        return b;
+                                    }
+                                    else {
+                                        return '';
+                                    }
+                                }
+                            },
+                        ],
+
+                        serverSide: true,
+                        processing: true,
+                        autoWidth: false,
+                        order: [0, "desc"],
+                        language: {
+                            processing: "Processing...Please Wait"
+                        }
+
+                    });
+
+                $(dtTblList.table().container()).removeClass('form-inline');
+            }
+        }
+
+
+        function InsuranceContractAction(insuranceContractId, fileName, id) {
+            var linktext = '@Html.ActionLink("", "ViewInsuranceContractFile", "Contract", new { fileName = "FN**", insuranceContractId = "II**", id="Id**" }, new { @target = "_blank", @class = "fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" })';
+            linktext = linktext.replace('FN**', escape(fileName)).replace('II**', insuranceContractId).replace('Id**', id);
+
+            return linktext;
+        }
+    </script>
+
+    @*Annual Charge Rate *@
+
+    <script type="text/javascript">
+        function AnnualChargeRateDatatable()
+        {
+            $("#divContractList").addClass('hide');
+            $("#divContractList").addClass('show');
+            var dtTblList;
+            PageValue = $('#Page').val();
+            if ($.fn.DataTable.isDataTable('#tblAnnualChargeRateList')) {
+                dtTblList = $('#tblAnnualChargeRateList').DataTable().ajax.reload();
+
+            } else {
+                dtTblList = $('#tblAnnualChargeRateList').DataTable(
+                   {
+                       ajax: {
+                           url: '@Url.Content("~/Contract/GetAnnualChargeRateList")',
+                           type: "POST",
+                           datatype: "json",
+                           data: function (d) {
+                               d.companyId = $('#@Html.IdFor(m => m.ClientsDetails.CompanyId)').val();
+                           },
+                           error: function (result) {
+                               //console.log(result);
+                           }
+                       },
+                        columns: [
+                            { data: "createdBy", name: "createdBy" },
+                            { data: "createdOn", name: "createdOn" }
+                       ],
+
+                       columnDefs: [
+                        {
+                            targets: 2,
+                               render: function (data, type, row, meta) {
+                                   if (row["filePath"] != "") {
+                                       var b = AnnualChargeRateAction(row["filePath"]);
+                                       return b;
+                                   }
+                                   else {
+                                       return '';
+                                   }
+                            }
+                        },
+                       ],
+
+                       serverSide: true,
+                       processing: true,
+                       autoWidth: false,
+                       order: [0, "desc"],
+                       language: {
+                           processing: "Processing...Please Wait"
+                       }
+
+                   })
+                $(dtTblList.table().container()).removeClass('form-inline');
+            }
+        }
+
+
+        function AnnualChargeRateAction(fileName) {
+            var linktext = '@Html.ActionLink("", "ViewAnnualChargeRateFile", "Contract", new { fileName = "FN**" }, new { @target = "_blank", @class = "fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" })';
+            linktext = linktext.replace('FN**', escape(fileName));
+
+            return linktext;
+        }
+    </script>
+}
+

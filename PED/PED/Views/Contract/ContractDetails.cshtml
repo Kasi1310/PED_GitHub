@@ -1,0 +1,183 @@
+﻿@using PED.ViewModels.Contract;
+@model Contracts
+
+@section Styles {
+    <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/css/BootstrapDatepicker.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <style>
+        .input-daterange input {
+            text-align: left !important;
+        }
+    </style>
+}
+<input type="hidden" id="hrfContractDetails" value='@Url.Content("~/Contract/ContractDetails/")' />
+<input type="hidden" id="hfReviewYear" />
+
+<div id="content" class="content">
+
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Contract</a></li>
+        <li class="active">Contract</li>
+    </ol>
+
+    <h1 class="page-header">Contract<small></small></h1>
+    <div id="alertsuccess" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Success!</strong> Details saved.
+    </div>
+    <div id="alertinfo" class="alert alert-info alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong>Sorry!</strong> Users are Mapped for the Contract.
+    </div>
+    <div id="divContractform">
+        @{ Html.RenderPartial("_ContractForm", Model); }
+    </div>
+</div>
+@section Scripts
+    {
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/ApplicationError.js")'></script>
+    <script src='@Url.Content("~/js/CommonUtils.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+    <script src='@Url.Content("~/plugins/masked-input/masked-input.min.js")'></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#alertsuccess').hide();
+        $('#alertinfo').hide();
+        InitEvents();
+        Cancel();
+        InitControls();
+    });
+
+
+        function createContractDetails()
+        {
+                    var validationresult = $('#contractdetailsfrm').parsley().validate();
+                    if (validationresult)
+                    {
+                        var GetAgreementType = $('#@Html.IdFor(m => m.ClientContractDetails.AgreementType)').val();
+                        var GetContractTitle = $('#@Html.IdFor(m => m.ClientContractDetails.ContractTitle)').val();
+                        var GetCompanyId = $('#@Html.IdFor(m => m.ClientContractDetails.CompanyId)').val();
+                        var GetContractSignedDate = $('#@Html.IdFor(m => m.ClientContractDetails.ContractSignedDate)').val();
+                        var GetContractExpiryDate = $('#@Html.IdFor(m => m.ClientContractDetails.ContractExpiryDate)').val();
+                        var GetActiveStatus = ($('.ActiveStatus:checked').val());
+                        var activ;
+                        if (GetActiveStatus == 1)
+                            activ = 1;
+                        else
+                            activ = 0;
+                        var GetId = $('#@Html.IdFor(m => m.ClientContractDetails.ID)').val();
+                        GetId = (GetId == "" ? 0 : GetId);
+
+                        var ClientContractDetails = JSON.stringify({
+                            ID: GetId,
+                            ClientId: 1,
+                            CompanyId: GetCompanyId,
+                            ContractTitle: GetContractTitle,
+                            AgreementType: GetAgreementType,
+                            ContractSignedDate: GetContractSignedDate,
+                            ContractExpiryDate: GetContractExpiryDate,
+                            Active: activ,
+                            Status:GetActiveStatus
+                        });
+
+                        var url = "@Url.Action("SaveContractDetails", "Contract")";
+                        var jsonData = ClientContractDetails;
+                        AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                            if (resp.contractID > 0)
+                            {
+                                if (window.FormData !== undefined) {
+                                    var formData = new FormData();
+                                    formData.append('file', $('#Agreementfile')[0].files[0]);
+                                
+                                    var url = "@Url.Action("SaveContractFiles", "Contract")";
+                                    $.ajax({
+                                        url: url,
+                                        type: "POST",
+                                        contentType: false, // Not to set any content header
+                                        processData: false, // Not to process data
+                                        data: formData,
+                                        success: function (result) {
+                                            AfterContractSubmit();
+
+                                        },
+                                        error: function (err) {
+
+                                        }
+                                    });
+                                }
+                                else {
+                                    AfterContractSubmit();
+                                }
+                            }
+                           
+                        });
+                }
+          }
+
+        function AfterContractSubmit()
+        {
+            $('.collapse').hide();
+            $('#btnContractDetailsSubmit').val('Submit');
+            $('#alertsuccess').show();
+            setTimeout(function () {
+                $('#alertsuccess').hide();
+                $('#alertsuccess').removeClass('show');
+            }, 2000);
+            $('#Active').removeAttr('disabled');
+            $('#InActive').removeAttr('disabled');
+            $('#expandcollapse').find('i').removeClass('fa-minus').addClass('fa-plus');
+            $('#contractdetailsfrm').parsley().destroy();
+            ClearForm();
+        }
+
+
+
+
+        function ClearForm()
+        {
+            $('#contractdetailsfrm').find('input:text').val('');
+            $("textarea").val("");
+            $('#contractdetailsfrm').find('input:radio').removeAttr('checked');
+            $('#contractdetailsfrm').find('select').val(0);
+            $('#ClientContractDetails_ID').val('');
+        }
+
+
+        $('#btnContractDetailsSubmit').live('click', function () {
+            createContractDetails();
+                $("#changeteam").html("Add Contract");
+        });
+
+
+
+        function Cancel() {
+            $('#btnCancel').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Data in the page will be lost!",
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonClass: 'btn-primary',
+                    confirmButtonText: 'Confirm'
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.href = $('#hrfContractDetails').val();
+                    }
+                });
+
+
+
+
+            });
+        }
+
+    </script>
+}

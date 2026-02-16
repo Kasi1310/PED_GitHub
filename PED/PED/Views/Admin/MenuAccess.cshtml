@@ -1,0 +1,182 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using WiseX.ViewModels.Admin;
+@model Users
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+@section Styles {
+    <link href='@Url.Content("~/plugins/jstree/dist/themes/default/style.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/parsley/src/parsley.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    <style type="text/css">
+        .border {
+            border: 1px solid #ccc !important;
+            padding-left: 0px !important;
+            width: 286px !important;
+        }
+    </style>
+}
+<input type="hidden" id="hrfUrlList" value='@Url.Content("~/Admin/MenuAccess/")' />
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li>Menu Access</li>
+    </ol>
+    <h1 class="page-header">Menu Access<small></small></h1>
+    <div id="msgbox" class="hide">
+        <div class="alert alert-success fade in m-b-15">
+            <strong>Success!</strong>
+            Details saved.
+            <span class="close" data-dismiss="alert">&times;</span>
+        </div>
+    </div>
+    <!---Begin Row-->
+    <div class="row">
+        <!-- begin col-->
+        <div class="col-md-12">
+            <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">Add Menu Access</h4>
+                </div>
+                <div class="panel-body panel-form">
+                    <!----Form Begin-->
+                    <form id="frmMenus" method="post" class="form-horizontal p-t-15" data-parsley-validate="true">
+                        <!--Roles-->
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4" for="Role">Role<span style="color:red">*</span></label>
+                            <div class="col-md-3 col-sm-3">
+                                @Html.DropDownList("dpdwnrole", new SelectList(Model.RolesList, "Id", "Name"), "Select Role", new { @class = "form-control", data_parsley_required = "true" })
+                            </div>
+                            <!--Endtag Role-->
+                        </div>
+                        <!--begin Jstree View-->
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4" for="Menus">Menus<span style="color:red">*</span></label>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="panel-body" id="divmenu">
+                                    <div id="Menutree">
+                                    </div>
+                                    <!--Load Jstree View via Script-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Jstree View-->
+                        <div class="form-group form-inline fa-align-center">
+                            <div>
+                                <p style="text-align:center">
+                                    <input type="button" id="btnSubmit" class="btn btn-sm btn-primary m-r-5 @isAdmin" value="Submit" />
+                                    <input type="button" id="btnCancel" class="btn btn-sm btn-default" value="Cancel" />
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                    <!--Form End-->
+                </div>
+            </div>
+            <!--End panel-->
+        </div>
+        <!--End Column-->
+    </div>
+    <!--End Row-->
+</div>
+
+@section Scripts
+    {
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src='@Url.Content("~/plugins/jstree/dist/jstree.min.js")'></script>
+    <script src='@Url.Content("~/js/ui-tree.demo.min.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.min.js")'></script>
+    <script src='@Url.Content("~/js/CommonEvents.js")'></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SubmitMenu();
+            InitEvents();
+            // Retrieve MenuAccessDetails based on Roles
+            $("#dpdwnrole").on('change', function () {
+                var GetRole = $(this).val();
+                var RoleModules = JSON.stringify({
+                    RoleId: GetRole
+                });
+                var url = '@Url.Action("GetMenusDetails", "Admin")';
+                var jsonData = RoleModules;
+                AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                    LoadModulesTree(resp);
+                });
+            });
+
+        });
+        function LoadModulesTree(result) {
+            $('#Menutree').jstree('destroy');
+            $('#divmenu').addClass('border');
+            var tree = $('#Menutree').jstree({
+                'check_callback': true,
+                'plugins': ["wholerow", "checkbox", "types"],
+                "core": {
+                    "themes": {
+                        "responsive": true
+                    },
+                    "data": result,
+                }
+            });
+        }
+
+          //Submit MenuAccess Details via Ajax
+        function SubmitMenu()
+        {
+           $("#btnSubmit").click(function (e) {
+              var validationresult = $('#frmMenus').parsley().validate();
+                if (validationresult) {
+                    //alert(validationresult);
+                    var GetRole = $('#dpdwnrole').val();
+                    var selectedElmsIds = [];
+                    var selectedElms = $('#Menutree').jstree("get_selected", true);
+                    $.each(selectedElms, function () {
+                        selectedElmsIds.push(
+                            {
+                                SubModuleId: this.id,
+                                ModuleId: this.parent
+                            }
+                        );
+                    });
+                    var RoleModules = JSON.stringify({
+                        RoleId: GetRole,
+                        SubModuleList: selectedElmsIds
+                    });
+                    //e.preventDefault()
+                    var url = '@Url.Action("RoleModules", "Admin")';
+                    var jsonData = RoleModules;
+                    AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                       $('#msgbox').removeClass('hide').addClass('show');
+                       ScrollToTop();
+                       setTimeout(function ()
+                       {
+                           $('#msgbox').hide();
+                           $('#msgbox').removeClass('show').addClass('hide');
+                       }, 2000);
+                       $('#frmMenus').parsley().destroy();
+                    });
+
+                }
+           });
+        }
+        function ScrollToTop() {
+            $('html, body').animate({
+                scrollTop: $("#page-container").offset().top
+            }, 2000);
+        }
+    </script>
+}
+

@@ -1,0 +1,50 @@
+﻿@using WiseX.ViewModels.Admin;
+@model Allocation
+<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-plus"></i></a>
+        </div>
+        <h4 class="panel-title">User File Allocation</h4>
+    </div>
+
+    <form method="post" id="ExcelUpload" class="form-horizontal" enctype="multipart/form-data">
+        <div class="panel-body panel-form p-t-15 collapse m-t-10">
+            <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                <label class="control-label col-md-5 col-sm-5" for="UploadKeywords">Allocation File<span style="color:red">*</span></label>
+                <div class="col-md-6 col-sm-6 col-lg-6 controls" data-parsley-validate="true" style="width:21% !important">
+                    <input type="file" id="ExcelFileUpload" class="btn btn-sm btn-primary m-r-1" />
+                    <span style="color:red;font:bolder;" id="fileErrorMessage"></span>
+                </div>
+                <div class="col-md-3 col-sm-3 col-lg-3 controls m-l-10 p-t-10">
+                    <a role="button" href="@Model.DemograhicsTemplateFileURL" download="Template_file">
+                        <i class="fa fa-download "></i> Sample Template
+                    </a>
+                </div>
+            </div>
+            <div>
+
+                @*@{
+                        if (Model.ErrorList != null)
+                        {
+                            if (Model.ErrorList.Count > 0)
+                            {
+                                foreach (var item in Model.ErrorList)
+                                {
+                                    <li>
+                                        <span style="color:red">@item.Message</span>
+                                    </li>
+                                }
+                            }
+                        }
+
+                    }*@
+            </div>
+                <div class="form-group col-sm-12 text-center">
+                    <input type="button" id="btnUpload" class="btn btn-sm btn-primary m-r-5" value="Upload" />
+                    <input type="button" id="btCancel" class="btn btn-sm btn-default m-r-5" value="Cancel" />
+                </div>
+        </div>
+    </form>
+
+</div>

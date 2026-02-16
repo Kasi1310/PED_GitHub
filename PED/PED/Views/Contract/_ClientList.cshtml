@@ -1,0 +1,56 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Contract
+@model Contracts
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="row panel-body">
+    <table id="tblClients" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                @*<th>Sno</th>*@
+                <th>Company ID</th>
+                <th>Company Name</th>
+                <th>Residency Code</th>
+                <th>Contract Effective Date</th>
+                <th>Contract Expiry Date</th>
+                <th>Active</th>
+                <th class="hidden">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{int i = 0;
+                foreach (var item in Model.ClientsDetailsList)
+                {
+                    i++;
+            <tr id="@item.ID" href="javascript:;" data-compname="@item.CompanyName" data-compId="@item.CompanyId" data-clientId="@item.ID" class="btnClientView">
+                @*<td id="txtSno" class="tr1">@i</td>*@
+                <td id="txtCompanyId" class="tr1">@item.CompanyId</td>
+                <td id="txtName" class="tr1">@Html.Raw(item.CompanyName)</td>
+                <td id="txtResidencyCode" class="tr1">@item.ResidencyCode</td>
+                <td id="txtSignedDate" class="tr1">@item.ContractRenewedDate</td>
+                <td id="txtExpiryDate" class="tr1">@item.ContractExpiryDate</td>
+                <td id="txtStatus" class="tr1">@if (item.Active)
+                {<span>Yes</span>}
+                else
+                {<span>No</span>}</td>
+                <td id="txtAction" class="tr1" hidden="hidden"><a href="javascript:;" data-compname="@item.CompanyName" data-compId="@item.CompanyId" class="fa fa-eye btnClientView"></a></td>
+
+            </tr>
+                    }
+                }
+        </tbody>
+    </table>
+</div>

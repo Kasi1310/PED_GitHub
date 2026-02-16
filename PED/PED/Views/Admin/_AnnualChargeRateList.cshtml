@@ -1,0 +1,54 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Admin;
+@model Clients
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+<div class="row panel-body">
+    <div class="col-lg-10 m-10">
+        @*<input type="hidden" id="hrfInsuranceContractReferenceId" value='@Model.InsuranceContractRefID' />*@
+        @if (Model.AnnualChargeRateList.Count != 0)
+        {
+            <table id="tblAnnualChargeRate" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        @*<th>Annual Charge Rate</th>*@
+                        <th>Created By</th>
+                        <th>Created On</th>
+                        <th class="@isAdmin">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{int i = 0;
+                        foreach (var item in Model.AnnualChargeRateList)
+                        {
+                            i++;
+                            <tr id="@item.ID">
+                                @*<td id="txtFilePath" class="tr1">@item.FilePath</td>*@
+                                <td id="txtCreatedBy" class="tr1">@item.CreatedBy</td>
+                                <td id="txtCreatedOn" class="tr1">@item.CreatedOn</td>
+                                <td class="tr1">
+                                    <button id="btnAnnualChargeRateDelete" type="button" Onclick="ConfirmAnnualChargeRateDelete('@item.ID', '@item.CompanyID')" title="Delete" class="fa fa-lg fa-trash-o  text-inverse form-control1 p-l-0 p-r-0 @isAdmin" style="border:none; background-color:transparent"></button>
+                                    @Html.ActionLink("", "ViewAnnualChargeRateFile", "Contract", new { fileName = item.FilePath }, new { @target = "_blank", @class = "fa fa-eye text-inverse form-control1 p-l-0 p-r-0 m-5 text-decoration" })
+                                </td>
+                            </tr>
+                        } }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

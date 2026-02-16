@@ -1,0 +1,32 @@
+﻿@{
+    //Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width = device-width" />
+    <title>Unauthorized Access</title>
+</head>
+<body>
+    <div id="content" class="content">
+        <!-- begin row -->
+        <div class="row">
+            <!-- begin error -->
+            <div class="error">
+                <div class="error-code m-b-10">Unauthorized Access <i class="fa fa-warning"></i></div>
+                <div class="error-content">
+                    <div class="error-message">OOPS! You don't have permission to access this page</div>
+                    <div class="error-desc m-b-20">
+                        If you have any questions, please contact the administrator.
+                    </div>
+                    <div>
+                        <a href='@Url.Action("Index","Home")' class="btn btn-success">Go Back to Home Page</a>
+                    </div>
+                </div>
+            </div>
+            <!-- end error -->
+        </div>
+        <!-- end row -->
+    </div>
+</body>
+</html> 

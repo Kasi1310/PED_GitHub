@@ -1,0 +1,171 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@model LoginViewModel
+@{
+    ViewBag.PageId = "extr-page";
+    ViewBag.PageClass = "animated fadeInDown";
+}
+@{
+    ViewBag.Title = "Index";
+}
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+<style>
+    .brand-name {
+        text-align: center;
+        font-weight: 900;
+        /* padding: 3px; */
+        color: white;
+        font-size: 16px;
+        padding-top: 3px;
+        /* margin: 4px; */
+    }
+</style>
+<!-- begin login -->
+<div class="login login-v2 animated fadeInDown">
+    <!-- begin brand -->
+    <div class="login-header">
+        <div class="brand">
+            @*<span class="logo"></span>*@
+            <img src="~/img/MedicountHeaderLogo.png" />
+           
+        </div>
+        @*<div class="icon">
+                <i class="fa fa-sign-in"></i>
+            </div>*@
+    </div>
+    <div class="brand-name">Medicount's Provider Enrollment Database</div>
+    <!-- end brand -->
+    <div class="login-content">
+
+        @*action="@Url.Action("login", "account")" method="POST" *@
+        <form id="login-form" class="smart-form client-form">
+            @Html.HiddenFor(m => m.ReturnUrl)
+            @Html.AntiForgeryToken()
+            @Html.ValidationBootstrap()
+            <input type="hidden" id="hfQstring" value="@Context.Request.Query["p"]" />
+            <div id="alertdanger" class="alert alert-danger alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                <strong id="alertMsg"></strong>
+            </div>
+            <div id="divLogin">
+                <div class="form-group m-b-20">
+                    <input id="username" name="username" value="" class="form-control input-lg inverse-mode no-border" placeholder="Username" required />
+                </div>
+                <div class="form-group m-b-20">
+                    <input id="password" name="password" value="" type="password" class="form-control input-lg inverse-mode no-border" placeholder="Password" required />
+                </div>
+                <div class="checkbox m-b-20">
+                    <label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="rememberMe" value="true" checked="checked">
+                            <input type="hidden" name="rememberMe" value="false" />
+                            <i></i>Remember Me
+                        </label>
+                    </label>
+                </div>
+                <div class="login-buttons">
+                    <input type="submit" id="Submit" class="btn btn-success btn-block btn-lg" value="Sign In" />
+                </div>
+                <br />
+                @*<div class="form-group m-b-20" style="align-content:center;">
+                    <a href="https://fcms.medicount.com/Account/Login" class="btn btn-success btn-block btn-lg">Go to FCMS</a>
+                </div>*@
+                <div class="login-buttons">
+                    <a href="@Url.Action("ForgotPassword", "Account")" style="color:blue">Forgot Password</a>
+                </div>
+            </div>
+            <div id="divProjects" class="hide">
+
+            </div>
+        </form>
+    </div>
+</div>
+<!-- end login -->
+@section Scripts {
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#alertdanger').hide();
+        LoginPage();
+
+        //Session expired and redirected to login page
+        if ($('#hfQstring').val() === 'l') {
+            $('#alertMsg').text('Your session expired. Please login again.');
+            $('#alertdanger').show();
+            if (window.location.href.indexOf('?') > -1) {
+                history.pushState('', document.title, window.location.pathname);
+            }
+        }
+    });
+
+    function LoginPage()
+    {
+
+        $('#login-form').on('submit', function (e) {
+            e.preventDefault();
+            var GetUserName = $('#username').val();
+            var GetPassword = $('#password').val();
+            var LoginViewModel = JSON.stringify({
+                Username: GetUserName,
+                Password: GetPassword
+            });
+
+            $.ajax({
+                url: "@Url.Content("~/Account/Login")",
+                cache: false,
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: LoginViewModel,
+                success: function (result)
+                {
+                    $('#alertdanger').hide();
+                    if (result.message == "" || result.message == null) {
+                        @*location.href = "@Url.Action("Index","Home")";*@
+                        $('#divLogin').hide();
+                        $('#divProjects').html(result);
+                        $('#divProjects').removeClass("hide");
+                        $('#divProjects').show();
+
+                        $('#btnPrjCancel').on('click', function () {
+                            $('#divLogin').show();
+                            $('#divProjects').html(result);
+                            $('#divProjects').hide();
+                        });
+                    }
+                    else
+                    {
+                        if (result.message == "failure") {
+                            $('#alertMsg').text('Invalid login attempt');
+                            $('#alertdanger').show();
+                        }
+                        else if (result.message == "NewLogin")
+                        {
+                            swal('Welcome to CMS! Please change your password to continue.');
+                            setTimeout(function () {
+                                location.href = "@Url.Action("ChangePassword", "Account")";
+                            }, 3000);
+                        }
+                        else if (result.message == "PasswordExpired")
+                        {
+                            swal('Your Password has expired and must be changed.');
+                            setTimeout(function () {
+                                location.href = "@Url.Action("ChangePassword", "Account")";
+                            }, 3000);
+                        }
+                        else if (result.message == "HomePage")
+                        {
+                            location.href = "@Url.Action("Index","Home")";
+                        }
+                    }
+                },
+                error: function (result)
+                {
+                    console.log(result);
+                }
+
+            });
+        });
+    }
+    </script>
+}

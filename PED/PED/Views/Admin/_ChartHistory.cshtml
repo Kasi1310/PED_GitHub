@@ -1,0 +1,189 @@
+﻿@using WiseX.ViewModels.Admin;
+@model ChartManagement
+
+@{ 
+    var submenulist = Model.ChartHistoryList.OrderBy(x => x.SubMenuItem).Select(x => x.SubMenuItem).Distinct().ToList();
+    var tmpSubmenuId = "";
+    int tmpSlNo = 0;
+    string CurrentProjectName = string.Empty;
+}
+
+@section Styles {
+    <style type="text/css">
+        /*td {
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+
+        body {
+            font-size: 12px !important;
+        }*/
+
+        table tr:nth-child(odd) td {
+            background: #DCDCDC;
+        }
+
+        table tr:nth-child(even) td {
+            background: #fff;
+        }
+
+        .ActionOn {
+            width: 500px !important;
+            color: black;
+        }
+
+        .actionBy {
+            width: 450px !important;
+        }     
+    </style>
+}
+<div id="content" class="content">
+    <ol class="breadcrumb pull-right">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li><a href="javascript:;">Admin</a></li>
+        <li>Chart History</li>
+    </ol>
+    <h1 class="page-header">Chart History<small></small></h1>
+    <!---Begin Row-->
+    <div class="row">
+        <!-- begin col-->
+        <div class="col-md-12">
+            <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a title="Back to List" class="btn btn-xs btn-icon btn-circle btn-primary" id="backto_list"><i class="fa fa-arrow-left"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning collapsed" id="expandcollapse" data-click="panel-collapse" data-original-title="" title="" data-init="true"><i class="fa fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">Chart HistoryList</h4>
+                </div>
+                <div class="panel-body panel-form">
+                    <!----Form Begin-->
+                    <form id="frmChartdeatil" method="post" class="form-horizontal p-t-15" data-parsley-validate="true">
+                        <div class="panel-body">
+                            <label for="File" class="p-r-25"><b class="text-primary p-r-2">File Name:</b><span>@Model.ChartCurrentHistoryList.FirstOrDefault().FileName.ToString()</span></label>
+                            <label for="Status" class="p-r-25"><b class="text-primary p-r-2">Current Status:</b>@Model.ChartCurrentHistoryList.FirstOrDefault().ChartStatus.ToString()</label>
+                            @if (Model.ChartCurrentHistoryList.FirstOrDefault().CodeReviewBy != "")
+                            {
+                            <label for="CodeReviewBy" class="p-r-25"><b class="text-primary p-r-2">Reviewed By:</b>@Model.ChartCurrentHistoryList.FirstOrDefault().CodeReviewBy.ToString()</label>
+                            }
+                            @if (Model.ChartCurrentHistoryList.FirstOrDefault().AuditedBy != "")
+                            {
+                                <label for="Audited" class="p-r-25"><b class="text-primary p-r-2">Audited By:</b>@Model.ChartCurrentHistoryList.FirstOrDefault().AuditedBy.ToString()</label>
+                            }
+                            @if (Model.ChartCurrentHistoryList.FirstOrDefault().SuperAuditedBy != "")
+                            {
+                                <label for="SuperAudited" class="p-r-25"><b class="text-primary p-r-2">SuperAudited By:</b>@Model.ChartCurrentHistoryList.FirstOrDefault().SuperAuditedBy.ToString()</label>
+                            }
+                            @if (Model.ChartCurrentHistoryList.FirstOrDefault().ClientFeedbackBy != "")
+                            {
+                                <label for="ClientAudited" class="p-r-25"><b class="text-primary p-r-2">ClientAudited By:</b>@Model.ChartCurrentHistoryList.FirstOrDefault().ClientFeedbackBy.ToString()</label>
+                            }
+                            @if (Model.ChartHistoryList.Count > 0)
+                            {
+                                foreach (var item in Model.ChartHistoryList)
+                                {
+                                    tmpSlNo = item.SlNo;
+                                    if (item.SubMenuID.ToString() != tmpSubmenuId)
+                                    {
+                                        tmpSubmenuId = item.SubMenuID.ToString();
+                                       
+                                        @:<div class="divHistory">
+                                          
+                                            @:<h5><img class="plusMinusIcon" src="@Url.Content("~/img/details_open.png")" />@item.SubMenuItem</h5>
+                                            @if (item.SubMenuID == 2046)
+                                            {
+                                                <hr style="border: 1px dashed black;" />
+                                            }
+                                            @:<div id="tblCodeReview" class="tblHistory">
+                                                @:<table class="table table-profile width-full" id="tableid">
+                                                    @:<thead>
+                                                        <tr>
+                                                            <th class="">Action On</th>
+                                                            <th class="">Action By</th>
+                                                            @if (item.SubMenuID == 2046)
+                                                            {
+                                                                <th> Change Status</th>
+                                                                <th>Re-AssignTo</th>
+                                                                <th>Comment</th>
+                                                            }
+                                                            else
+                                                            {
+                                                                <th>Chart Action</th>
+                                                            }
+
+                                                        </tr>
+                                                    @:</thead>
+                                                    @:<tbody>
+                                    }
+                                    
+                                    //else
+                                    //{
+
+                                            <tr id="@item.Id">
+                                                <td>@item.ActionTime</td>
+                                                <td>@item.ActionBy</td>
+                                                @if (item.MenuID == 100)
+                                                {
+                                                    <td>@item.Description</td>
+                                                    <td>@item.ActionAttributes3</td>
+                                                    <td>@item.ActionAttributes2</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.Action</td>
+
+                                                }
+                                            </tr>
+                                        
+                                    //}
+
+                                    @if (tmpSubmenuId != Model.ChartHistoryList.Where(m => m.SlNo > tmpSlNo || Model.ChartHistoryList.Count == tmpSlNo).FirstOrDefault().SubMenuID.ToString())
+                                    {       
+                                                @:</tbody>
+                                            @:</table>
+                                        @:</div>
+                                    @:</div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                            <h4>No Chart History Available...</h4>
+                            }
+                        </div>
+                    </form>
+                    <!--Form End-->
+                </div>
+            </div>
+            <!--End panel-->
+        </div>
+
+    </div>
+    <!-- begin scroll to top btn -->
+    <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+    <!-- end scroll to top btn -->
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.tblHistory').hide();
+        });
+
+        $('.divHistory').toggle(function () {
+            $(this).find('.plusMinusIcon').attr('src','@Url.Content("~/img/details_close.png")');
+            $(this).find('.tblHistory').slideDown(1000);
+        }, function () {
+            $(this).find('.plusMinusIcon').attr('src','@Url.Content("~/img/details_open.png")');
+            $(this).find('.tblHistory').slideUp(1000);
+            });
+
+        $('#backto_list').click(function () {
+           window.location.href = '@Url.Action("ChartManagement", "Admin")';
+
+        });
+</script>
+}
+
+
+

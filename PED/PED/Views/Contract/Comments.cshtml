@@ -1,0 +1,103 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.Contract
+@model Notes
+@{
+    string isAdmin = string.Empty;
+
+    var Changeproject = HttpContextAccessor.HttpContext.Session.Get<List<UserProjectRole>>("Changeproject");
+    var RoleId = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleID");
+    var NotificationCount = HttpContextAccessor.HttpContext.Session.Get<string>("NotificationCount");
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+
+    if (RoleId == "30133577-ba4d-4d74-8c17-575c99f6cc01")//Provider Enrollment Full Access
+    {
+        isAdmin = "hide";
+    }
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+
+    }
+
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Comments</title>
+    @section Styles {
+        <link href='@Url.Content("~/css/DataTables.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/css/BootstrapDatepicker.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/DataTables/media/css/dataTables.bootstrap.min.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/simple-line-icons/css/simple-line-icons.css")' rel="stylesheet" />
+        <link href='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.css")' rel="stylesheet" />
+    }
+</head>
+<body>
+    <input type="hidden" id="hrfComments" value='@Url.Content("~/Contract/Comments/")' />
+    <input type="hidden" id="hfReviewYear" />
+    <div class="content" id="content">
+        <ol class="breadcrumb pull-right">
+            <li><a href="@Url.Action("Index","Home")">Home</a></li>
+            <li><a href="javascript:;">Comments</a></li>
+            <li class="active">Comments</li>
+        </ol>
+        <h1 class="page-header">Comments<small></small></h1>
+        <div id="divCommentsList">
+            @{await Html.RenderPartialAsync("_CommentsList", Model); }
+        </div>
+    </div>
+</body>
+</html>
+
+@section Scripts{
+    <script src='@Url.Content("~/js/DataTables.js")'></script>
+    <script src='@Url.Content("~/plugins/parsley/dist/parsley.js")'></script>
+    <script src='@Url.Content("~/plugins/DataTables/media/js/dataTables.bootstrap.js")'></script>
+    <script src='@Url.Content("~/js/ui-modal-notification.demo.min.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-sweetalert/sweetalert.js")'></script>
+    <script src='@Url.Content("~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js")'></script>
+    <script src='@Url.Content("~/plugins/masked-input/masked-input.min.js")'></script>
+    <script src='@Url.Content("~/js/CommonUtils.js")'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Notification.init();
+            InitControls();
+            Datatable();
+        });
+        function Datatable()
+        {
+                var dtTblList;
+              PageValue = $('#Page').val();
+              if ($.fn.DataTable.isDataTable('#tblCommentsList')) {
+                  dtTblList = $('#tblCommentsList').DataTable().ajax.reload();
+              } else {
+                  dtTblList = $('#tblCommentsList').DataTable(
+                     {
+                         ajax: {
+                             url: '@Url.Content("~/Contract/LoadCommentsList")',
+                             type: "POST",
+                             datatype: "json",
+                             data: function (d) {
+                             },
+                             error: function (result) {
+                                 console.log(result);
+                             }
+                         },
+                         columns: [
+                             { data: "comments", name: "comments" }
+                         ],
+                         serverSide: true,
+                         processing: true,
+                         autoWidth: false,
+                         order: [0, "asc"],
+                         language: {
+                             processing: "Processing...Please Wait"
+                         }
+
+                     })
+                  $(dtTblList.table().container()).removeClass('form-inline');
+              }
+        }
+    </script>
+}
+
