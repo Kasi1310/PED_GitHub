@@ -163,9 +163,11 @@
                 <div class="panel-body panel-form p-t-15 m-t-10">
                     <ul class="nav nav-tabs customtab" role="tablist">
                         <li class="nav-item active"> <a class="nav-link" data-toggle="tab" id="tDetails" href="#divPEDetails" role="tab"><span class="hidden-sm-up"></span> <span class="hiddpen-xs-down">Details</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tClientsBankInfo" href="#divPEClientsBankInfo" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info </span></a> </li>
+                       @*  <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tBankInfo" href="#divPEBankInfo" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info</span></a> </li> *@
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tContracts" href="#divPEContracts" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Contracts</span></a> </li>
                        @*  <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tRefusedEnrollment" href="#divPERefusedEnrollment" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Refused Enrollment </span></a> </li> *@                    
-                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherAddresses" href="#divPEOtherAddresses" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Other Addresses</span></a> </li>                       
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherAddresses" href="#divPEOtherAddresses" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Other Addresses</span></a> </li>                       
                         @*<li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tIDs" href="#divIDs" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">IDs</span></a> </li>*@
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tContacts" href="#divPEContacts" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Contacts</span></a> </li>
                         @*<li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tHours" href="#divHours" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Hours</span></a> </li>
@@ -193,6 +195,13 @@
                         <div id="PERefusedEnrollment">
                             @{
                                 await Html.RenderPartialAsync("_PERefusedEnrollment", Model);
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane active" id="divPEClientsBankInfo" role="tabpanel">
+                        <div id="PEClientsBankInfo">
+                            @{
+                                await Html.RenderPartialAsync("_PEClientsBankInfo", Model);
                             }
                         </div>
                     </div>
@@ -349,36 +358,46 @@
 
             ClientEdit();
 
-            @*if (@isSU) {
-                var ddlDownloadType = document.getElementById("ddlDownloadType");
-                var ddlDocumentType = document.getElementById("ddlDocumentType");
-
-                ddlDownloadType.style.display = "none";
-                ddlDocumentType.style.display = "none";
-            }*@
+           
 
             $(".nav-link").click(function () {
                 var tabid = this.id;
                 if (tabid == "tDetails") {
                     $("#divPEDetails").show();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
-                   // $("#PEIDs").hide();
-                    $("#divPEContacts").hide();
-                    //$("#PEHours").hide();
-                    //$("#PELanguages").hide();
+                    $("#divPEContacts").hide();                   
                     $("#divPEDocuments").hide();
                     $("#divPEServices").hide();
                     $("#divPENotes").hide();
                     $("#divPEAuditLog").hide();
                      $("#divPEEFT").hide();
-                    //$("#PETexonomy").hide();
 
+                }
+                else if (tabid == "tClientsBankInfo") {
+                    $("#divPEDetails").hide();
+                    $("#divPEClientsBankInfo").show();
+                    $("#divPEContracts").hide();
+                    $("#divPERefusedEnrollment").hide();
+                    $("#divPEOtherAddresses").hide();
+                    $("#divPEContacts").hide();                    
+                    $("#divPEDocuments").hide();
+                    $("#divPEServices").hide();
+                    $("#divPENotes").hide();
+                    $("#divPEAuditLog").hide();
+                    $("#divPEEFT").hide();
+
+                    $('#divContractForm').removeClass('show');
+                    $('#divContractForm').addClass('hide');
+
+                    InsuranceContractDatatable();
                 }
                 else if (tabid == "tContracts") {
                     $("#divPEDetails").hide();
                     $("#divPEContracts").show();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
                     //$("#PEIDs").hide();
@@ -399,6 +418,7 @@
                 }
                 else if (tabid == "tOtherAddresses") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").show();
@@ -417,20 +437,10 @@
                     $('#divOtherAddressesForm').addClass('hide');
                     PEOtherAddressDatatable();
                 }
-                //else if (tabid == "tIDs") {
-                //    $("#divPEDetails").hide();
-                //    $("#PEContracts").hide();
-                //    $("#PEOtherAddresses").hide();
-                //    $("#PEIDs").show();
-                //    $("#PEContacts").hide();
-                //    $("#PEHours").hide();
-                //    $("#PELanguages").hide();
-                //    $("#PEDocuments").hide();
-                //    $("#PEServices").hide();
-                //    $("#PETexonomy").hide();
-                //}
+               
                 else if (tabid == "tContacts") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -449,32 +459,10 @@
                     $('#divContactsForm').addClass('hide');
                     PEContactDatatable();
                 }
-                //else if (tabid == "tHours") {
-                //    $("#divPEDetails").hide();
-                //    $("#PEContracts").hide();
-                //    $("#PEOtherAddresses").hide();
-                //   // $("#PEIDs").hide();
-                //    $("#PEContacts").hide();
-                //    $("#PEHours").show();
-                //    $("#PELanguages").hide();
-                //    $("#PEDocuments").hide();
-                //    $("#PEServices").hide();
-                //    $("#PETexonomy").hide();
-                //}
-                //else if (tabid == "tLanguages") {
-                //    $("#divPEDetails").hide();
-                //    $("#PEContracts").hide();
-                //    $("#PEOtherAddresses").hide();
-                //    //$("#PEIDs").hide();
-                //    $("#PEContacts").hide();
-                //    $("#PEHours").hide();
-                //    $("#PELanguages").show();
-                //    $("#PEDocuments").hide();
-                //    $("#PEServices").hide();
-                //    $("#PETexonomy").hide();
-                //}
+                
                 else if (tabid == "tDocuments") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -495,6 +483,7 @@
                 }
                 else if (tabid == "tServices") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -515,6 +504,7 @@
                 }
                 else if (tabid == "tNotes") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -548,6 +538,7 @@
 
                 else if (tabid == "tAuditLog") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -566,6 +557,7 @@
                 }
                 else if (tabid == "tRefusedEnrollment") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").show();
                     $("#divPEOtherAddresses").hide();
@@ -583,6 +575,7 @@
                 }
                 else if (tabid == "tEFT") {
                     $("#divPEDetails").hide();
+                     $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -595,8 +588,6 @@
                     $("#divPENotes").hide();
                     $("#divPEAuditLog").hide();
                     $("#divPEEFT").show();
-                    //$("#PETexonomy").hide();
-                    //PEEFTDatatable();
                     PEEFTDatatable();
 
                 }
@@ -1771,6 +1762,7 @@
             $('#divRefusedEnrollmentForm').addClass('hide');
             $('#divRefusedEnrollmentForm').removeClass('show');
          }
+        
          $('#btnPERefusedEnrollmentInsert').live('click', function ()
          {
               $('#@Html.IdFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName)').attr("data-parsley-required", true);
@@ -1808,7 +1800,8 @@
                 });   
                 }
         }); 
-         function PERefusedEnrollmentDatatable() {
+        
+        function PERefusedEnrollmentDatatable() {
                 var Id = $('#hrfClientId').val();
 
                    var url = "@Url.Action("PERefusedEnrollmentDetailList", "ProviderEntrollment")";
@@ -1821,9 +1814,9 @@
 
                 $('#divRefusedEnrollmentForm').removeClass('show');
                 $('#divRefusedEnrollmentForm').addClass('hide');
-            } 
-            
-            function EditPERefusedEnrollment(RefusedEnrollmentID) {
+            }             
+         
+        function EditPERefusedEnrollment(RefusedEnrollmentID) {
 
             var url = "@Url.Action("EditPERefusedEnrollment", "ProviderEntrollment")";
             var formData = new FormData();
@@ -1875,10 +1868,24 @@
                 }
             });
         }
-
-
         
     </script>
+    <script type="text/javascript">
+        function btnClientsBankInfo() {
+                console.log("Add Clients Bank Info");
+                ClearClientsBankInfo();
+                $('#divClientBankInfoForm').addClass('show');
+                $('#divClientBankInfoForm').removeClass('hide');
+             }
+             function ClearClientsBankInfo() {
+
+            $("#btnPEClientsBankInfoInsert").prop('value', 'Add');
+
+            $('#divRefusedEnrollmentForm').addClass('hide');
+            $('#divRefusedEnrollmentForm').removeClass('show');
+         }
+    </script>
+     
 
     <script type="text/javascript">        
 
@@ -6146,7 +6153,7 @@
 }
 </script>
 
-           @* Created by Mohamed Iqbal *@
+           
     <script type="text/javascript">
         function GetM_W9FileAttachement() {
            const fileName = "MedcoW9CombinedForms.pdf"; // Replace or fetch dynamically

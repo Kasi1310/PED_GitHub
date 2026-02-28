@@ -1,0 +1,163 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PED.ViewModels.ProviderEntrollment;
+@model ProviderEntrollment
+@{
+    string isAdmin = string.Empty;
+    var RolePermission = HttpContextAccessor.HttpContext.Session.Get<string>("SessionRoleAccess");
+    if (RolePermission == "R")
+    {
+        isAdmin = "hide";
+    }
+}
+
+<form id="PERefusedEnrollmentFormfrm" method="post" class="form-horizontal">
+
+    <div class="row col-12 p-10" id="PEClientsBankInfoForm">
+       @*  <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="BankName">Bank Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Accounttype">Account Type</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="BankCategory">Bank Category</label>
+                </div>
+               <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="Effectivedate">Effective Date</label>
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="endDate">End Date</label>
+                </div>
+            </div>
+        </div> *@
+        <div class="col-md-12">
+            <div class="row mb-2">
+
+                <div class="col-md-3">
+                    <label for="BankName">Bank Name <span class="text-danger">*</span></label>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="AccountType">Account Type</label>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="BankCategory">Bank Category</label>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="EffectiveDate">Effective Date</label>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="EndDate">End Date</label>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+
+                    <div class="col-md-3">
+                       @*  @Html.HiddenFor(m => m.PERefusedEnrollment.Id)
+
+                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName, new { @class = "form-control", placeholder = "Enter Bank Name" }) *@
+                        <textarea class="form-control"></textarea>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <select id="ddlAccountType" class="form-control">
+                            <option value="0">Select</option>
+                            <option value="1">Checking</option>
+                            <option value="2">Savings</option>
+                        </select>
+
+                      @*   @Html.HiddenFor(m => m.PERefusedEnrollment.RefusedEnrollmentStatus) *@
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <select id="ddlBackCategory" class="form-control">
+                            <option value="0">Select</option>
+                            <option value="1">Primary</option>
+                            <option value="2">Secondary</option>
+                            <option value="3">Previous</option>
+                            <option value="4">Others</option>
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <textarea class="form-control"></textarea>
+                       @*  @Html.TextBoxFor(m => m.PERefusedEnrollment.EffectiveDate, new { @class = "form-control", type = "date" }) *@
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <textarea  class="form-control"></textarea>
+                      @*   @Html.TextBoxFor(m => m.PERefusedEnrollment.EndDate,new { @class = "form-control", type = "date" }) *@
+                    </div>
+
+                </div>
+            </div>
+       @*  <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">  
+                        @Html.HiddenFor(m => m.PERefusedEnrollment.Id)
+                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName, new { @class = "form-control", @placeholder = "Enter Bank Name" })                   
+                    </div>
+                </div>
+
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                       <select id="ddlAccountType" class="form-control" >
+                            <option value="0">selected</option>
+                            <option value="1">Checking</option>
+                            <option value="2">Savings</option>
+                           
+                        </select>
+                        @Html.HiddenFor(m => m.PERefusedEnrollment.RefusedEnrollmentStatus)
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 controls">
+                        <select id="ddlBackCategory" class="form-control">
+                            <option value="0">selected</option>
+                            <option value="1">Primary</option>
+                            <option value="2">Secondary</option>
+                            <option value="3">Previous</option>
+                            <option value="4">Others</option>
+                        </select>
+                        
+                      </div>
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentComments, new { @class = "form-control", @placeholder = "Select Bank Category" })
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentComments, new { @class = "form-control", @placeholder = "Select Bank Category" })
+                </div>              
+               
+            </div>
+        </div>   *@             
+    </div>
+    @*  <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPERefusedEnrollmentInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                    </div>
+                </div> *@
+    <script type="text/javascript">
+        function EnableMandatory() {
+            if (document.getElementById('ddlActive').value == "1") {
+
+                $('#spnNextRevalidationDate').show();
+            }
+            else {
+                $('#spnNextRevalidationDate').hide();
+            }
+        }
+    </script>
+</form> 
