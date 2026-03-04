@@ -68,7 +68,8 @@ namespace PED.ViewModels.Admin
         public string EmailId { get; set; }
         public bool Active { get; set; }
         public bool Transport { get; set; }
-        public int TransportCharges { get; set; }        
+        public int TransportCharges { get; set; }
+        //public string ResidencyCode { get; set; }
         public int ResidencyCodeID { get; set; }
         public string Status { get; set; }
         public string CreatedBy { get; set; }
@@ -89,6 +90,8 @@ namespace PED.ViewModels.Admin
         public int InsuranceID { get; set; }
         public string DocumentType { get; set; }
         public string ContractRenewed { get; set; }
+
+
         public string BillingType { get; set; }
 
     }

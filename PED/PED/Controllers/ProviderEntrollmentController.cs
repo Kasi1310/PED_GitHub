@@ -90,7 +90,7 @@ namespace PED.Controllers
                 model.PEDetails = new PEDetails();
                 model.PEInsuranceContracts = new PEInsuranceContracts();
                 model.PEOtherAddress = new PEOtherAddress();
-                model.PEContacts = new PEContacts();
+                model.PEContacts = new PEContacts();                
 
                 model.PEDocuments = new PEDocuments();
                 model.PECredentialingLicense = new PECredentialingLicense();
@@ -114,7 +114,8 @@ namespace PED.Controllers
                 model.PEDocumentTitleList = new List<PEDocumentTitleList>();// await _adminService.GetPEDocumentTitleList();
 
                 model.CitiesList = new List<CitiesList>();
-                model.StatesList = new List<StatesList>();// await _adminService.GetStatesList();
+                //model.StatesList = new List<StatesList>();// await _adminService.GetStatesList();
+                model.StatesList = await _adminService.GetStatesList();
 
                 model.PEPaymentCategoryChangeCheckList = new PEPaymentCategoryChangeCheckList();
                 model.PESinglePayerUpdateCheckList = new PESinglePayerUpdateCheckList();
@@ -144,9 +145,8 @@ namespace PED.Controllers
                 model.PEEFT = new PEEFT();
                 model.PEEFTList = new List<PEEFTList>();
 
-                
-
-
+                model.PEClientsBankInfo = new PEClientsBankInfo();
+                model.PEClientsBankInfoList = new List<PEClientsBankInfoList>();// new List<PEClientsBankInfo>();
 
 
             }
@@ -2204,9 +2204,29 @@ namespace PED.Controllers
                 x.EFTComments
             });
 
+            List<PEClientsBankInfoList> modelPEClientsBankInfoList = new List<PEClientsBankInfoList>();
+            modelPEClientsBankInfoList = await _adminService.GetPEClientsBankInfoListForExcel(0);
+            var dataPEClientsBankInfoList = modelPEClientsBankInfoList.Select(x => new
+            {
+                x.ClientDetailsID,
+                x.CompanyName,
+                x.BankName,
+                x.AccountType,
+                x.BankCategory,
+                x.EffectiveDate,
+                x.EndDate,
+                x.AddressLine1,
+                x.AddressLine2, 
+                x.City,
+                x.State,
+                x.ZipCode,
+                x.RoutingNumber,
+                x.AccountNumber
 
+            });
+            
 
-        string sFileName = @"ProviderEnrollment.xlsx";
+            string sFileName = @"ProviderEnrollment.xlsx";// ProviderEnrollment
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
             string UrlBase = _configuration["AppSettings:AppURL"].ToString() + sFileName;
             FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
@@ -2225,6 +2245,7 @@ namespace PED.Controllers
                 ExcelWorksheet worksheetCredentialingLicense = package.Workbook.Worksheets.Add("Credentialing License");
                 ExcelWorksheet worksheetNotes = package.Workbook.Worksheets.Add("Notes");
                 ExcelWorksheet worksheetEFT = package.Workbook.Worksheets.Add("EFT");
+                ExcelWorksheet worksheetClientsBankInfo = package.Workbook.Worksheets.Add("Client's Bank Info");
 
                 worksheetDetails.Cells.LoadFromCollection(dataPEDetails, true);
                 worksheetContract.Cells.LoadFromCollection(dataPEContracts, true);
@@ -2234,6 +2255,7 @@ namespace PED.Controllers
                 worksheetCredentialingLicense.Cells.LoadFromCollection(dataPECredentialingLicense, true);
                 worksheetNotes.Cells.LoadFromCollection(dataPENotesList, true);
                 worksheetEFT.Cells.LoadFromCollection(dataPEEFTList, true);
+                worksheetClientsBankInfo.Cells.LoadFromCollection(dataPEClientsBankInfoList, true);
                 package.Save();
             }
             return Json(UrlBase);
@@ -3576,43 +3598,6 @@ namespace PED.Controllers
         #region EFT BulkUpload
         [HttpPost]
 
-        //public async Task<IActionResult> SavePEEFTWithFile(PEEFTFileUploadModel model)
-        //{
-        //    string savedFileName = null;
-
-        //    if (model.EFTFileUpload != null && model.EFTFileUpload.Length > 0)
-        //    {
-        //        // Folder path to save files (e.g., wwwroot/Uploads/PEEFT)
-        //        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "PEEFT");
-
-        //        if (!Directory.Exists(uploadsPath))
-        //            Directory.CreateDirectory(uploadsPath);
-
-        //        savedFileName = Path.GetFileName(model.EFTFileUpload.FileName);
-        //        var filePath = Path.Combine(uploadsPath, savedFileName);
-
-        //        using (var stream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await model.EFTFileUpload.CopyToAsync(stream);
-        //        }
-        //    }
-        //    string UserId = HttpContext.Session.GetString("UserID");
-        //    // Save to database
-        //    var entity = new PEEFTFileUploadModel
-        //    {
-        //        //ClientDetailsID = model.ClientDetailsID,
-        //        EFTPayerName = model.EFTPayerName,
-        //        EFTBankType = model.EFTBankType,
-        //        EFTComments = model.EFTComments,              
-        //        CreatedBy = UserId,
-        //        CreatedOn = DateTime.Now.ToString(),
-        //        IsDeleted = false
-        //    };
-
-        //    //await _adminService.PEEFTFileUpload(PEEFTFileUploadModel, UserId);
-        //    return PartialView("_PEEFTList", model);
-        //}
-
         public async Task<IActionResult> UploadPEEFTFile(IFormFile EFTFileUpload, int ClientDetailsID)
         {
             if (EFTFileUpload != null && EFTFileUpload.Length > 0)
@@ -3716,6 +3701,166 @@ namespace PED.Controllers
         //    return 
         //}
 
+        #endregion
+
+        #region Client's Bank Info 
+        [HttpPost]
+        //
+        public async Task<IActionResult> PEClientsBankInfoList([FromBody] int id)
+        {
+            ProviderEntrollment model = new ProviderEntrollment();
+            string UserId = HttpContext.Session.GetString("UserID");
+            try
+            {
+                model.CitiesList = new List<CitiesList>();
+                model.StatesList = await _adminService.GetStatesList();
+                model.PEClientsBankInfoList = await _adminService.GetPEClientsBankInfoList(id);
+                model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+            }
+            catch (Exception Ex) { }
+            return PartialView("_PEClientsBankInfo", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> SavePEClientsBankInfo([FromBody] PEClientsBankInfo pEClientsBankInfo)
+        {
+            if (HttpContext.Session.GetString("SessionRoleAccess").Replace("\"", "") == "R")
+            {
+                return Json("");
+            }
+            ProviderEntrollment model = new ProviderEntrollment();
+
+            string message = "";
+            var userId = HttpContext.Session.GetString("UserID");
+            try
+            {
+                await _menuUtils.SetMenu(HttpContext.Session);
+                model.PEClientsBankInfo = pEClientsBankInfo;
+
+                await _adminService.InsertPEClientBankInfo(model, userId);
+
+                message = "Success";
+            }
+            catch (Exception ex)
+            {
+                message = "Failed";
+            }
+            return Json(new { Message = message });
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditPEClientsBankInfo(int Id)
+        {
+            string message = "";
+            if (HttpContext.Session.GetString("SessionRoleAccess").Replace("\"", "") == "R")
+            {
+                return Json("");
+            }
+            
+            ProviderEntrollment model = new ProviderEntrollment();
+            try
+            {
+                model.PEClientsBankInfo  = await _adminService.GetPEClientsBankInfoByID(Id);
+                message = "Success";
+            }
+            catch (Exception ex)
+            {
+                message = "Failed";
+            }           
+            return Json(new { data = model.PEClientsBankInfo, draw = HttpContext.Request.Form["draw"], recordsTotal = totalrows, recordsFiltered = totalRowsAfterFiltering });
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeletePEClientsBankInfo(int ID)
+        {
+            if (HttpContext.Session.GetString("SessionRoleAccess").Replace("\"", "") == "R")
+            {
+                return Json("");
+            }
+            ProviderEntrollment model = new ProviderEntrollment();
+            string message = "";
+            try
+            {
+                string UserId = HttpContext.Session.GetString("UserID");
+                await _adminService.DeletePEClientsBankInfo(ID, UserId);
+                message = "Success";
+            }
+            catch (Exception ex)
+            {
+                message = "Failed";
+            }
+            return Json(new { Message = message });
+        }
+        #endregion
+
+        #region Clients Bank Info Upload
+
+        public async Task<IActionResult> UploadPEClientsBankInfoFile(IFormFile ClientsBankInfoFileUpload, int ClientDetailsID)
+        {
+            if (ClientsBankInfoFileUpload != null && ClientsBankInfoFileUpload.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads/PEEFT");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var filePath = Path.Combine(uploadsFolder, ClientsBankInfoFileUpload.FileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ClientsBankInfoFileUpload.CopyToAsync(stream);
+                }
+
+                DataTable dt = ReadExcelToDataTable(filePath);
+
+                // 2. Add metadata columns
+                string userId = HttpContext.Session.GetString("UserID");
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["ClientDetailsID"] = row["ClientDetailsID"];
+                    row["BankName"] = row["BankName"];
+                    row["AccountType"] = row["AccountType"];
+                    row["BankCategory"] = row["BankCategory"];
+                    row["EffectiveDate"] = row["EffectiveDate"];
+                    row["EndDate"] = row["EndDate"];
+                    row["AddressLine1"] = row["AddressLine1"];
+                    row["AddressLine2"] = row["AddressLine2"];
+                    row["StateCode"] = row["StateCode"];
+                    row["CityName"] = row["CityName"];
+                    row["ZipCode"] = row["ZipCode"];
+                    row["RoutingNumber"] = row["RoutingNumber"];
+                    row["AccountNumber"] = row["AccountNumber"];
+                    row["CreatedBy"] = userId;
+                    row["CreatedOn"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    row["IsDeleted"] = "0";
+                }
+                // 3. Convert to XML
+                string xmlData = ConvertDataTableToXmlInClientsBankInfo(dt);
+
+                // 4. Call stored procedure
+                var xmlParam = new SqlParameter("@XmlData", xmlData) { SqlDbType = SqlDbType.Xml };
+                await _adminService.PEClientsBankInfoFileUpload(xmlData);
+
+                return Json(new { success = true, fileName = ClientsBankInfoFileUpload.FileName });
+            }
+
+            return Json(new { success = false, message = "File upload failed." });
+        }
+
+        private string ConvertDataTableToXmlInClientsBankInfo(DataTable dt)
+        {
+            DataSet ds = new DataSet("Root");  
+            dt.TableName = "ClientsBankInfo";            
+            ds.Tables.Add(dt.Copy());
+
+            using (var sw = new StringWriter())
+            {
+                ds.WriteXml(sw, XmlWriteMode.IgnoreSchema);
+                return sw.ToString();
+            }
+        }
+
+        
         #endregion
 
     }

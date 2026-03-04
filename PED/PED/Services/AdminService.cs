@@ -2095,6 +2095,17 @@ namespace WiseX.Services
             catch (Exception Ex) { }
             return check;
         }
+        public async Task<List<PEClientsBankInfoList>> GetPEClientsBankInfoListForExcel(int ClientID)
+        {
+            List<PEClientsBankInfoList> check = new List<PEClientsBankInfoList>();
+            var paramClientID = new SqlParameter("@ClientID", ClientID);
+            try
+            {
+                check = await _applicationDbContext.PEClientsBankInfoList.FromSql("EXEC USP_tblPEClientsBankInfo_Select @ClientID", paramClientID).ToListAsync();
+            }
+            catch (Exception Ex) { }
+            return check;
+        }
         #endregion
 
 
@@ -2261,6 +2272,68 @@ namespace WiseX.Services
                 "EXEC USP_PEEFTFileUpload_Insert @XmlData", xmlParam
             );
         }
+
+        #region Client Bank Info
+        public async Task InsertPEClientBankInfo(ProviderEntrollment providerEntrollment, string userid)
+        {
+            try
+            {
+                var paramPEClientsBankInfo = new SqlParameter("@PEClientsBankInfo", providerEntrollment.GetXml());
+                var paramuserid = new SqlParameter("@userid", userid);
+
+                await _applicationDbContext.Database.ExecuteSqlCommandAsync("EXEC USP_tblPEClientsBankInfo_Insert @PEClientsBankInfo,@userid", paramPEClientsBankInfo, paramuserid);
+            }
+            catch (Exception Ex) { }
+        }
+        public async Task<List<PEClientsBankInfoList>> GetPEClientsBankInfoList(int ClientID)
+        {
+            List<PEClientsBankInfoList> check = new List<PEClientsBankInfoList>();
+            var paramClientID = new SqlParameter("@ClientID", ClientID);
+            try
+            {
+                check = await _applicationDbContext.PEClientsBankInfoList.FromSql("EXEC USP_tblPEClientsBankInfo_Select @ClientID", paramClientID).ToListAsync();
+            }
+            catch (Exception Ex) { }
+            return check;
+        }
+
+        public async Task<PEClientsBankInfo> GetPEClientsBankInfoByID(int ID)
+        {
+            PEClientsBankInfo check = new PEClientsBankInfo();
+            var paramID = new SqlParameter("@ID", ID);
+            try
+            {
+                check = await _applicationDbContext.PEClientsBankInfo.FromSql("EXEC USP_tblPEClientsBankInfo_SelectByID @ID", paramID).FirstOrDefaultAsync();
+            }
+            catch (Exception Ex) { }
+            return check;
+        }
+        public async Task DeletePEClientsBankInfo(int ID, string userid)
+        {
+            try
+            {
+                var paramID = new SqlParameter("@ID", ID);
+                var paramuserid = new SqlParameter("@userid", userid);
+
+                await _applicationDbContext.Database.ExecuteSqlCommandAsync("EXEC USP_tblPEClientsBankInfo_Delete @ID,@userid", paramID, paramuserid);
+            }
+            catch (Exception Ex) { }
+        }
+
+        public async Task PEClientsBankInfoFileUpload(string xmlData)
+        {
+            var xmlParam = new SqlParameter("@XmlData", SqlDbType.Xml)
+            {
+                Value = xmlData
+            };
+
+            await _applicationDbContext.Database.ExecuteSqlCommandAsync(
+                "EXEC USP_PEClientsBankInfoFileUpload_Insert @XmlData", xmlParam
+            );
+        }
+
+
+        #endregion
     }
 }
 

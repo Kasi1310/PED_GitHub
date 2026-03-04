@@ -109,6 +109,7 @@
                 cursor: pointer;
             }
         </style>
+       
     }
 </head>
 <body>
@@ -163,11 +164,10 @@
                 <div class="panel-body panel-form p-t-15 m-t-10">
                     <ul class="nav nav-tabs customtab" role="tablist">
                         <li class="nav-item active"> <a class="nav-link" data-toggle="tab" id="tDetails" href="#divPEDetails" role="tab"><span class="hidden-sm-up"></span> <span class="hiddpen-xs-down">Details</span></a> </li>
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tClientsBankInfo" href="#divPEClientsBankInfo" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info </span></a> </li>
-                       @*  <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tBankInfo" href="#divPEBankInfo" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info</span></a> </li> *@
+                       
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tContracts" href="#divPEContracts" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Contracts</span></a> </li>
-                       @*  <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tRefusedEnrollment" href="#divPERefusedEnrollment" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Refused Enrollment </span></a> </li> *@                    
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherAddresses" href="#divPEOtherAddresses" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Other Addresses</span></a> </li>                       
+                      @*   <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tRefusedEnrollment" href="#divPERefusedEnrollment" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info </span></a> </li>   *@                 
+                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tOtherAddresses" href="#divPEOtherAddresses" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Other Addresses</span></a> </li>                       
                         @*<li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tIDs" href="#divIDs" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">IDs</span></a> </li>*@
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tContacts" href="#divPEContacts" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Contacts</span></a> </li>
                         @*<li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tHours" href="#divHours" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Hours</span></a> </li>
@@ -175,7 +175,8 @@
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tDocuments" href="#divPEDocuments" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Documents</span></a> </li>
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tServices" href="#divPEServices" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Credentialing/License</span></a> </li>
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tNotes" href="#divPENotes" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Notes</span></a> </li>
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tEFT" href="#divPEEFT" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">EFT </span></a> </li> 
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tEFT" href="#divPEEFT" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">EFT </span></a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tClientsBankInfo" href="#divPEClientsBankInfo" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Client's Bank Info </span></a> </li>
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tAuditLog" href="#divPEAuditLog" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Audit Log</span></a> </li>
                        
                         @*<li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tTexonomy" href="#divTexonomy" role="tab"><span class="hidden-sm-up"></span> <span class="hidpden-xs-down">Taxonomy</span></a> </li>*@
@@ -186,6 +187,15 @@
                             @{ await Html.RenderPartialAsync("_PEDetails", Model); }
                         </div>
                     </div>
+
+                     <div class="tab-pane active" id="divPEClientsBankInfo" role="tabpanel" style="padding-top:10px;">
+                         <div id="PEClientsBankInfo">
+                            @{
+                                await Html.RenderPartialAsync("_PEClientsBankInfo", Model);
+                            }
+                        </div> 
+                    </div> 
+
                     <div class="tab-pane active" id="divPEContracts" role="tabpanel">
                         <div id="PEContracts">
                             @{ await Html.RenderPartialAsync("_PEContracts", Model); }
@@ -195,13 +205,6 @@
                         <div id="PERefusedEnrollment">
                             @{
                                 await Html.RenderPartialAsync("_PERefusedEnrollment", Model);
-                            }
-                        </div>
-                    </div>
-                    <div class="tab-pane active" id="divPEClientsBankInfo" role="tabpanel">
-                        <div id="PEClientsBankInfo">
-                            @{
-                                await Html.RenderPartialAsync("_PEClientsBankInfo", Model);
                             }
                         </div>
                     </div>
@@ -308,32 +311,17 @@
 
             $("#divProviderEntrollmentList").hide();
 
-            //$('#divContractForm').addClass('hide');
-            //$('#divContractForm').removeClass('show');
-            //$('#divOtherAddressesForm').hide();
-            //$('#divContactsForm').hide();
-            //$('#divDocumentsForm').hide();
-            //$('#divCredentialingLicenseForm').hide();
-
             $('#alertsuccess').hide();
             $('#alertinfo').hide();
 
             $('.mandatory').show();
             ClientSearch();
-
             
-            LoadPENotesList();
-            
+            LoadPENotesList();            
             $('#tblNotes').DataTable();
 
-            //LoadPEClientsList();
-            //$('#tblPEClients').DataTable();
-
-            //LoadProviderEntrollmentList();
-            //$('#tblProviderEntrollment').DataTable();
-
-
             $("#divPEDetails").show();
+            $("#divPEClientsBankInfo").hide();
             $("#divPEContracts").hide();
             $("#divPERefusedEnrollment").hide();            
             $("#divPEOtherAddresses").hide();
@@ -345,38 +333,37 @@
             $("#divPEServices").hide();
             $("#divPENotes").hide();
             $("#divPEAuditLog").hide();
-            $("#divPEEFT").hide();
-            
-            //$("#PETexonomy").hide();
+            $("#divPEEFT").hide();                      
 
-            StatesOnchange();
-            //CitiesOnchange();
+            StatesOnchange();           
 
             OtherAddressStatesOnchange();
+
+            ClientsBankInfoStatesOnchange();
+           // PEClientsBankInfoDatatable();
 
             ContactsStatesOnchange();
 
             ClientEdit();
-
-           
+          
 
             $(".nav-link").click(function () {
                 var tabid = this.id;
                 if (tabid == "tDetails") {
                     $("#divPEDetails").show();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
-                     $("#divPERefusedEnrollment").hide();
+                    $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
                     $("#divPEContacts").hide();                   
                     $("#divPEDocuments").hide();
                     $("#divPEServices").hide();
                     $("#divPENotes").hide();
                     $("#divPEAuditLog").hide();
-                     $("#divPEEFT").hide();
+                    $("#divPEEFT").hide();
 
                 }
-                else if (tabid == "tClientsBankInfo") {
+                 else if (tabid == "tClientsBankInfo") {
                     $("#divPEDetails").hide();
                     $("#divPEClientsBankInfo").show();
                     $("#divPEContracts").hide();
@@ -389,15 +376,16 @@
                     $("#divPEAuditLog").hide();
                     $("#divPEEFT").hide();
 
-                    $('#divContractForm').removeClass('show');
-                    $('#divContractForm').addClass('hide');
+                    $('#divClientsBankInfoForm').removeClass('show');
+                    $('#divClientsBankInfoForm').addClass('hide');
 
-                    InsuranceContractDatatable();
+                   ClientsBankInfoStatesOnchange();
+                   PEClientsBankInfoDatatable();
                 }
                 else if (tabid == "tContracts") {
                     $("#divPEDetails").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").show();
-                     $("#divPEClientsBankInfo").hide();
                     $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
                     //$("#PEIDs").hide();
@@ -418,7 +406,7 @@
                 }
                 else if (tabid == "tOtherAddresses") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").show();
@@ -459,10 +447,10 @@
                     $('#divContactsForm').addClass('hide');
                     PEContactDatatable();
                 }
-                
+               
                 else if (tabid == "tDocuments") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -483,7 +471,7 @@
                 }
                 else if (tabid == "tServices") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -504,7 +492,7 @@
                 }
                 else if (tabid == "tNotes") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -523,22 +511,11 @@
                     $('#divNotesForm').addClass('hide');
                     PENotesDatatable();
                 }
-                //else if (tabid == "tTexonomy") {
-                //    $("#divPEDetails").hide();
-                //    $("#PEContracts").hide();
-                //    $("#PEOtherAddresses").hide();
-                //    //$("#PEIDs").hide();
-                //    $("#PEContacts").hide();
-                //    //$("#PEHours").hide();
-                //    //$("#PELanguages").hide();
-                //    $("#PEDocuments").hide();
-                //    $("#PEServices").hide();
-                //    //$("#PETexonomy").show();
-                //}
+               
 
                 else if (tabid == "tAuditLog") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -557,7 +534,7 @@
                 }
                 else if (tabid == "tRefusedEnrollment") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").show();
                     $("#divPEOtherAddresses").hide();
@@ -575,7 +552,7 @@
                 }
                 else if (tabid == "tEFT") {
                     $("#divPEDetails").hide();
-                     $("#divPEClientsBankInfo").hide();
+                    $("#divPEClientsBankInfo").hide();
                     $("#divPEContracts").hide();
                      $("#divPERefusedEnrollment").hide();
                     $("#divPEOtherAddresses").hide();
@@ -588,12 +565,14 @@
                     $("#divPENotes").hide();
                     $("#divPEAuditLog").hide();
                     $("#divPEEFT").show();
+                    //$("#PETexonomy").hide();
+                    //PEEFTDatatable();
                     PEEFTDatatable();
 
                 }
             });
 
-            InitEvents();
+            //InitEvents();
             InitControls();
             CancelTeam();
         });
@@ -672,6 +651,8 @@
                 }
             });
         }
+
+        
 
         function ContactsStatesOnchange() {
             $('.ContactsStatesList').live('change', function () {
@@ -819,17 +800,7 @@
             $('#MailToOthers').val("");
             document.getElementById("divAttachements").innerHTML = "";
 
-            //$('#document-select-all').click();
-
-            //$('#document-select-all').on('click', function () {
-            //    //alert("2");
-            //    //$('#document-select-all').prop('checked', false);
-            //    //alert("1");
-            //    // Get all rows with search applied
-            //    var rows = dtTblList.rows({ 'search': 'applied' }).nodes();
-            //    // Check/uncheck checkboxes for all rows in the table
-            //     $('input[type="checkbox"]', rows).prop('checked', false);
-            //});
+          
 
             $('#document-select-all').prop('checked', false);
             dtTblList = $('#tblPEDocumentsList').DataTable();
@@ -837,34 +808,9 @@
                 dtTblList.$('input[type="checkbox"]').prop('checked', false);
             });
 
-            //$('#ClientsDetails_Id').val('');
         }
 
-        @*function EditProviderEntrollment(PEId) {
-            var url = "@Url.Action("EditProviderEntrollment", "ProviderEntrollment")";
-            var jsonData = PEId;
-            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
-                $('#divProviderEntrollmentform').html(resp);
-
-                $('#btnBillingProviderSubmit').val('Update');
-                $('#expandcollapse').find('i').removeClass('fa-plus').addClass('fa-minus');
-                $('.collapse').collapse();
-
-                if ($('#hrfRoleAccess').val() == "F") {
-                    $("#changeteam").html("Edit Provider Enrollment");
-                }
-                if ($('#hrfRoleAccess').val() == "R") {
-                    $("#changeteam").html("View Provider Enrollment");
-                }
-
-                $('.mandatory').hide();
-                //InitControls();
-                CancelTeam();
-                SetPayToCity();
-                SetBillingProviderCity();
-                ScrollToTop();
-            });
-        }*@
+        
 
         $('#btnBillingProviderSubmit').live('click', function () {
             createProviderEntrollment();
@@ -1130,7 +1076,7 @@
                 //PEAuditLogDatatable();
 
 
-                InitEvents();
+                //InitEvents();
                 InitControls();
                 CancelTeam();
 
@@ -1385,12 +1331,8 @@
             var GetMedicaidNumberIssued= $('#@Html.IdFor(m => m.PEDetails.MedicaidNumberIssued)').val();
             var GetMedicareNumber= $('#@Html.IdFor(m => m.PEDetails.MedicareNumber)').val();
             var GetMedicareNumberIssued= $('#@Html.IdFor(m => m.PEDetails.MedicareNumberIssued)').val();
-            // var GetGroupPTAN= $('#@Html.IdFor(m => m.PEDetails.GroupPTAN)').val();
-            // var GetGroupPTANIssued = $('#@Html.IdFor(m => m.PEDetails.GroupPTANIssued)').val();
-            var GetGroupPTAN="";// $('#@Html.IdFor(m => m.PEDetails.GroupPTAN)').val();
-            var GetGroupPTANIssued ="";// $('#@Html.IdFor(m => m.PEDetails.GroupPTANIssued)').val();
-
-
+            var GetGroupPTAN= $('#@Html.IdFor(m => m.PEDetails.GroupPTAN)').val();
+            var GetGroupPTANIssued = $('#@Html.IdFor(m => m.PEDetails.GroupPTANIssued)').val();
             var GetWPPolicyNumber=$('#@Html.IdFor(m => m.PEDetails.WPPolicyNumber)').val();
 
             var GetInitialBillingSetup = $('#ddlBilling').val(); //$('#@Html.IdFor(m => m.PEDetails.InitialBillingSetup)').val();
@@ -1425,12 +1367,12 @@
             var GetCommericalEFTsCheckListPayer =$('#@Html.IdFor(m => m.PECommericalEFTsCheckList.Payer)').val();
 
              var GetPEECPRStatusID = $('#@Html.IdFor(m => m.PEDetails.EPCRStatus)').val();
-             GetPEECPRStatusID = GetPEECPRStatusID == "" ? 0 : GetPEECPRStatusID;
+            //GetPEECPRStatusID = GetPEECPRStatusID == "" ? 0 : GetPEECPRStatusID;
             //console.log(GetPEECPRStatusID)
             //debugger;
 
              var GetPEEnrollmentRepresentativeStatusID = $('#@Html.IdFor(m => m.PEDetails.EnrollmentRepresentativeStatus)').val();
-             GetPEEnrollmentRepresentativeStatusID = GetPEEnrollmentRepresentativeStatusID == "" ? 0 : GetPEEnrollmentRepresentativeStatusID;
+            //GetPEEnrollmentRepresentativeStatusID = GetPEEnrollmentRepresentativeStatusID == "" ? 0 : GetPEEnrollmentRepresentativeStatusID;
             //console.log(GetPEEnrollmentRepresentativeStatusID)
             //debugger;
 
@@ -1762,7 +1704,6 @@
             $('#divRefusedEnrollmentForm').addClass('hide');
             $('#divRefusedEnrollmentForm').removeClass('show');
          }
-        
          $('#btnPERefusedEnrollmentInsert').live('click', function ()
          {
               $('#@Html.IdFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName)').attr("data-parsley-required", true);
@@ -1800,8 +1741,7 @@
                 });   
                 }
         }); 
-        
-        function PERefusedEnrollmentDatatable() {
+         function PERefusedEnrollmentDatatable() {
                 var Id = $('#hrfClientId').val();
 
                    var url = "@Url.Action("PERefusedEnrollmentDetailList", "ProviderEntrollment")";
@@ -1814,9 +1754,9 @@
 
                 $('#divRefusedEnrollmentForm').removeClass('show');
                 $('#divRefusedEnrollmentForm').addClass('hide');
-            }             
-         
-        function EditPERefusedEnrollment(RefusedEnrollmentID) {
+            } 
+            
+            function EditPERefusedEnrollment(RefusedEnrollmentID) {
 
             var url = "@Url.Action("EditPERefusedEnrollment", "ProviderEntrollment")";
             var formData = new FormData();
@@ -1868,24 +1808,10 @@
                 }
             });
         }
+
+
         
     </script>
-    <script type="text/javascript">
-        function btnClientsBankInfo() {
-                console.log("Add Clients Bank Info");
-                ClearClientsBankInfo();
-                $('#divClientBankInfoForm').addClass('show');
-                $('#divClientBankInfoForm').removeClass('hide');
-             }
-             function ClearClientsBankInfo() {
-
-            $("#btnPEClientsBankInfoInsert").prop('value', 'Add');
-
-            $('#divRefusedEnrollmentForm').addClass('hide');
-            $('#divRefusedEnrollmentForm').removeClass('show');
-         }
-    </script>
-     
 
     <script type="text/javascript">        
 
@@ -1973,76 +1899,7 @@
         }
 
 
-        @*function InsuranceContractDatatable()
-        {
-            var dtTblList;
-            PageValue = $('#Page').val();
-            if ($.fn.DataTable.isDataTable('#tblInsuranceContractList')) {
-                dtTblList = $('#tblInsuranceContractList').DataTable().ajax.reload();
-
-            } else {
-                dtTblList = $('#tblInsuranceContractList').DataTable(
-                    {
-                        ajax: {
-                            url: '@Url.Content("~/ProviderEntrollment/InsuranceContractList")',
-                            type: "POST",
-                            datatype: "json",
-                            data: function (d) {
-                                d.id = $('#hrfClientId').val();
-                            },
-                            error: function (result) {
-                                //console.log(result);
-                            }
-                        },
-                        columns: [
-                            { data: "insuranceContractName", name: "insuranceContractName" },
-                            { data: "info", name: "info" },
-                            { data: "effectiveDate", name: "effectiveDate" },
-                            { data: "lastRevalidateDate", name: "lastRevalidateDate" },
-                            { data: "nextUpdateDue", name: "nextUpdateDue" },
-                            { data: "termedDate", name: "termedDate" },
-                            { data: "providerNo", name: "providerNo" },
-                            /*{ data: "groupNo", name: "groupNo" },*/
-                            { data: "active", name: "active" }
-                        ],
-
-                        columnDefs: [
-                            {
-                                targets: 8,
-                                render: function (data, type, row, meta) {
-                                    var Edit = '<a href="javascript:;" id="' + row["insuranceContractId"] + '" class="btnContractedit fa fa-lg fa-edit text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-                                    var Delete = '<a href="javascript:;" id="' + row["insuranceContractId"] + '" class="btnContractdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-
-
-                                    return Edit + Delete;
-                                }
-                            }
-                        ],
-
-                        autoWidth: false,
-                        order: [],
-                        language: {
-                            processing: "Processing...Please Wait"
-                        }
-
-                    });
-
-                $(dtTblList.table().container()).removeClass('form-inline');
-
-                $('#tblInsuranceContractList tbody td .btnContractdelete').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var ContractID = $(this).attr("id");
-                    ConfirmPEContractDelete(ContractID);
-                });
-
-                $('#tblInsuranceContractList tbody td .btnContractedit').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var ContractID = $(this).attr("id");
-                    EditPEContract(ContractID);
-
-                });
-            }
-        }*@
+        
 
         function EditPEContract(ContractID) {
 
@@ -2197,75 +2054,7 @@
             $('#divOtherAddressesForm').addClass('hide');
         }
 
-        @*function PEOtherAddressDatatable()
-        {
-            var dtTblList;
-            PageValue = $('#Page').val();
-            if ($.fn.DataTable.isDataTable('#tblPEOtherAddress')) {
-                dtTblList = $('#tblPEOtherAddress').DataTable().ajax.reload();
-
-            } else {
-                dtTblList = $('#tblPEOtherAddress').DataTable(
-                    {
-                        ajax: {
-                            url: '@Url.Content("~/ProviderEntrollment/PEOtherAddressList")',
-                            type: "POST",
-                            datatype: "json",
-                            data: function (d) {
-                                d.id = $('#hrfClientId').val();
-                            },
-                            error: function (result) {
-                                //console.log(result);
-                            }
-                        },
-                        columns: [
-                            { data: "addressType", name: "addressType" },
-                            { data: "addressLine1", name: "addressLine1" },
-                            { data: "addressLine2", name: "addressLine2" },
-                            { data: "city", name: "city" },
-                            { data: "state", name: "state" },
-                            { data: "zipCode", name: "zipCode" },
-                            { data: "phoneNumber", name: "phoneNumber" }
-                        ],
-
-                        columnDefs: [
-                            {
-                                targets: 7,
-                                render: function (data, type, row, meta) {
-                                    var Edit = '<a href="javascript:;" id="' + row["id"] + '" class="btnOtherAddressedit fa fa-lg fa-edit text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-                                    var Delete = '<a href="javascript:;" id="' + row["id"] + '" class="btnOtherAddressdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-
-
-                                    return Edit + Delete;
-                                }
-                            }
-                        ],
-
-
-                        autoWidth: false,
-                        order: [],
-                        language: {
-                            processing: "Processing...Please Wait"
-                        }
-
-                    });
-
-                $(dtTblList.table().container()).removeClass('form-inline');
-
-                $('#tblPEOtherAddress tbody td .btnOtherAddressdelete').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var OtherAddressID = $(this).attr("id");
-                    ConfirmPEOtherAddressDelete(OtherAddressID);
-                });
-
-                $('#tblPEOtherAddress tbody td .btnOtherAddressedit').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var OtherAddressID = $(this).attr("id");
-                    EditPEOtherAddress(OtherAddressID);
-
-                });
-            }
-        }*@
+       
 
         function EditPEOtherAddress(OtherAddressID, editFrom) {
 
@@ -2443,75 +2232,7 @@
             $('#divContactsForm').addClass('hide');
         }
 
-        @*function PEContactDatatable()
-        {
-            var dtTblList;
-            PageValue = $('#Page').val();
-            if ($.fn.DataTable.isDataTable('#tblPEContactList')) {
-                dtTblList = $('#tblPEContactList').DataTable().ajax.reload();
-
-            } else {
-                dtTblList = $('#tblPEContactList').DataTable(
-                    {
-                        ajax: {
-                            url: '@Url.Content("~/ProviderEntrollment/PEContacstList")',
-                            type: "POST",
-                            datatype: "json",
-                            data: function (d) {
-                                d.id = $('#hrfClientId').val();
-                            },
-                            error: function (result) {
-                                //console.log(result);
-                            }
-                        },
-                        columns: [
-                            { data: "contactType", name: "contactType" },
-                            { data: "title", name: "title" },
-                            { data: "contactName", name: "contactName" },
-                            { data: "address", name: "address" },
-                            { data: "phone", name: "phone" },
-                            { data: "fax", name: "fax" },
-                            { data: "email", name: "email" }
-                        ],
-
-                        columnDefs: [
-                            {
-                                targets: 7,
-                                render: function (data, type, row, meta) {
-                                    var Edit = '<a href="javascript:;" id="' + row["id"] + '" class="btnContactedit fa fa-lg fa-edit text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-                                    var Delete = '<a href="javascript:;" id="' + row["id"] + '" class="btnContactdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-
-
-                                    return Edit + Delete;
-                                }
-                            }
-                        ],
-
-
-                        autoWidth: false,
-                        order: [],
-                        language: {
-                            processing: "Processing...Please Wait"
-                        }
-
-                    });
-
-                $(dtTblList.table().container()).removeClass('form-inline');
-
-                $('#tblPEContactList tbody td .btnContactdelete').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var ContactID = $(this).attr("id");
-                    ConfirmPEContactsDelete(ContactID);
-                });
-
-                $('#tblPEContactList tbody td .btnContactedit').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var ContactID = $(this).attr("id");
-                    EditPEContact(ContactID);
-
-                });
-            }
-        }*@
+        
 
         function EditPEContact(ContactID) {
 
@@ -2611,26 +2332,51 @@
             event.preventDefault();
         }
 
-        function handleDrop(event) {
-            event.preventDefault();
-            var files = event.dataTransfer.files;
-            var file = files[0];
+        // function handleDrop(event) {
+        //     event.preventDefault();
+        //     var files = event.dataTransfer.files;
+        //     var file = files[0];
 
-            // Check if the dropped file is a PDF
-            if (file.type === 'application/pdf') {
-                // Perform further processing or upload the file to the server
-                //uploadFile(file);
-                var dropZone = document.getElementById('dropZone');
-                dropZone.innerHTML = '<p>' + file.name + '</p>';
+        //     // Check if the dropped file is a PDF
+        //     if (file.type === 'application/pdf') {
+        //         // Perform further processing or upload the file to the server
+        //         //uploadFile(file);
+        //         var dropZone = document.getElementById('dropZone');
+        //         dropZone.innerHTML = '<p>' + file.name + '</p>';
 
-                selectedFile = file;
+        //         selectedFile = file;
 
-                //uploadFile(file);
-            } else {
-                document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "Drop a PDF file.";
-            }
-        }
+        //         //uploadFile(file);
+        //     } else {
+        //         document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "Drop a PDF file.";
+        //     }
+        // }
+                function handleDrop(event) {
+                    event.preventDefault();
 
+                    var files = event.dataTransfer.files;
+                    var file = files[0];
+
+                    var allowedTypes = [
+                        "application/pdf",
+                        "application/msword", // .doc
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // .docx
+                    ];
+
+                    if (allowedTypes.includes(file.type)) {
+
+                        var dropZone = document.getElementById('dropZone');
+                        dropZone.innerHTML = '<p>' + file.name + '</p>';
+
+                        selectedFile = file;
+
+                        document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "";
+
+                    } else {
+                        document.getElementById("spanPEDocumentfileErrorMessage").innerHTML =
+                            "Only PDF, DOC, and DOCX files are allowed.";
+                    }
+                }
 
         $('#btnPEDocumentsInsert').live('click', function () {
         //function uploadFile() {
@@ -2661,7 +2407,6 @@
                 var jsonData = PEDocuments;
                 AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
                     if (resp.documentsId > 0) {
-                        //if (window.FormData !== undefined) {
                             ShowOverlay();
                             var formData = new FormData();
                             formData.append('file', selectedFile);
@@ -2677,11 +2422,13 @@
                                     PEDocumentDatatable();
                                     ClearPEDocuments();
                                     HideOverlay();
+                                    swal("Success!", "File uploaded successfully.", "success");
                                 },
                                 error: function (err) {
+                                    HideOverlay();
+                                      swal("Error!", "File upload failed.", "error");
                                 }
                             });
-                        //}
                     }
                 });
             }
@@ -2734,153 +2481,7 @@
             }
         });
 
-        //// Handle click on "Select all" control
-        //$('#document-select-all').on('click', function () {
-
-        //    var dtTblList = $('#tblPEDocumentsList').DataTable();
-        //    // Get all rows with search applied
-        //    var rows = dtTblList.rows({ 'search': 'applied' }).nodes();
-        //    // Check/uncheck checkboxes for all rows in the table
-        //    $('input[type="checkbox"]', rows).prop('checked', this.checked);
-        //});
-
-        //$('#tblPEDocumentsList tbody').on('change', 'input[type="checkbox"]', function () {
-        //    // If checkbox is not checked
-        //    if (!this.checked) {
-        //        var el = $('#document-select-all').get(0);
-        //        // If "Select all" control is checked and has 'indeterminate' property
-        //        if (el && el.checked && ('indeterminate' in el)) {
-        //            // Set visual state of "Select all" control
-        //            // as 'indeterminate'
-        //            el.indeterminate = true;
-        //        }
-        //    }
-        //});
-
-        @*function PEDocumentDatatable()
-        {
-            var dtTblList;
-            PageValue = $('#Page').val();
-            if ($.fn.DataTable.isDataTable('#tblPEDocumentsList')) {
-                dtTblList = $('#tblPEDocumentsList').DataTable().ajax.reload();
-
-            } else {
-                dtTblList = $('#tblPEDocumentsList').DataTable(
-                    {
-                        ajax: {
-                            url: '@Url.Content("~/ProviderEntrollment/PEDocumentsList")',
-                            type: "POST",
-                            datatype: "json",
-                            data: function (d) {
-                                d.id = $('#hrfClientId').val();
-                            },
-                            error: function (result) {
-                                //console.log(result);
-                            }
-                        },
-
-                        columns: [{
-                                targets: 0,
-                                searchable: false,
-                                orderable: false,
-                                className: 'dt-body-center',
-                                render: function (data, type, row, meta) {
-                                    return '<input type="checkbox" name="id[]" value="' + row["id"] + '">';
-                                }
-                            },
-                            { data: "title", name: "title" },
-                            { data: "documentName", name: "documentName" },
-                            { data: "addedOn", name: "addedOn" },
-
-                            {
-                                targets: 4,
-                                render: function (data, type, row, meta) {
-                                    //var Edit = '<a href="javascript:;" id="' + row["id"] + '" class="btnDocumentedit fa fa-lg fa-edit text-inverse form-control1 p-l-0 p-r-0 m-5" style="border:none; background-color:transparent;display: initial;"></a>';
-                                    var Delete = '<a href="javascript:;" id="' + row["id"] + '" class="btnDocumentdelete fa fa-lg fa-trash-o text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-
-                                    var view = "";
-
-                                    //if (!@isSU || ((row["title"] == "W9" || row["title"] == "State License") && @isSU)) {
-
-                                    if (!row["isAdminOnly"] || @isFullAccess) {
-
-                                        //var view = '<a href="javascript:;" data-FileName="' + row["fileName"]+'" id="' + row["id"] + '" class="btnDocumentView fa fa-lg fa-download text-inverse form-control1 p-l-0 p-r-0 m-5 @isPermission" style="border:none; background-color:transparent;display: initial;"></a>';
-
-                                        var viewFileName = row["fileName"];
-                                        view = '@Html.ActionLink("", "ViewPEDetailsFile", "ProviderEntrollment", new { fileName = "FN**" }, new { @class = "btnDocview fa fa-download text-inverse form-control1 p-l-0 p-r-0 m-5  text-decoration" })';
-                                        view = view.replace('FN**', escape(viewFileName))
-                                    }
-                                    //return Edit + Delete;
-
-                                    return view + Delete;
-                                }
-                            }
-                        ],
-
-                        autoWidth: false,
-                        order: [],
-                        language: {
-                            processing: "Processing...Please Wait"
-                        }
-
-                    });
-
-                $(dtTblList.table().container()).removeClass('form-inline');
-
-                $('#tblPEDocumentsList tbody td .btnDocumentdelete').live('click', function () {
-                    var tr = $(this).closest('tr');
-                    var DocumentID = $(this).attr("id");
-                    ConfirmPEDocumentDelete(DocumentID);
-                });
-
-                // Handle click on "Select all" control
-                $('#document-select-all').on('click', function () {
-                    // Get all rows with search applied
-                    var rows = dtTblList.rows({ 'search': 'applied' }).nodes();
-                    // Check/uncheck checkboxes for all rows in the table
-                    $('input[type="checkbox"]', rows).prop('checked', this.checked);
-                });
-
-                $('#tblPEDocumentsList tbody').on('change', 'input[type="checkbox"]', function () {
-                    // If checkbox is not checked
-                    if (!this.checked) {
-                        var el = $('#document-select-all').get(0);
-                        // If "Select all" control is checked and has 'indeterminate' property
-                        if (el && el.checked && ('indeterminate' in el)) {
-                            // Set visual state of "Select all" control
-                            // as 'indeterminate'
-                            el.indeterminate = true;
-                        }
-                    }
-                });
-
-            }
-        }
-        *@
-        @*function EditPEDocument(DocumentID) {
-
-            var url = "@Url.Action("EditPEDocuments", "ProviderEntrollment")";
-            var formData = new FormData();
-            formData.append('Id', DocumentID);
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (result) {
-                    $('#@Html.IdFor(m => m.PEDocuments.Id)').val(result.data["id"]);
-                    $('#@Html.IdFor(m => m.PEDocuments.ClientDetailsID)').val(result.data["clientDetailsID"]);
-                    $('#@Html.IdFor(m => m.PEDocuments.TitleID)').val(result.data["title"]);
-
-                    $('#divDocumentsForm').show();
-                    $("#btnPEDocumentsInsert").prop('value', 'Update');
-                },
-                error: function (err) {
-                }
-            });
-        }*@
+       
 
         function ConfirmPEDocumentDelete(DocumentID) {
             var response = swal({
@@ -6153,7 +5754,7 @@
 }
 </script>
 
-           
+           @* Created by Mohamed Iqbal *@
     <script type="text/javascript">
         function GetM_W9FileAttachement() {
            const fileName = "MedcoW9CombinedForms.pdf"; // Replace or fetch dynamically
@@ -6181,5 +5782,317 @@
               }
 
     </script>
+    <script type="text/javascript">
+         $('#btnClientsBankInfoAdd').live('click', function () {
+            //ClearContacts();
 
+            $('#divClientsBankInfoForm').addClass('show');
+            $('#divClientsBankInfoForm').removeClass('hide');
+        });
+            function btnClientsBankInfo() {
+                 console.log("Add Clients Bank Info");
+                 ClearClientsBankInfo();
+                 $('#divClientsBankInfoForm').addClass('show');
+                 $('#divClientsBankInfoForm').removeClass('hide');
+
+                  $('#divClientsBankInfoList').addClass('show');
+                 $('#divClientsBankInfoList').removeClass('hide');
+
+                 $('#divBankLetterUpload').addClass('hide');
+                 $('#divBankLetterUpload').removeClass('show');
+
+                 $('#diBankLetterInfoList').addClass('hide');
+                 $('#diBankLetterInfoList').removeClass('show');
+              }
+
+               $('#btnBankLetterUploadAdd').live('click', function () {
+                    //ClearContacts();
+
+                    $('#btnBankLetterUpload').addClass('show');
+                    $('#btnBankLetterUpload').removeClass('hide');
+                });
+               function btnBankLetterUpload() {
+                 console.log("Bank Letter Upload");
+              //   ClearClientsBankInfo();
+                 $('#divClientsBankInfoForm').addClass('hide');
+                 $('#divClientsBankInfoForm').removeClass('show');
+
+                 $('#divClientsBankInfoList').addClass('hide');
+                 $('#divClientsBankInfoList').removeClass('show');
+
+                 $('#divBankLetterUpload').addClass('show');
+                 $('#divBankLetterUpload').removeClass('hide');
+
+                 $('#diBankLetterInfoList').addClass('show');
+                 $('#diBankLetterInfoList').removeClass('hide');
+              }
+        function ClearClientsBankInfo() {
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.Id)').val("0");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.ClientDetailsID)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.BankName)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountType)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.BankCategory)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.EffectiveDate)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.EndDate)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine1)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine1)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine2)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.StateId)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.ZipCode)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.RoutingNumber)').val("");
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountNumber)').val("");
+
+
+
+            $('#divClientsBankInfoForm').addClass('hide');
+            $('#divClientsBankInfoForm').removeClass('show');
+             $("#btnPEClientsBankInfoInsert").prop('value', 'Add');
+
+             
+          }
+
+          /// Client bank info get State and City
+        function ClientsBankInfoStatesOnchange() {
+            $('.StatesList').live('change', function () {
+                var StateId = $(this).val();
+                console.log(StateId);
+                $('#hfClientsBankInfoStateId').val(StateId);
+                SetClientsBankInfoCity();
+            });
+        }
+
+        function SetClientsBankInfoCity() {
+            var StateId = $('#hfClientsBankInfoStateId').val();
+            var CityId = $('#hfClientsBankInfoCityId').val();
+            var url = '@Url.Action("GetCity", "Admin")';
+            var jsonData = { StateId: StateId };
+
+            AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                $($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)')).get(0).options.length = 0;
+                $("<option value = >Select City</option>").appendTo($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)'));
+                $.each(resp, function (index) {
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)').append($("<option></option>").attr('value', this.id).text(this.value));
+                });
+                if (CityId != 'undefined' && CityId != null && CityId != '') {
+                    $($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)')).val(CityId);
+                }
+            });
+        }
+        $(document).on('click', '#btnPEClientsBankInfoInsert', function () {
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.BankName)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountType)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.BankCategory)').attr("data-parsley-required", true);
+            $('#@Html.IdFor(m => m.PEClientsBankInfo.EffectiveDate)').attr("data-parsley-required", true);
+
+            console.log($('#PEClientsBankInfofrm').length);
+            var ClientBankInfovalidationresult = $('#PEClientsBankInfofrm').parsley();
+           
+
+            if (ClientBankInfovalidationresult.validate()) {
+                var GetId = $('#@Html.IdFor(m => m.PEClientsBankInfo.Id)').val();
+                GetId = GetId == "" ? 0 : GetId;
+                var GetClientDetailsID = $('#hrfClientId').val();
+                                
+                var GetBankName = $('#@Html.IdFor(m => m.PEClientsBankInfo.BankName)').val();
+                var GetAccountType = $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountType)').val();
+                var GetBankCategory = $('#@Html.IdFor(m => m.PEClientsBankInfo.BankCategory)').val();
+                var GetEffectiveDate = $('#@Html.IdFor(m => m.PEClientsBankInfo.EffectiveDate)').val();
+                var GetEndDate = $('#@Html.IdFor(m => m.PEClientsBankInfo.EndDate)').val();
+
+                var GetAddressLine1 = $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine1)').val();
+                var GetAddressLine2 = $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine2)').val();
+
+                var GetCityId = $('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)').val();
+                GetCityId = GetCityId == "" ? 0 : GetCityId;
+
+                var GetStateId = $('#@Html.IdFor(m => m.PEClientsBankInfo.StateId)').val();
+                GetStateId = GetStateId == "" ? 0 : GetStateId;
+
+                var GetZipCode = $('#@Html.IdFor(m => m.PEClientsBankInfo.ZipCode)').val();
+                var GetRoutingNumber = $('#@Html.IdFor(m => m.PEClientsBankInfo.RoutingNumber)').val();
+                var GetAccountNumber = $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountNumber)').val();
+
+                
+
+                var PEContacts = JSON.stringify({
+                    Id: GetId,
+                    ClientDetailsID: GetClientDetailsID,
+                    BankName: GetBankName,
+                    AccountType: GetAccountType,
+                    BankCategory: GetBankCategory,
+                    EffectiveDate: GetEffectiveDate,
+                    EndDate: GetEndDate,
+                    AddressLine1: GetAddressLine1,
+                    AddressLine2: GetAddressLine2,
+                    CityId: GetCityId,
+                    StateId: GetStateId,
+                    ZipCode: GetZipCode,
+                    RoutingNumber: GetRoutingNumber,
+                    AccountNumber: GetAccountNumber
+                    
+                });
+                var url = "@Url.Action("SavePEClientsBankInfo", "ProviderEntrollment")";
+                var jsonData = PEContacts;
+                AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                    PEClientsBankInfoDatatable();
+                    ClearClientsBankInfo();
+                });
+            }
+        });
+
+        function PEClientsBankInfoDatatable() {
+            var Id = $('#hrfClientId').val();
+
+            var url = "@Url.Action("PEClientsBankInfoList", "ProviderEntrollment")";
+            var jsonData = Id;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divPEClientsBankInfo').html(resp);
+                
+
+                $('.DateMask').datepicker({
+                    format: 'mm/dd/yyyy',
+                    autoclose: true,
+                    orientation: 'bottom left'
+                });
+
+            });
+
+
+            $('#divClientsBankInfoForm').removeClass('show');
+            $('#divClientsBankInfoForm').addClass('hide');
+        }
+          function EditPEClientsBankInfo(ClientsBankInfoID) {
+
+            var url = "@Url.Action("EditPEClientsBankInfo", "ProviderEntrollment")";
+            var formData = new FormData();
+            formData.append('Id', ClientsBankInfoID);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.Id)').val(result.data["id"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.ClientDetailsID)').val(result.data["clientDetailsID"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.BankName)').val(result.data["bankName"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountType)').val(result.data["accountType"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.BankCategory)').val(result.data["bankCategory"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.EffectiveDate)').val(result.data["effectiveDate"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.EndDate)').val(result.data["endDate"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine1)').val(result.data["addressLine1"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.AddressLine2)').val(result.data["addressLine2"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)').val(result.data["cityId"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.StateId)').val(result.data["stateId"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.ZipCode)').val(result.data["zipCode"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.RoutingNumber)').val(result.data["routingNumber"]);
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.AccountNumber)').val(result.data["accountNumber"]);
+
+
+                    $('#hfClientsBankInfoStateId').val(result.data["stateId"]);
+                    $('#hfClientsBankInfoCityId').val(result.data["cityId"]);
+                    SetClientsBankInfoCity();
+
+                    $('#divClientsBankInfoForm').addClass('show');
+                    $('#divClientsBankInfoForm').removeClass('hide');
+                    $("#btnPEClientsBankInfoInsert").prop('value', 'Update');
+                },
+                error: function (err) {
+                }
+            });
+        }
+        function SetClientsBankInfoCity() {
+            var StateId = $('#hfClientsBankInfoStateId').val();
+            var CityId = $('#hfClientsBankInfoCityId').val();
+            var url = '@Url.Action("GetCity", "Admin")';
+            var jsonData = { StateId: StateId };
+
+
+            AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                $($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)')).get(0).options.length = 0;
+                $("<option value = >Select City</option>").appendTo($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)'));
+                $.each(resp, function (index) {
+                    $('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)').append($("<option></option>").attr('value', this.id).text(this.value));
+                });
+                if (CityId != 'undefined' && CityId != null && CityId != '') {
+                    $($('#@Html.IdFor(m => m.PEClientsBankInfo.CityId)')).val(CityId);
+                }
+            });
+        }
+         function ConfirmPEClientsBankInfoDelete(ClientsBankInfoID) {
+            var response = swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this detail!",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Yes, delete it!'
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    var url = "@Url.Action("DeletePEClientsBankInfo", "ProviderEntrollment")";
+                    var jsonData = { Id: ClientsBankInfoID };
+                    AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
+                        PEClientsBankInfoDatatable();
+                        ClearClientsBankInfo();
+                    });
+                }
+                else {
+                    return false;
+                }
+            });
+        }
+        $("#PEClientsBankInfo_EndDate").datepicker({
+            dateFormat: "mm/dd/yy"
+        });
+          $("#PEClientsBankInfo_EffectiveDate").datepicker({
+            dateFormat: "mm/dd/yy"
+        });
+
+
+         $('#btnPEClientsBankInfoFileUpload').live('click', function () {
+            var fileInput = $('#ClientsBankInfoFileUpload')[0];
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append("ClientsBankInfoFileUpload", fileInput.files[0]);
+
+            // Optional: add other data
+            var clientId = $('#hrfClientId').val();
+            formData.append("ClientDetailsID", clientId);
+
+            $.ajax({
+                url: '@Url.Action("UploadPEClientsBankInfoFile", "ProviderEntrollment")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                    beforeSend: function () {
+                    ShowOverlay();   // Show loader
+                    },
+
+                   success: function (response) {
+                    swal({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'File uploaded successfully!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Upload failed: " + error);
+                },
+                    complete: function () {
+                        HideOverlay();// Hide loader (always runs)
+                    }
+            });
+        });
+         
+        </script>
 }

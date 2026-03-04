@@ -183,6 +183,9 @@ namespace WiseX.Data
         public virtual DbSet<PEEFT> PEEFT { get; set; }
         public virtual DbSet<PEEFTList> PEEFTList { get; set; }
 
+        public virtual DbSet<PEClientsBankInfo> PEClientsBankInfo { get; set; }
+        public virtual DbSet<PEClientsBankInfoList> PEClientsBankInfoList { get; set; }
+
         #endregion
 
         #region other check List

@@ -246,6 +246,8 @@ namespace WiseX.Controllers
         public async Task<IActionResult> Error()
         {
             // We do not want to use any existing identity information
+            List<string> strlst= new List<string>();
+            
             await EnsureLoggedOut();
 
             return View();
@@ -442,9 +444,8 @@ namespace WiseX.Controllers
                     sb.Append("Hi, <br /><br />");
                     sb.Append("Find your password reset link.");
                     sb.Append("<br /><br />");
-                    //sb.Append(passwordResetLink + "<br /><br />");  // Old
-                    sb.Append("<a href=\"" + passwordResetLink + "\">" + passwordResetLink + "</a><br /><br />"); // New
-                    sb.Append("Regards,<br /> ");
+                    sb.Append(passwordResetLink + "<br /><br />");
+                    sb.Append("Regards,<br ");
                     sb.Append("PED Admin");
                     sb.Append("</td>");
                     sb.Append("</tr>");

@@ -9,155 +9,189 @@
         isAdmin = "hide";
     }
 }
-
-<form id="PERefusedEnrollmentFormfrm" method="post" class="form-horizontal">
+<input type="hidden" id="hfClientsBankInfoStateId" value="0" />
+<input type="hidden" id="hfClientsBankInfoCityId" value="0" />
+<form id="PEClientsBankInfofrm" method="post" class="form-horizontal" data-parsley-validate>
 
     <div class="row col-12 p-10" id="PEClientsBankInfoForm">
-       @*  <div class="col-lg-12">
+        <div class="col-lg-12">
             <div class="form-group" style="margin-bottom: 5px !important;">
+                
                 <div class="col-sm-3 col-md-3 col-lg-3 p-0">
                     <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="BankName">Bank Name<span style="color:red">*</span></label>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 p-0">
-                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="Accounttype">Account Type</label>
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AccountType">Account Type<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="BankCategory">Bank Category<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="EffectiveDate">Effective Date<span style="color:red">*</span></label>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="EndDate">End Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    @Html.HiddenFor(m => m.PEClientsBankInfo.Id)
+                    @Html.HiddenFor(m => m.PEClientsBankInfo.ClientDetailsID)
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.BankName, new { @class = "form-control", @placeholder = "Enter Bank Name", required = "required" })
+                    </div>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 p-0">
-                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="BankCategory">Bank Category</label>
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                     
+                        @Html.DropDownListFor(m => m.PEClientsBankInfo.AccountType,new List<SelectListItem>
+                            {
+                                                new SelectListItem { Text = "Checking", Value = "Checking" },
+                                                new SelectListItem { Text = "Savings", Value = "Savings" }
+                                                },
+                                                "Select Account Type",
+                                                new { @class = "form-control" }
+                                                )
+                    </div>
                 </div>
-               <div class="col-sm-1 col-md-1 col-lg-1 p-0">
-                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="Effectivedate">Effective Date</label>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" data-parsley-validate="true">
+                        @Html.DropDownListFor(m => m.PEClientsBankInfo.BankCategory,new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "Primary", Value = "Primary" },
+                                                new SelectListItem { Text = "Secondary", Value = "Secondary" },
+                                                new SelectListItem { Text = "Previous", Value = "Previous" },
+                                                new SelectListItem { Text = "Others", Value = "Others" }
+                                                },
+                                                "Select Bank Category",
+                                                new { @class = "form-control" }
+                                                )
+                    </div>
                 </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
-                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:15px !important" for="endDate">End Date</label>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.EffectiveDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "MM/DD/YYYY", })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>                    
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 controls input-daterange datepicker-autoClose input-group">
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.EndDate, new { @class = "form-control DateMask datepicker-autoClose", @placeholder = "MM/DD/YYYY", })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    
                 </div>
             </div>
-        </div> *@
-        <div class="col-md-12">
-            <div class="row mb-2">
-
-                <div class="col-md-3">
-                    <label for="BankName">Bank Name <span class="text-danger">*</span></label>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="AccountType">Account Type</label>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="BankCategory">Bank Category</label>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="EffectiveDate">Effective Date</label>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="EndDate">End Date</label>
-                </div>
-
-            </div>
-            <div class="col-md-12">
-                <div class="row">
-
-                    <div class="col-md-3">
-                       @*  @Html.HiddenFor(m => m.PERefusedEnrollment.Id)
-
-                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName, new { @class = "form-control", placeholder = "Enter Bank Name" }) *@
-                        <textarea class="form-control"></textarea>
-                    </div>
-
-
-                    <div class="col-md-2">
-                        <select id="ddlAccountType" class="form-control">
-                            <option value="0">Select</option>
-                            <option value="1">Checking</option>
-                            <option value="2">Savings</option>
-                        </select>
-
-                      @*   @Html.HiddenFor(m => m.PERefusedEnrollment.RefusedEnrollmentStatus) *@
-                    </div>
-
-
-                    <div class="col-md-2">
-                        <select id="ddlBackCategory" class="form-control">
-                            <option value="0">Select</option>
-                            <option value="1">Primary</option>
-                            <option value="2">Secondary</option>
-                            <option value="3">Previous</option>
-                            <option value="4">Others</option>
-                        </select>
-                    </div>
-
-
-                    <div class="col-md-2">
-                        <textarea class="form-control"></textarea>
-                       @*  @Html.TextBoxFor(m => m.PERefusedEnrollment.EffectiveDate, new { @class = "form-control", type = "date" }) *@
-                    </div>
-
-
-                    <div class="col-md-2">
-                        <textarea  class="form-control"></textarea>
-                      @*   @Html.TextBoxFor(m => m.PERefusedEnrollment.EndDate,new { @class = "form-control", type = "date" }) *@
-                    </div>
-
-                </div>
-            </div>
-       @*  <div class="col-lg-12">
+        </div>
+        <div class="col-lg-12">
             <div class="form-group" style="margin-bottom: 5px !important;">
                 <div class="col-sm-3 col-md-3 col-lg-3 p-0">
-                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">  
-                        @Html.HiddenFor(m => m.PERefusedEnrollment.Id)
-                        @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentInsuranceName, new { @class = "form-control", @placeholder = "Enter Bank Name" })                   
-                    </div>
-                </div>
-
-                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
-                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
-                       <select id="ddlAccountType" class="form-control" >
-                            <option value="0">selected</option>
-                            <option value="1">Checking</option>
-                            <option value="2">Savings</option>
-                           
-                        </select>
-                        @Html.HiddenFor(m => m.PERefusedEnrollment.RefusedEnrollmentStatus)
-                    </div>
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AddressLine1">Address Line1</label>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 p-0">
-                    <div class="col-md-11 col-sm-11 col-lg-11 controls">
-                        <select id="ddlBackCategory" class="form-control">
-                            <option value="0">selected</option>
-                            <option value="1">Primary</option>
-                            <option value="2">Secondary</option>
-                            <option value="3">Previous</option>
-                            <option value="4">Others</option>
-                        </select>
-                        
-                      </div>
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AddressLine1">Address Line2</label>
                 </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
-                    @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentComments, new { @class = "form-control", @placeholder = "Select Bank Category" })
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="City">City</label>
                 </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
-                    @Html.TextBoxFor(m => m.PERefusedEnrollment.RefusedEnrollmentComments, new { @class = "form-control", @placeholder = "Select Bank Category" })
-                </div>              
-               
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="State">State</label>
+                </div>
+                
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ZipCode">Zip Code</label>
+                </div>
             </div>
-        </div>   *@             
-    </div>
-    @*  <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
                     <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
-                        <input type="button" id="btnPERefusedEnrollmentInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.AddressLine1, new { @class = "form-control", @placeholder = "Enter Address " })
                     </div>
-                </div> *@
-    <script type="text/javascript">
-        function EnableMandatory() {
-            if (document.getElementById('ddlActive').value == "1") {
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.AddressLine2, new { @class = "form-control", @placeholder = "Enter Address " })
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        
+                        @Html.DropDownListFor(m => m.PEClientsBankInfo.CityId, new SelectList(Model.CitiesList, "Id", "Value"), "Select City", new { @class = "form-control CitiesList", })
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        @Html.DropDownListFor(m => m.PEClientsBankInfo.StateId, new SelectList(Model.StatesList, "Id", "Value"), "Select State", new { @class = "form-control StatesList", })
+                        
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.ZipCode, new { @class = "form-control", @type = "number", @maxlength = "5", @placeholder = "Enter Zip " })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="RoutingNumber">Rounting Number</label>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="AccountNumber">Account Number</label>
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                       
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <label class="control-label col-md-11 col-sm-11" style="text-align:left !important;padding-left:2px !important" for="ClientsBankInfoFileUpload">Client's Bank Info Bulk Upload</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group" style="margin-bottom: 5px !important;">
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.RoutingNumber, new { @class = "form-control", @type = "number", @maxlength = "15", @placeholder = "Enter Routing# " })
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls" >
+                        @Html.TextBoxFor(m => m.PEClientsBankInfo.AccountNumber, new { @class = "form-control", @type = "number", @maxlength = "15", @placeholder = "Enter Account# " })
+                    </div>
+                </div>
+                
+                <div class="col-sm-1 col-md-1 col-lg-1 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPEClientsBankInfoInsert" class="btn btn-sm btn-success m-r-5" value="Add" />
+                    </div>
+                </div>
 
-                $('#spnNextRevalidationDate').show();
-            }
-            else {
-                $('#spnNextRevalidationDate').hide();
-            }
-        }
-    </script>
-</form> 
+                <div class="col-sm-3 col-md-3 col-lg-3 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="file" id="ClientsBankInfoFileUpload" name="ClientsBankInfoFileUpload" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 p-0">
+                    <div class="col-md-11 col-sm-11 col-lg-11 p-0 controls">
+                        <input type="button" id="btnPEClientsBankInfoFileUpload" class="btn btn-sm btn-success m-r-5" value="Upload" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+
+</form>

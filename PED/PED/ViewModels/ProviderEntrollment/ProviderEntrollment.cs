@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PED.ViewModels.Admin;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,11 @@ namespace PED.ViewModels.ProviderEntrollment
 
         public List<PEEPCRList> PEEPCRList;
         public List<PEEnrollmentRepresentativeStatusList> PEEnrollmentRepresentativeStatusList;
+
+        //public List<PEClientsBankInfo> PEClientsBankInfo;
+        //public List<PEClientBankChangeCheckList> PEClientsBankInfoList;
+        public PEClientsBankInfo PEClientsBankInfo;
+        public List<PEClientsBankInfoList>  PEClientsBankInfoList;
 
         
 
@@ -919,6 +925,49 @@ namespace PED.ViewModels.ProviderEntrollment
         public string ModifiedOn { get; set; }
         public bool IsDeleted { get; set; }
        
+
+    }
+
+    public class PEClientsBankInfo
+    {
+        [Key]
+        public int Id { get; set; }
+        public int ClientDetailsID { get; set; }
+        public string BankName { get; set; }
+        public string AccountType { get; set; }
+        public string BankCategory { get; set; }
+        public DateTime? EffectiveDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public int CityId { get; set; }
+        public int StateId { get; set; }
+        public string ZipCode { get; set; }
+        public string RoutingNumber { get; set; }
+        public string AccountNumber { get; set; }
+
+    }
+    public class PEClientsBankInfoList
+    {
+        [Key]
+        public int Id { get; set; }
+        public int ClientDetailsID { get; set; }
+        public string CompanyName { get; set; }
+        public string BankName { get; set; }
+        public string AccountType { get; set; }
+        public string BankCategory { get; set; }
+        public DateTime? EffectiveDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+       //public int CityId { get; set; }
+        //public int StateId { get; set; }
+
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string RoutingNumber { get; set; }
+        public string AccountNumber { get; set; }
 
     }
 }
