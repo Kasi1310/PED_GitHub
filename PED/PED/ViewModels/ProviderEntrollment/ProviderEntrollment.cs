@@ -98,6 +98,9 @@ namespace PED.ViewModels.ProviderEntrollment
         //public List<PEClientBankChangeCheckList> PEClientsBankInfoList;
         public PEClientsBankInfo PEClientsBankInfo;
         public List<PEClientsBankInfoList>  PEClientsBankInfoList;
+        public List<PEClientsBankInfoBankLetterDocumentsList> PEBankLetterDocumentList;
+
+        
 
         
 
@@ -946,6 +949,7 @@ namespace PED.ViewModels.ProviderEntrollment
         public string RoutingNumber { get; set; }
         public string AccountNumber { get; set; }
 
+
     }
     public class PEClientsBankInfoList
     {
@@ -970,4 +974,18 @@ namespace PED.ViewModels.ProviderEntrollment
         public string AccountNumber { get; set; }
 
     }
+    public class PEClientsBankInfoBankLetterDocumentsList
+    {
+        [Key]
+        public int Id { get; set; }
+        public int ClientDetailsID { get; set; }
+        public string CompanyID { get; set; }
+        public string CompanyName { get; set; }
+        public string Title { get; set; }
+        public string DocumentName { get; set; }
+        public string AddedOn { get; set; }
+        public string FileName { get; set; }
+        public bool IsAdminOnly { get; set; }
+    }
+
 }

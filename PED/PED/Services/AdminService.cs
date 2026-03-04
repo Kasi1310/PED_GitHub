@@ -1120,17 +1120,7 @@ namespace WiseX.Services
             catch (Exception Ex) { }
             return check;
         }
-        //public async Task<PEDocuments> GetPEDocumentsByID(int ID)
-        //{
-        //    PEDocuments check = new PEDocuments();
-        //    var paramID = new SqlParameter("@ID", ID);
-        //    try
-        //    {
-        //        check = await _applicationDbContext.PEDocuments.FromSql("EXEC USP_tblPEDocuments_SelectByID @ID", paramID).FirstOrDefaultAsync();
-        //    }
-        //    catch (Exception Ex) { }
-        //    return check;
-        //}
+        
 
         public async Task DeletePEDocuments(int ID, string userid)
         {
@@ -2330,6 +2320,17 @@ namespace WiseX.Services
             await _applicationDbContext.Database.ExecuteSqlCommandAsync(
                 "EXEC USP_PEClientsBankInfoFileUpload_Insert @XmlData", xmlParam
             );
+        }
+        public async Task<List<PEClientsBankInfoBankLetterDocumentsList>> GetPEDocumentFromClientsBankInfoList(int ClientID)
+        {
+            List<PEClientsBankInfoBankLetterDocumentsList> check = new List<PEClientsBankInfoBankLetterDocumentsList>();
+            var paramClientID = new SqlParameter("@ClientID", ClientID);
+            try
+            {
+                check = await _applicationDbContext.PEBankLetterDocumentList.FromSql("EXEC USP_tblPEDocumentsFromClientsBankInfoBankLetter_Select @ClientID", paramClientID).ToListAsync();
+            }
+            catch (Exception Ex) { }
+            return check;
         }
 
 

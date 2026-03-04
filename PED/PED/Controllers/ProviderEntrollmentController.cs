@@ -147,6 +147,7 @@ namespace PED.Controllers
 
                 model.PEClientsBankInfo = new PEClientsBankInfo();
                 model.PEClientsBankInfoList = new List<PEClientsBankInfoList>();// new List<PEClientsBankInfo>();
+                model.PEBankLetterDocumentList = new List<PEClientsBankInfoBankLetterDocumentsList>();
 
 
             }
@@ -1256,14 +1257,6 @@ namespace PED.Controllers
             return PartialView("_PECredentialingLicense", model);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ViewPEDetailsFile(string filename)
-        //{
-        //    var userId = HttpContext.Session.GetString("UserID");
-        //    await _menuUtils.SetMenu(HttpContext.Session);
-
-        //    return GetFileFromPath(filename);
-        //}
 
         public FileResult ViewPEDetailsFile(string fileName)
         {
@@ -1276,44 +1269,6 @@ namespace PED.Controllers
             //Send the File to Download.
             return File(bytes, "application/octet-stream", fileName);
         }
-
-
-
-        //public FileStreamResult GetFileFromPath(string fileName)
-        //{
-        //    string fullPaths = Path.Combine(StorageRoot + "ProviderEnrollment\\");
-
-        //    var fileStream = new FileStream(fullPaths + HttpUtility.HtmlDecode(fileName), FileMode.Open, FileAccess.Read);
-        //    string Extn = Path.GetExtension(fileName.Trim());
-
-        //    switch (Extn)
-        //    {
-        //        case ".pdf":
-        //            Response.ContentType = "application/pdf";
-        //            break;
-        //        case ".doc":
-        //            Response.ContentType = "application/msword";
-        //            break;
-        //        case ".docx":
-        //            Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        //            break;
-        //        case ".xls":
-        //            Response.ContentType = "application/vnd.ms-excel";
-        //            break;
-        //        case ".xlsx":
-        //            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //            break;
-        //    }
-
-        //    var cd = new System.Net.Http.Headers.ContentDispositionHeaderValue("inline")
-        //    {
-        //        FileNameStar = Path.GetFileName(fileName)
-        //    };
-        //    Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
-
-        //    var fsResult = File(fileStream, Response.ContentType);
-        //    return fsResult;
-        //}
 
 
 
@@ -3086,228 +3041,6 @@ namespace PED.Controllers
         }
 
 
-
-        //public async Task<string> MedcoW9Form(List<PEDetailsList> peDetailsList, int ClientId)
-        //{
-        //    string sWebRootFolder = _hostingEnvironment.WebRootPath;
-        //    string mmpiTemplate = Path.Combine(sWebRootFolder, "Medco.pdf");
-        //    string w9Template = Path.Combine(sWebRootFolder, "W9_Unlocked.pdf");
-
-        //    string mmpiPath = Path.Combine(sWebRootFolder, "Medco");
-        //    string w9Path = Path.Combine(sWebRootFolder, "W9");
-        //    string mergedPath = Path.Combine(sWebRootFolder, "MedcoWithW9");
-
-        //    Directory.CreateDirectory(mmpiPath);
-        //    Directory.CreateDirectory(w9Path);
-        //    Directory.CreateDirectory(mergedPath);
-
-        //    foreach (var pe in peDetailsList)
-        //    {
-        //        string mmpiFile = Path.Combine(mmpiPath, $"{pe.ClientID}_{pe.ClientName}_Medco.pdf");
-        //        string w9File = Path.Combine(w9Path, $"{pe.ClientID}_{pe.ClientName}_W9.pdf");
-        //        string mergedFile = Path.Combine(mergedPath, $"{pe.ClientID}_{pe.ClientName}_Combined.pdf");
-
-        //        // Generate MMPI PDF
-        //        using (var pdfReader = new PdfReader(mmpiTemplate))
-        //        using (var pdfStamper = new PdfStamper(pdfReader, new FileStream(mmpiFile, FileMode.Create)))
-        //        {
-        //            AcroFields pdfFormFields = pdfStamper.AcroFields;
-        //            //pdfFormFields.SetField("SLI_TIN", pe.TaxID);
-        //            //pdfFormFields.SetField("SLI_Facility or Group Name", pe.ClientName);
-        //            pdfFormFields.SetField("02 AmbulanceCB", "Yes");
-
-
-        //            List<ClientInsuranceContractFileDetails> ContractList = await _commonService.GetClientInsuranceContractFileDetailsList(ClientId);
-
-        //            for (int j = 0; j < ContractList.Count; j++)
-        //            {
-        //                if (ContractList[j].InsuranceContractName == "BWC")//BWC provider number
-        //                {
-        //                    pdfFormFields.SetField("GI_ProviderNumber", ContractList[j].ProviderNo.ToUpper());
-        //                }
-        //            }
-
-        //            pdfFormFields.SetField("GI_TIN", pe.TaxID.ToUpper());
-        //            pdfFormFields.SetField("GI_SSN#", "NA");
-        //            pdfFormFields.SetField("GI_Individual Name", pe.ClientName.ToUpper());
-        //            pdfFormFields.SetField("GI_CB1", "Yes");
-        //            pdfFormFields.SetField("GI_DBA Name", pe.ClientName.ToUpper());
-        //            pdfFormFields.SetField("GI_Business Type", pe.TaxIDClassification.ToUpper());
-        //            pdfFormFields.SetField("GI_NPI", pe.GroupNPI.ToUpper());
-        //            pdfFormFields.SetField("GI_Taxonomy Code", pe.Taxonomy.ToUpper());
-        //            pdfFormFields.SetField("GI_Business Owner Names", pe.ClientName + " - 100% OWNERSHIP");
-        //            pdfFormFields.SetField("GI_WCPolicy", pe.WPPolicyNumber.ToUpper());
-        //            pdfFormFields.SetField("GI_Practice Location", pe.PracticeLocation.ToUpper());
-        //            pdfFormFields.SetField("GI_City", pe.City.ToUpper());
-        //            pdfFormFields.SetField("GI_state", pe.State.ToUpper());
-        //            pdfFormFields.SetField("GI_Zip Code", pe.Zip.ToUpper());
-        //            pdfFormFields.SetField("GI_Telephone", "800-962-1484");
-        //            pdfFormFields.SetField("GI_Fax", "513-527-0659");
-        //            pdfFormFields.SetField("GI_Email Address", "PE@MEDICOUNT.COM"); //peDetailsList[i].Email);
-
-        //            List<PEOtherAddressList> peOtherAddressList = new List<PEOtherAddressList>();
-        //            peOtherAddressList = await _adminService.GetPEOtherAddresses(ClientId);
-        //            for (int j = 0; j < peOtherAddressList.Count; j++)
-        //            {
-        //                if (peOtherAddressList[j].AddressTypeID == 3)
-        //                {
-        //                    pdfFormFields.SetField("GI_Reimb Address", peOtherAddressList[j].AddressLine1.ToUpper());
-        //                    pdfFormFields.SetField("GI_Reimb City", peOtherAddressList[j].City.ToUpper());
-        //                    pdfFormFields.SetField("GI_Reimb state", peOtherAddressList[j].State.ToUpper());
-        //                    pdfFormFields.SetField("GI_Reimb Zip", peOtherAddressList[j].ZipCode);
-        //                }
-        //            }
-
-
-        //            pdfFormFields.SetField("GI_Corres Address", "PO BOX 392907");
-        //            pdfFormFields.SetField("GI_Corres City", "PITTSBURGH");
-        //            pdfFormFields.SetField("GI_Corres State", "PA");
-        //            pdfFormFields.SetField("GI_Corres Zip Code", "15251-9907");
-
-        //            pdfFormFields.SetField("Req_List Medicare", pe.MedicareNumber.ToUpper());
-        //            pdfFormFields.SetField("GI_MedicareState", pe.State.ToUpper());
-        //            pdfFormFields.SetField("Req_Medicaid Number", pe.MedicaidNumber.ToUpper());
-        //            pdfFormFields.SetField("GI_MedicaidState", pe.State.ToUpper());
-
-
-        //            //pdfFormFields.SetField("PQI_26", "26");
-        //            pdfFormFields.SetField("PIQ_1", "No");
-
-        //            //pdfFormFields.SetField("PQI_25", "25");
-        //            pdfFormFields.SetField("PIQ_2", "No");
-
-        //            //pdfFormFields.SetField("PQI_24", "24");
-        //            pdfFormFields.SetField("PQI_3", "No");
-
-        //            //pdfFormFields.SetField("PQI_23", "23");
-        //            pdfFormFields.SetField("PQI_4", "No");
-
-        //            //pdfFormFields.SetField("PQI_22", "22");
-        //            pdfFormFields.SetField("PQI_5", "No");
-
-        //            //pdfFormFields.SetField("PQI_21", "21");
-        //            pdfFormFields.SetField("PQI_6", "No");
-
-        //            //pdfFormFields.SetField("PQI_20", "20");
-        //            pdfFormFields.SetField("PQI_7", "No");
-
-        //            //pdfFormFields.SetField("PQI_19", "19");
-        //            pdfFormFields.SetField("PQI_8", "No");
-
-        //            //pdfFormFields.SetField("PQI_18", "18");
-        //            pdfFormFields.SetField("PQI_9", "No");
-
-        //            //pdfFormFields.SetField("PQI_17", "17");
-        //            pdfFormFields.SetField("PQI_10", "No");
-
-        //            //pdfFormFields.SetField("PQI_16", "16");
-        //            pdfFormFields.SetField("PQI_11", "No");
-
-        //            //pdfFormFields.SetField("PQI_15", "15");
-        //            pdfFormFields.SetField("PQI_12", "No");
-
-        //            //pdfFormFields.SetField("PQI_14", "14");
-        //            pdfFormFields.SetField("PQI_13", "No");
-
-        //            pdfFormFields.SetField("Exp_App Contact", "AMY KING");
-        //            pdfFormFields.SetField("Exp_Title", "PROVIDER ENROLLMENT MANAGER");
-        //            pdfFormFields.SetField("EXP_Telep", " 513-612-3158");
-        //            pdfFormFields.SetField("Exp_Fax", "513-527-0659");
-        //            pdfFormFields.SetField("Exp_Email", "PE@MEDICOUNT.COM");
-
-        //            pdfFormFields.SetField("OwnerName", pe.ClientName);
-        //            pdfFormFields.SetField("Ownership%", "100%");
-
-        //            pdfFormFields.SetField("PrintName", "AMY KING");
-        //            pdfFormFields.SetField("End Date", DateTime.Now.ToString("MM/dd/yyyy"));
-
-        //            //pdfFormFields.SetField("RAI_Phone", "800-962-1484");
-        //            //pdfFormFields.SetField("RAI_Fax", "513-527-0659");
-
-
-        //            //pdfFormFields.SetField("RAI_OM_Date", DateTime.Now.ToString("MM/dd/yyyy"));
-        //            pdfStamper.FormFlattening = false;
-        //            // pdfStamper.Close();
-        //        }
-
-        //        // Generate W9 PDF
-        //        using (var pdfReader = new PdfReader(w9Template))
-        //        using (var pdfStamper = new PdfStamper(pdfReader, new FileStream(w9File, FileMode.Create)))
-        //        {
-        //            AcroFields pdfFormFields = pdfStamper.AcroFields;
-        //            //pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_1[0]", pe.ClientName);
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_1[0]", pe.ClientName);
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].f1_4[0]", pe.TaxIDClassification.ToString());
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "7");
-
-        //            List<PEOtherAddressList> peOtherAddressList = new List<PEOtherAddressList>();
-        //            peOtherAddressList = await _adminService.GetPEOtherAddresses(ClientId);
-        //            for (int j = 0; j < peOtherAddressList.Count; j++)
-        //            {
-        //                if (peOtherAddressList[j].AddressTypeID == 3)
-        //                {
-        //                    pdfFormFields.SetField("topmostSubform[0].Page1[0].Address[0].f1_7[0]", peOtherAddressList[j].AddressLine1.ToString().ToUpper());
-        //                    pdfFormFields.SetField("topmostSubform[0].Page1[0].Address[0].f1_8[0]", peOtherAddressList[j].City.ToString().ToUpper() + "," + peOtherAddressList[j].State.ToString().ToUpper() + " " + peOtherAddressList[j].ZipCode.ToString().ToUpper());
-        //                }
-        //            }
-
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_10[0]", "NPI - " + pe.GroupNPI);
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].EmployerID[0].f1_14[0]", pe.TaxID == "" ? "" : pe.TaxID.Substring(0, 2));
-        //            pdfFormFields.SetField("topmostSubform[0].Page1[0].EmployerID[0].f1_15[0]", pe.TaxID == "" ? "" : pe.TaxID.Substring(3, pe.TaxID.Length - 3));
-        //            pdfFormFields.SetField("DateSigned", DateTime.Now.ToString("MM/dd/yyyy"));
-
-        //            pdfStamper.FormFlattening = false;
-        //            //pdfStamper.Close();
-        //        }
-
-        //        // Merge MMPI and W9 into one PDF
-        //        using (var stream = new FileStream(mergedFile, FileMode.Create))
-        //        using (var document = new iTextSharp.text.Document())
-        //        using (var copy = new PdfCopy(document, stream))
-        //        {
-        //            document.Open();
-        //            foreach (string file in new[] { mmpiFile, w9File })
-        //            {
-        //                var reader = new PdfReader(file);
-        //                for (int i = 1; i <= reader.NumberOfPages; i++)
-        //                    copy.AddPage(copy.GetImportedPage(reader, i));
-        //                reader.Close();
-        //            }
-        //            document.Close();
-        //        }
-        //    }
-
-        //    string outputMergedPdf = Path.Combine(sWebRootFolder, "MedcoW9CombinedForms.pdf");
-        //    if (System.IO.File.Exists(outputMergedPdf)) System.IO.File.Delete(outputMergedPdf);
-
-        //    string[] pdfFiles = Directory.GetFiles(mergedPath, "*.pdf");
-
-        //    using (FileStream stream = new FileStream(outputMergedPdf, FileMode.Create))
-        //    {
-        //        Document doc = new Document();
-        //        PdfCopy pdf = new PdfCopy(doc, stream);
-        //        doc.Open();
-
-        //        foreach (string file in pdfFiles)
-        //        {
-        //            PdfReader reader = new PdfReader(file);
-        //            for (int page = 1; page <= reader.NumberOfPages; page++)
-        //            {
-        //                pdf.AddPage(pdf.GetImportedPage(reader, page));
-        //            }
-        //            pdf.FreeReader(reader);
-        //            reader.Close();
-        //        }
-
-        //        doc.Close();
-        //    }
-
-        //    string url = _configuration["AppSettings:AppURL"].ToString() + "MedciW9CombinedForms.pdf";
-        //    return url;
-
-
-        //}
-
         [HttpGet]
         public IActionResult GetMMW9PEFile(string fileName)
         {
@@ -3859,8 +3592,21 @@ namespace PED.Controllers
                 return sw.ToString();
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> PEClientsBankInfoBankLetterList([FromBody] int id)
+        {
+            ProviderEntrollment model = new ProviderEntrollment();
+            string UserId = HttpContext.Session.GetString("UserID");
+            try
+            {
+                model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+                model.PEBankLetterDocumentList  = await _adminService.GetPEDocumentFromClientsBankInfoList(id);
+             
+            }
+            catch (Exception Ex) { }           
+            return PartialView("_PEClientsBankInfoBankLetterUploadList", model);
+        }
 
-        
         #endregion
 
     }

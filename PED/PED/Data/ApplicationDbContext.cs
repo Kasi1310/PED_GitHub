@@ -186,6 +186,8 @@ namespace WiseX.Data
         public virtual DbSet<PEClientsBankInfo> PEClientsBankInfo { get; set; }
         public virtual DbSet<PEClientsBankInfoList> PEClientsBankInfoList { get; set; }
 
+        public virtual DbSet<PEClientsBankInfoBankLetterDocumentsList> PEBankLetterDocumentList { get; set; }
+
         #endregion
 
         #region other check List

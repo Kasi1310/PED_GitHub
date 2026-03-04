@@ -194,8 +194,15 @@
                                 await Html.RenderPartialAsync("_PEClientsBankInfo", Model);
                             }
                         </div> 
-                    </div> 
-
+                    </div>
+                   @*  <div class="tab-pane active" id="divBankLetterInfoList" role="tabpanel" style="padding-top:10px;">
+                         <div id="PEClientsBankInfo">
+                            @{
+                                await Html.RenderPartialAsync("_PEClientsBankInfo", Model);
+                            }
+                        </div> 
+                    </div>  *@
+                   
                     <div class="tab-pane active" id="divPEContracts" role="tabpanel">
                         <div id="PEContracts">
                             @{ await Html.RenderPartialAsync("_PEContracts", Model); }
@@ -381,6 +388,7 @@
 
                    ClientsBankInfoStatesOnchange();
                    PEClientsBankInfoDatatable();
+                   PEClientsBankInfoBankLetterUploadDatatable();
                 }
                 else if (tabid == "tContracts") {
                     $("#divPEDetails").hide();
@@ -2420,6 +2428,7 @@
                                 data: formData,
                                 success: function (result) {
                                     PEDocumentDatatable();
+                                    PEClientsBankInfoBankLetterUploadDatatable();
                                     ClearPEDocuments();
                                     HideOverlay();
                                     swal("Success!", "File uploaded successfully.", "success");
@@ -2498,6 +2507,7 @@
                     var jsonData = { Id: DocumentID };
                     AjaxRequestJsonPost(url, jsonData, function (resp, status, req) {
                         PEDocumentDatatable();
+                        PEClientsBankInfoBankLetterUploadDatatable();
                         ClearPEDocuments();
                     });
                 }
@@ -5801,8 +5811,8 @@
                  $('#divBankLetterUpload').addClass('hide');
                  $('#divBankLetterUpload').removeClass('show');
 
-                 $('#diBankLetterInfoList').addClass('hide');
-                 $('#diBankLetterInfoList').removeClass('show');
+                 $('#divBankLetterInfoList').addClass('hide');
+                 $('#divBankLetterInfoList').removeClass('show');
               }
 
                $('#btnBankLetterUploadAdd').live('click', function () {
@@ -5823,8 +5833,9 @@
                  $('#divBankLetterUpload').addClass('show');
                  $('#divBankLetterUpload').removeClass('hide');
 
-                 $('#diBankLetterInfoList').addClass('show');
-                 $('#diBankLetterInfoList').removeClass('hide');
+                 $('#divBankLetterInfoList').addClass('show');
+                 $('#divBankLetterInfoList').removeClass('hide');
+                 PEClientsBankInfoBankLetterUploadDatatable();
               }
         function ClearClientsBankInfo() {
             $('#@Html.IdFor(m => m.PEClientsBankInfo.Id)').val("0");
@@ -6093,6 +6104,26 @@
                     }
             });
         });
-         
+
+        //PEClientsBankInfoBankLetterUpload();
+          function PEClientsBankInfoBankLetterUploadDatatable() {
+            var Id = $('#hrfClientId').val();
+
+            var url = "@Url.Action("PEClientsBankInfoBankLetterList", "ProviderEntrollment")";
+            var jsonData = Id;
+            AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                $('#divBankLetterInfoList').html(resp);
+
+                $('.DateMask').datepicker({
+                    format: 'mm/dd/yyyy',
+                    autoclose: true,
+                    orientation: 'bottom left'
+                });
+
+            });
+
+            // $('#divDocumentsForm').removeClass('show');
+            // $('#divDocumentsForm').addClass('hide');
+        }
         </script>
 }
