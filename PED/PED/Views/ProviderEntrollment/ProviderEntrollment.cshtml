@@ -108,6 +108,15 @@
                 font-family: Arial;
                 cursor: pointer;
             }
+            .BankLetterdropZone {
+                width: 300px;
+                height: 100px;
+                border: 2px dashed #ccc;
+                text-align: center;
+                padding: 40px;
+                font-family: Arial;
+                cursor: pointer;
+            }
         </style>
        
     }
@@ -2340,25 +2349,6 @@
             event.preventDefault();
         }
 
-        // function handleDrop(event) {
-        //     event.preventDefault();
-        //     var files = event.dataTransfer.files;
-        //     var file = files[0];
-
-        //     // Check if the dropped file is a PDF
-        //     if (file.type === 'application/pdf') {
-        //         // Perform further processing or upload the file to the server
-        //         //uploadFile(file);
-        //         var dropZone = document.getElementById('dropZone');
-        //         dropZone.innerHTML = '<p>' + file.name + '</p>';
-
-        //         selectedFile = file;
-
-        //         //uploadFile(file);
-        //     } else {
-        //         document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "Drop a PDF file.";
-        //     }
-        // }
                 function handleDrop(event) {
                     event.preventDefault();
 
@@ -2428,7 +2418,6 @@
                                 data: formData,
                                 success: function (result) {
                                     PEDocumentDatatable();
-                                    PEClientsBankInfoBankLetterUploadDatatable();
                                     ClearPEDocuments();
                                     HideOverlay();
                                     swal("Success!", "File uploaded successfully.", "success");
@@ -2530,6 +2519,104 @@
 
         }
     </script>
+   
+    <!-- #region name -->
+
+     <!-- PE ClientBank Info Bank letter Insert funcion-->
+    <script type="text/javascript">       
+        var selectedFile = null;
+
+        function BankLetterhandleDragOver(event) {
+            event.preventDefault();
+        }
+
+                function BankLetterhandleDrop(event) {
+                    event.preventDefault();
+
+                    var files = event.dataTransfer.files;
+                    var file = files[0];
+
+                    var allowedTypes = [
+                        "application/pdf",
+                        "application/msword", // .doc
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // .docx
+                    ];
+
+                    if (allowedTypes.includes(file.type)) {
+
+                        var BankLetterdropZone = document.getElementById('BankLetterdropZone');
+                        BankLetterdropZone.innerHTML = '<p>' + file.name + '</p>';
+
+                        selectedFile = file;
+
+                        document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "";
+
+                    } else {
+                        document.getElementById("spanPEDocumentfileErrorMessage").innerHTML =
+                            "Only PDF, DOC, and DOCX files are allowed.";
+                    }
+                }
+
+        $('#btnPEBankLetterDocumentsInsert').live('click', function () {
+
+            var validationresult = $('#PEBankLetterUploadDocumentsFormfrm').parsley().validate();
+            if (selectedFile == null) {
+                document.getElementById("spanPEDocumentfileErrorMessage").innerHTML = "Select File";
+                validationresult = false;
+            }
+
+            if (validationresult) {
+                var GetId = $('#@Html.IdFor(m => m.PEClientBankInfoBankLetterDocuments.Id)').val();
+                GetId = GetId == "" ? 0 : GetId;
+
+                var GetClientDetailsID = $('#hrfClientId').val();
+
+                var GetTitle = $('#@Html.IdFor(m => m.PEClientBankInfoBankLetterDocuments.TitleID)').val();
+
+                var GetTitleName = $('#@Html.IdFor(m => m.PEClientBankInfoBankLetterDocuments.TitleName)').val();
+
+                var PEDocuments = JSON.stringify({
+                    Id: GetId,
+                    ClientDetailsID: GetClientDetailsID,
+                    TitleID: GetTitle,
+                    TitleName: GetTitleName
+                });
+                var url = "@Url.Action("SavePEBankLetterDocuments", "ProviderEntrollment")";
+                var jsonData = PEDocuments;
+                AjaxRequestJsonPostContent(url, jsonData, function (resp, status, req) {
+                    if (resp.documentsId > 0) {
+                            ShowOverlay();
+                            var formData = new FormData();
+                            formData.append('file', selectedFile);
+                            formData.append('PEDocumentsId', resp.documentsId);
+                            var url = "@Url.Action("SaveDocumentFiles", "ProviderEntrollment")";
+                            $.ajax({
+                                url: url,
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                data: formData,
+                                success: function (result) {
+                                   //PEDocumentDatatable();
+                                    PEClientsBankInfoBankLetterUploadDatatable();
+                                   // ClearPEDocuments();
+                                    HideOverlay();
+                                    swal("Success!", "File uploaded successfully.", "success");
+                                },
+                                error: function (err) {
+                                    HideOverlay();
+                                      swal("Error!", "File upload failed.", "error");
+                                }
+                            });
+                    }
+                });
+            }
+        });
+        
+    </script>
+
+
+<!-- #endregion -->
     <script type="text/javascript">
         $('#btnCredentialingLicenseAdd').live('click', function () {
             ClearPECredentialingLicense();
@@ -6122,8 +6209,6 @@
 
             });
 
-            // $('#divDocumentsForm').removeClass('show');
-            // $('#divDocumentsForm').addClass('hide');
         }
         </script>
 }

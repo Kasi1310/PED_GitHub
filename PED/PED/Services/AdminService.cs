@@ -2333,7 +2333,31 @@ namespace WiseX.Services
             return check;
         }
 
+        public async Task<PEClientBankInfoBankLetterDocuments> InsertBankLetterDocuments(ProviderEntrollment providerEntrollment, string userid)
+        {
+            //PEDocuments check = new PEDocuments();
 
+            PEClientBankInfoBankLetterDocuments check = new PEClientBankInfoBankLetterDocuments();
+            try
+            {
+                var paramPEDocuments = new SqlParameter("@PEDocuments", providerEntrollment.GetXml());
+                var paramuserid = new SqlParameter("@userid", userid);
+
+                //check = await _applicationDbContext.PEDocuments.FromSql("EXEC USP_tblPEDocuments_Insert @PEDocuments,@userid", paramPEDocuments, paramuserid).FirstOrDefaultAsync();
+                check = await _applicationDbContext.PEClientBankInfoBankLetterDocuments.FromSql("EXEC USP_tblPEBankLetterDocuments_Insert @PEDocuments,@userid", paramPEDocuments, paramuserid).FirstOrDefaultAsync();
+            }
+            catch (Exception Ex) { }
+
+            return check;
+        }
+
+
+        public async Task<List<PEClientsBankInfoBankLetterTitleList>> GetPEClientsBankInfoBankLetterTitleList()
+        {
+            var paramId = new SqlParameter("@Id", 18);
+            var paramSearchTerm = new SqlParameter("@UserID", DBNull.Value);
+            return await _applicationDbContext.GetPEClientsBankInfoBankLetterTitleLists.FromSql("EXEC GetMasterTableData @Id, @UserID", paramId, paramSearchTerm).ToListAsync();
+        }
         #endregion
     }
 }

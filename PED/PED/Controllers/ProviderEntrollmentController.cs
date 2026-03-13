@@ -95,6 +95,7 @@ namespace PED.Controllers
                 model.PEDocuments = new PEDocuments();
                 model.PECredentialingLicense = new PECredentialingLicense();
                 model.PECheckList = new PECheckList();
+                model.PEClientBankInfoBankLetterDocuments = new PEClientBankInfoBankLetterDocuments();
 
                 model.PENotes = new PENotes();
 
@@ -112,6 +113,8 @@ namespace PED.Controllers
                 model.PELicenseTypeList = new List<PELicenseTypeList>();// await _adminService.GetPELicenseTypeList();
                 model.PECertificationLevelList = new List<PECertificationLevelList>();// await _adminService.GetPECertificationLevelList();
                 model.PEDocumentTitleList = new List<PEDocumentTitleList>();// await _adminService.GetPEDocumentTitleList();
+
+                model.PEClientsBankInfoBankLetterTitleList = new List<PEClientsBankInfoBankLetterTitleList>();
 
                 model.CitiesList = new List<CitiesList>();
                 //model.StatesList = new List<StatesList>();// await _adminService.GetStatesList();
@@ -1112,7 +1115,7 @@ namespace PED.Controllers
             try
             {
                 model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
-                model.PEDocumentsList = await _adminService.GetPEDocumentsList(id);
+                model.PEDocumentsList = await _adminService.GetPEDocumentsList(id);                
                 //totalrows = (model.PEDocumentsList.Count > 0 ? model.PEDocumentsList.Count : 0);
                 //totalRowsAfterFiltering = (model.PEDocumentsList.Count > 0 ? model.PEDocumentsList.Count : 0);
             }
@@ -3448,7 +3451,8 @@ namespace PED.Controllers
                 model.CitiesList = new List<CitiesList>();
                 model.StatesList = await _adminService.GetStatesList();
                 model.PEClientsBankInfoList = await _adminService.GetPEClientsBankInfoList(id);
-                model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+                //model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+                model.PEClientsBankInfoBankLetterTitleList = await _adminService.GetPEClientsBankInfoBankLetterTitleList();
             }
             catch (Exception Ex) { }
             return PartialView("_PEClientsBankInfo", model);
@@ -3592,6 +3596,38 @@ namespace PED.Controllers
                 return sw.ToString();
             }
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> SavePEBankLetterDocuments([FromBody] PEClientBankInfoBankLetterDocuments BankLetterDocuments)
+        {
+            if (HttpContext.Session.GetString("SessionRoleAccess").Replace("\"", "") == "R")
+            {
+                return Json("");
+            }
+            ProviderEntrollment model = new ProviderEntrollment();
+
+            string message = "";
+            var userId = HttpContext.Session.GetString("UserID");
+            try
+            {
+                await _menuUtils.SetMenu(HttpContext.Session);
+                model.PEClientBankInfoBankLetterDocuments = BankLetterDocuments;
+
+
+                model.PEClientBankInfoBankLetterDocuments = await _adminService.InsertBankLetterDocuments(model, userId);
+
+                message = "Success";
+
+
+            }
+            catch (Exception ex)
+            {
+                message = "Failed";
+            }
+            return Json(new { DocumentsId = model.PEClientBankInfoBankLetterDocuments.Id });
+        }
+
         [HttpPost]
         public async Task<IActionResult> PEClientsBankInfoBankLetterList([FromBody] int id)
         {
@@ -3599,7 +3635,8 @@ namespace PED.Controllers
             string UserId = HttpContext.Session.GetString("UserID");
             try
             {
-                model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+                //model.PEDocumentTitleList = await _adminService.GetPEDocumentTitleList();
+                model.PEClientsBankInfoBankLetterTitleList = await _adminService.GetPEClientsBankInfoBankLetterTitleList();
                 model.PEBankLetterDocumentList  = await _adminService.GetPEDocumentFromClientsBankInfoList(id);
              
             }

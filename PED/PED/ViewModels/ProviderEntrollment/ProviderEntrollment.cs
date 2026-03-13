@@ -100,9 +100,12 @@ namespace PED.ViewModels.ProviderEntrollment
         public List<PEClientsBankInfoList>  PEClientsBankInfoList;
         public List<PEClientsBankInfoBankLetterDocumentsList> PEBankLetterDocumentList;
 
-        
+        public List<PEClientsBankInfoBankLetterTitleList> PEClientsBankInfoBankLetterTitleList;
+        public PEClientBankInfoBankLetterDocuments PEClientBankInfoBankLetterDocuments;
 
-        
+
+
+
 
 
     }
@@ -986,6 +989,22 @@ namespace PED.ViewModels.ProviderEntrollment
         public string AddedOn { get; set; }
         public string FileName { get; set; }
         public bool IsAdminOnly { get; set; }
+    }
+    public class PEClientBankInfoBankLetterDocuments
+    {
+        [Key]
+        public int Id { get; set; }
+        public int ClientDetailsID { get; set; }
+        public int TitleID { get; set; }
+        public string TitleName { get; set; }
+        //public string Document { get; set; }
+        //public string AddedOn { get; set; }
+    }
+    public class PEClientsBankInfoBankLetterTitleList
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Value { get; set; }
     }
 
 }
