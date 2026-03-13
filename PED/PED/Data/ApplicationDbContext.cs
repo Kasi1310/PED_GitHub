@@ -157,6 +157,7 @@ namespace WiseX.Data
         public virtual DbSet<PELicenseTypeList> PELicenseTypeList { get; set; }
         public virtual DbSet<PECertificationLevelList> PECertificationLevelList { get; set; }
         public virtual DbSet<PEDocumentTitleList> PEDocumentTitleList { get; set; }
+        public virtual DbSet<PEClientsBankInfoBankLetterTitleList> GetPEClientsBankInfoBankLetterTitleLists { get; set; }
         public virtual DbSet<PEDetails> PEDetails { get; set; }
         public virtual DbSet<PEDetailsList> PEDetailsList { get; set; }
         public virtual DbSet<PEInsuranceContracts> PEInsuranceContracts { get; set; }
@@ -168,6 +169,8 @@ namespace WiseX.Data
         public virtual DbSet<PEContacts> PEContacts { get; set; }
         public virtual DbSet<PEContactsList> PEContactsList { get; set; }
         public virtual DbSet<PEDocuments> PEDocuments { get; set; }
+
+        public virtual DbSet<PEClientBankInfoBankLetterDocuments> PEClientBankInfoBankLetterDocuments { get; set; }
         public virtual DbSet<PEDocumentsList> PEDocumentsList { get; set; }
         public virtual DbSet<PECredentialingLicenseList> PECredentialingLicenseList { get; set; }
         public virtual DbSet<PECredentialingLicense> PECredentialingLicense { get; set; }
@@ -213,7 +216,7 @@ namespace WiseX.Data
 
         //public DbSet<PEEFTFileUploadModel> PEEFTTable { get; set; }
 
-        
+
 
 
     }
